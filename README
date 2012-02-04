@@ -1,0 +1,23 @@
+Notepad++ (UDL 2.0 version), beta phase
+This repository will serve as central point for code sharing as well as distribution of binaries during development and testing.
+
+UDL stands for User Defined Language, it is a feature of Notepad++ editor through which users can define their own syntax highlighting.
+
+UDL 2.0 is my attempt to update default UDL that is shipped with Notepad++.
+At this point it is in testing phase and not part of official Notepad++ build.
+
+This page was created for beta testers. If you want to join, or simply get more information, please visit official forum thread.
+There you can also comment current features or request new ones.
+
+http://notepad-plus-plus.org/
+https://sourceforge.net/projects/notepad-plus/forums/forum/331753/topic/4631095
+
+I created solution (.sln) and project (.vcproj) files for Visual Studio 2008.
+For some reason, DEBUG configuration wasn't working properly, so I set up "Unicode release" configuration to generate debug info.
+Please use "Unicode release" configuration to avoid "fighting" with Visual studio.
+
+Finally, user documentation can be found on the following link:
+http://udl20.weebly.com/
+
+Thank you and best regards,
+Loreia
