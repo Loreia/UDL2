@@ -10,14 +10,14 @@
         <!-- 2 positions : "horizontal" or "vertical"-->
         <GUIConfig name="ScintillaViewsSplitter">vertical</GUIConfig>
         <!-- For the attribut of position, 2 status : docked or undocked ; 2 status : "show" or "hide" -->
-        <GUIConfig name="UserDefineDlg" position="docked">show</GUIConfig>
+        <GUIConfig name="UserDefineDlg" position="undocked">hide</GUIConfig>
         <GUIConfig name="TabSetting" size="4" replaceBySpace="yes" />
         <!--App position-->
-        <GUIConfig name="AppPosition" x="0" y="0" width="1279" height="738" isMaximized="yes" />
+        <GUIConfig name="AppPosition" x="129" y="0" width="1135" height="738" isMaximized="no" />
         <!-- For the primary scintilla view,
              2 status for Attribut lineNumberMargin, bookMarkMargin, indentGuideLine and currentLineHilitingShow: "show" or "hide"
              4 status for Attribut folderMarkStyle : "simple", "arrow", "circle" and "box"  -->
-        <GUIConfig name="ScintillaPrimaryView" lineNumberMargin="show" bookMarkMargin="show" folderMarkStyle="box" indentGuideLine="show" currentLineHilitingShow="show" Wrap="yes" edge="no" edgeNbColumn="100" wrapSymbolShow="hide" zoom="0" whiteSpaceShow="hide" eolShow="hide" lineWrapMethod="aligned" zoom2="0" />
+        <GUIConfig name="ScintillaPrimaryView" lineNumberMargin="show" bookMarkMargin="show" folderMarkStyle="box" indentGuideLine="show" currentLineHilitingShow="show" Wrap="no" edge="no" edgeNbColumn="100" wrapSymbolShow="hide" zoom="0" whiteSpaceShow="hide" eolShow="hide" lineWrapMethod="aligned" zoom2="0" />
         <!-- For the secodary scintilla view,
              2 status for Attribut lineNumberMargin, bookMarkMargin, indentGuideLine and currentLineHilitingShow: "show" or "hide"
              4 status for Attribut folderMarkStyle : "simple", "arrow", "circle" and "box" -->
@@ -92,28 +92,36 @@
         </GUIConfig>
     </GUIConfigs>
     <!-- The History of opened files list -->
-    <FindHistory nbMaxFindHistoryPath="10" nbMaxFindHistoryFilter="10" nbMaxFindHistoryFind="10" nbMaxFindHistoryReplace="10" matchWord="yes" matchCase="yes" wrap="yes" directionDown="yes" fifRecuisive="yes" fifInHiddenFolder="no" dlgAlwaysVisible="no" fifFilterFollowsDoc="no" fifFolderFollowsDoc="no" searchMode="0" transparencyMode="1" transparency="150">
+    <FindHistory nbMaxFindHistoryPath="10" nbMaxFindHistoryFilter="10" nbMaxFindHistoryFind="10" nbMaxFindHistoryReplace="10" matchWord="no" matchCase="yes" wrap="yes" directionDown="yes" fifRecuisive="yes" fifInHiddenFolder="no" dlgAlwaysVisible="no" fifFilterFollowsDoc="no" fifFolderFollowsDoc="no" searchMode="0" transparencyMode="1" transparency="150">
         <Path name="C:\1\Projects\C++\NPP\33_final\npp.5.9.3.src\PowerEditor" />
-        <Find name="nesting" />
-        <Find name="keywords" />
-        <Find name="will" />
-        <Find name="||" />
-        <Find name="&amp;&amp;" />
-        <Find name="!" />
-        <Find name="foldersInCode1Open" />
-        <Find name="foldersInCodeClose" />
-        <Find name="foldersInCodeMiddle" />
-        <Find name="foldersInCodeOpen" />
-        <Replace name="or" />
-        <Replace name="and" />
-        <Replace name="not" />
-        <Replace name="foldersInCode1Close" />
-        <Replace name="foldersInCode1Middle" />
-        <Replace name="foldersInCode1Open" />
-        <Replace name="IDC_FOLDER_IN_CODE1_" />
-        <Replace name="\1png" />
-        <Replace name='&quot;' />
-        <Replace name="vvstring" />
+        <Find name="SC_FOLDCOMMENT" />
+        <Find name="lineContinuation" />
+        <Find name="setFoldEndAtEOL" />
+        <Find name="commentBlockEnd" />
+        <Find name=", levelMinCurrent, levelNext);" />
+        <Find name="isWhiteSpace" />
+        <Find name=", sc, styler," />
+        <Find name="multiPartEndVectors" />
+        <Find name="ResetBackwardSegments" />
+        <Find name="isSpaceOrTab" />
+        <Replace name="SC_ISCOMMENTLINE" />
+        <Replace name=", levelMinCurrent, levelNext, nlCount);" />
+        <Replace name=", sc," />
+        <Replace name="// ResetBackwardSegments" />
+        <Replace name=", multiPartEndVectors, levelMinCurrent, levelNext);" />
+        <Replace name=", levelMinCurrent, levelNext);" />
+        <Replace name="start" />
+        <Replace name="backwardSegments, lineFoldPositions, lineFoldValues);" />
+        <Replace name="foldVector" />
+        <Replace name="sc, styler, prefixes," />
     </FindHistory>
-    <History nbMaxFile="10" inSubMenu="no" customLength="-1" />
+    <History nbMaxFile="10" inSubMenu="no" customLength="-1">
+        <File filename="C:\Users\eivarad\Desktop\Legacy_Suit_SIP_All.cpp" />
+        <File filename="C:\Users\eivarad\Desktop\Legacy_Suit_SIP_All2.cpp" />
+        <File filename="Z:\web2py\applications\sqr\databases\c8b669d15150d7109e5f7ab36744a5b7_auth_cas.table" />
+        <File filename="Z:\web2py\applications\rqs\databases\c8b669d15150d7109e5f7ab36744a5b7_auth_event.table" />
+        <File filename="Z:\web2py\applications\rqs\databases\c8b669d15150d7109e5f7ab36744a5b7_auth_cas.table" />
+        <File filename="Z:\web2py\applications\sqr\databases\c8b669d15150d7109e5f7ab36744a5b7_auth_event.table" />
+        <File filename="C:\1\code\cpp\UDL24\LexUser.cxx" />
+    </History>
 </NotepadPlus>

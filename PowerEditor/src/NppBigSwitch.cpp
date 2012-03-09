@@ -1243,9 +1243,9 @@ LRESULT Notepad_plus::process(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPa
 
 		case WM_NOTIFY:
 		{
-			checkClipboard();
-			checkUndoState();
-			checkMacroState();
+			// checkClipboard();
+			// checkUndoState();
+			// checkMacroState();
 			_pluginsManager.notify(reinterpret_cast<SCNotification *>(lParam));
 			return notify(reinterpret_cast<SCNotification *>(lParam));
 		}

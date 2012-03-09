@@ -34,12 +34,6 @@ struct nestedInfo {
 	}
 };
 
-struct foldInfo {
-	unsigned int position;
-	int state;
-	bool isFoldStatement;
-};
-
 /**
  * A Position is a position within a document between two characters or at the beginning or end.
  * Sometimes used as a character index where it identifies the character after the position.
@@ -264,7 +258,7 @@ public:
 
 	// UserDefineLanguage specific
 	std::vector<nestedInfo> nestedVector;
-	std::vector<foldInfo> foldVector;
+	std::vector<int> foldVector;
 
 	vvstring commentLineOpen, commentLineContinue, commentLineClose;
 	vvstring commentOpen, commentClose;
@@ -276,9 +270,9 @@ public:
 	vvstring delim6Open, delim6Escape, delim6Close;
 	vvstring delim7Open, delim7Escape, delim7Close;
 	vvstring delim8Open, delim8Escape, delim8Close;
-	vvstring operators1/*, operators2*/;
+	vvstring operators1;
 	vvstring foldersInCode1Open, foldersInCode1Middle, foldersInCode1Close;
-	//vvstring foldersInCode2Open, foldersInCode2Middle, foldersInCode2Close;
+	vvstring foldersInCode2Open, foldersInCode2Middle, foldersInCode2Close;
 	std::vector<std::string> suffixTokens;
 	std::vector<std::string> prefixTokens;
 	std::vector<std::string> negativePrefixTokens;

@@ -1,6 +1,12 @@
 <NotepadPlus>
     <Session activeView="0">
-        <mainView activeIndex="0" />
+        <mainView activeIndex="1">
+            <File firstVisibleLine="1253" xOffset="0" scrollWidth="1304" startPos="44201" endPos="44201" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL2\scintilla\lexers\LexUser.cxx" />
+            <File firstVisibleLine="32" xOffset="0" scrollWidth="1465" startPos="4431" endPos="4529" selMode="3" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx" />
+            <File firstVisibleLine="203" xOffset="0" scrollWidth="1048" startPos="32855" endPos="32855" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexCPP.cxx" />
+            <File firstVisibleLine="258" xOffset="0" scrollWidth="920" startPos="7490" endPos="7490" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\src\Document.h" />
+            <File firstVisibleLine="177" xOffset="0" scrollWidth="1008" startPos="9527" endPos="9527" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\UserDefineDialog.h" />
+        </mainView>
         <subView activeIndex="0" />
     </Session>
 </NotepadPlus>

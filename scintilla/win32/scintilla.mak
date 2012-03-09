@@ -13,8 +13,8 @@
 DIR_O=.
 DIR_BIN=..\bin
 
-COMPONENT=$(DIR_BIN)\Scintilla.dll
-LEXCOMPONENT=$(DIR_BIN)\SciLexer.dll
+COMPONENT=$(DIR_BIN)\Scintilla2.dll
+LEXCOMPONENT=$(DIR_BIN)\SciLexer2.dll
 LEXLIB=Lexers.lib
 
 CC=cl
@@ -24,7 +24,7 @@ LD=link
 CXXFLAGS=-Zi -TP -W4 -EHsc -Zc:forScope -Zc:wchar_t -D_CRT_SECURE_NO_DEPRECATE=1
 # For something scary:-Wp64
 CXXDEBUG=-Od -MTd -DDEBUG
-CXXNDEBUG=-O1 -MT -DNDEBUG -GL
+CXXNDEBUG=-O2 -MT -DNDEBUG -GL
 NAME=-Fo
 LDFLAGS=-OPT:REF -LTCG -DEBUG
 LDDEBUG=

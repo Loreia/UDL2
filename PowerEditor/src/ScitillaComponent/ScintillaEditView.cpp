@@ -596,6 +596,7 @@ void ScintillaEditView::setEmbeddedAspLexer()
 
 void ScintillaEditView::setUserLexer(const TCHAR *userLangName)
 {
+	int setKeywordsCounter = 0;
     execute(SCI_SETLEXER, SCLEX_USER);
 
 	UserLangContainer * userLangContainer = userLangName?NppParameters::getInstance()->getULCFromName(userLangName):_userDefineDlg._pCurrentUserLang;
@@ -662,7 +663,7 @@ void ScintillaEditView::setUserLexer(const TCHAR *userLangName)
 		{
 			execute(SCI_SETPROPERTY, (WPARAM)"userDefine.foldersInCode1Close", reinterpret_cast<LPARAM>(keyWords_char));
 		}
-		else// if (i >= SCE_USER_STYLE_KEYWORD1 && i <= (SCE_USER_STYLE_KEYWORD1 + SCE_USER_TOTAL_KEYWORDS))
+		else // if (i >= SCE_USER_KWLIST_KEYWORDS1 && i <= (SCE_USER_KWLIST_KEYWORDS1 + SCE_USER_TOTAL_KEYWORDS))
 		{
 			char temp[max_char];
 			bool inDoubleQuote = false;
@@ -697,7 +698,9 @@ void ScintillaEditView::setUserLexer(const TCHAR *userLangName)
 					if (keyWords_char[j] != ' ')
 						temp[index++] = keyWords_char[j];
 					else if (keyWords_char[j+1] != '"')
+					{
 						temp[index++] = '\v';
+					}
 					else
 						continue;
 				}
@@ -706,7 +709,10 @@ void ScintillaEditView::setUserLexer(const TCHAR *userLangName)
 					if (keyWords_char[j] != ' ')
 						temp[index++] = keyWords_char[j];
 					else if (keyWords_char[j+1] != '\'')
+					{
 						temp[index++] = '\b';
+					}
+
 					else
 						continue;
 				}
@@ -717,10 +723,8 @@ void ScintillaEditView::setUserLexer(const TCHAR *userLangName)
 
 			}
 			temp[index++] = 0;
-			execute(SCI_SETKEYWORDS, i, reinterpret_cast<LPARAM>(temp));
+			execute(SCI_SETKEYWORDS, setKeywordsCounter++, reinterpret_cast<LPARAM>(temp));
 		}
-		//else
-		//	execute(SCI_SETKEYWORDS, i, reinterpret_cast<LPARAM>(keyWords_char));
 	}
 
 	char nestingBuffer[] = "userDefine.nesting.00";
