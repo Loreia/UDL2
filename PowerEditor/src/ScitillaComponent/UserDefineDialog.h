@@ -96,7 +96,7 @@ const TCHAR keywordListMapper[SCE_USER_KWLIST_TOTAL][32] = {
 };
 
 const TCHAR styleNameMapper[SCE_USER_STYLE_TOTAL_STYLES][32] = { 
-	TEXT("DEFAULT"),				    // 0   SCE_USER_STYLE_DEFAULT                             
+	TEXT("DEFAULT"),				    // 0   SCE_USER_STYLE_IDENTIFIER                             
 	TEXT("COMMENTS"),                   // 1   SCE_USER_STYLE_COMMENT                             
 	TEXT("LINE COMMENTS"),              // 2   SCE_USER_STYLE_COMMENTLINE                         
 	TEXT("NUMBERS"),                    // 3   SCE_USER_STYLE_NUMBER                              

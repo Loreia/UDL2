@@ -10,10 +10,10 @@
         <!-- 2 positions : "horizontal" or "vertical"-->
         <GUIConfig name="ScintillaViewsSplitter">vertical</GUIConfig>
         <!-- For the attribut of position, 2 status : docked or undocked ; 2 status : "show" or "hide" -->
-        <GUIConfig name="UserDefineDlg" position="undocked">hide</GUIConfig>
+        <GUIConfig name="UserDefineDlg" position="docked">show</GUIConfig>
         <GUIConfig name="TabSetting" size="4" replaceBySpace="yes" />
         <!--App position-->
-        <GUIConfig name="AppPosition" x="129" y="0" width="1135" height="738" isMaximized="no" />
+        <GUIConfig name="AppPosition" x="129" y="0" width="1135" height="738" isMaximized="yes" />
         <!-- For the primary scintilla view,
              2 status for Attribut lineNumberMargin, bookMarkMargin, indentGuideLine and currentLineHilitingShow: "show" or "hide"
              4 status for Attribut folderMarkStyle : "simple", "arrow", "circle" and "box"  -->
@@ -115,13 +115,5 @@
         <Replace name="foldVector" />
         <Replace name="sc, styler, prefixes," />
     </FindHistory>
-    <History nbMaxFile="10" inSubMenu="no" customLength="-1">
-        <File filename="C:\Users\eivarad\Desktop\Legacy_Suit_SIP_All.cpp" />
-        <File filename="C:\Users\eivarad\Desktop\Legacy_Suit_SIP_All2.cpp" />
-        <File filename="Z:\web2py\applications\sqr\databases\c8b669d15150d7109e5f7ab36744a5b7_auth_cas.table" />
-        <File filename="Z:\web2py\applications\rqs\databases\c8b669d15150d7109e5f7ab36744a5b7_auth_event.table" />
-        <File filename="Z:\web2py\applications\rqs\databases\c8b669d15150d7109e5f7ab36744a5b7_auth_cas.table" />
-        <File filename="Z:\web2py\applications\sqr\databases\c8b669d15150d7109e5f7ab36744a5b7_auth_event.table" />
-        <File filename="C:\1\code\cpp\UDL24\LexUser.cxx" />
-    </History>
+    <History nbMaxFile="10" inSubMenu="no" customLength="-1" />
 </NotepadPlus>

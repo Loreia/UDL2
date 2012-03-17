@@ -235,7 +235,17 @@ BOOL CALLBACK KeyWordsStyleDialog::run_dlgProc(UINT Message, WPARAM wParam, LPAR
             switch (wParam)
             {
                 case IDC_KEYWORD1_PREFIX_CHECK :
-                    return setPropertyByCheck(_hSelf, wParam, _pUserLang->_isPrefix[0]);
+					{	
+					//HFONT hFont=CreateFont(18,0,0,0,FW_DONTCARE,FALSE,FALSE,FALSE,DEFAULT_CHARSET,OUT_OUTLINE_PRECIS,
+     //               CLIP_DEFAULT_PRECIS,ANTIALIASED_QUALITY, VARIABLE_PITCH,TEXT("Courier New"));
+
+					//SendMessage(GetDlgItem(_hSelf, IDC_KEYWORD1_DESCGROUP_STATIC/*IDC_KEYWORD1_EDIT*/),             // Handle of edit control
+     //               WM_SETFONT,         // Message to change the font
+     //               (WPARAM) hFont,     // handle of the font
+     //               MAKELPARAM(TRUE, 0) // Redraw text
+     //               );
+						return setPropertyByCheck(_hSelf, wParam, _pUserLang->_isPrefix[0]);
+					}
 
                 case IDC_KEYWORD2_PREFIX_CHECK :
                     return setPropertyByCheck(_hSelf, wParam, _pUserLang->_isPrefix[1]);
@@ -365,6 +375,15 @@ BOOL CALLBACK CommentStyleDialog::run_dlgProc(UINT Message, WPARAM wParam, LPARA
             {
                 case IDC_FOLDING_OF_COMMENTS :
                 {
+					//HFONT hFont=CreateFont(28,0,0,0,FW_DONTCARE,FALSE,FALSE,FALSE,DEFAULT_CHARSET,OUT_OUTLINE_PRECIS,
+     //               CLIP_DEFAULT_PRECIS,ANTIALIASED_QUALITY, VARIABLE_PITCH,TEXT("Courier New"));
+
+					//SendMessage(GetDlgItem(_hSelf, IDC_KEYWORD1_DESCGROUP_STATIC/*IDC_COMMENTLINE_OPEN_EDIT*/),             // Handle of edit control
+     //               WM_SETFONT,         // Message to change the font
+     //               (WPARAM) hFont,     // handle of the font
+     //               MAKELPARAM(TRUE, 0) // Redraw text
+     //               );
+
                     return setPropertyByCheck(_hSelf, wParam, _pUserLang->_allowFoldOfComments);
                 }
 
@@ -858,7 +877,8 @@ UserDefineDialog::UserDefineDialog(): SharedParametersDialog(), _status(UNDOCK),
 {
     _pCurrentUserLang = new UserLangContainer();
 
-	_pCurrentUserLang->_styleArray.addStyler(SCE_USER_STYLE_DEFAULT,              styleNameMapper[SCE_USER_STYLE_DEFAULT]);
+	//_pCurrentUserLang->_styleArray.addStyler(SCE_USER_STYLE_DEFAULT,              styleNameMapper[SCE_USER_STYLE_DEFAULT]);
+	_pCurrentUserLang->_styleArray.addStyler(SCE_USER_STYLE_IDENTIFIER,           styleNameMapper[SCE_USER_STYLE_IDENTIFIER]);
     _pCurrentUserLang->_styleArray.addStyler(SCE_USER_STYLE_COMMENT,              styleNameMapper[SCE_USER_STYLE_COMMENT]);
     _pCurrentUserLang->_styleArray.addStyler(SCE_USER_STYLE_COMMENTLINE,          styleNameMapper[SCE_USER_STYLE_COMMENTLINE]);
     _pCurrentUserLang->_styleArray.addStyler(SCE_USER_STYLE_NUMBER,               styleNameMapper[SCE_USER_STYLE_NUMBER]);
@@ -1467,13 +1487,18 @@ BOOL CALLBACK StylerDlg::dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
     {
         case WM_INITDIALOG :
         {
-            // TODO: move dialog over UDL GUI (position 0,0 of UDL window) so it wouldn't cover the code 
-            
             ::SetProp(hwnd, TEXT("Styler dialog prop"), (HANDLE)lParam);
 			dlg = (StylerDlg *)::GetProp(hwnd, TEXT("Styler dialog prop"));
             Style & style = SharedParametersDialog::_pUserLang->_styleArray.getStyler(dlg->stylerIndex);
 
-            ::SendDlgItemMessage(hwnd, IDC_STYLER_CHECK_UNDERLINE, BM_SETCHECK, style._fontStyle & FONTSTYLE_UNDERLINE, 0);
+            // move dialog over UDL GUI (position 0,0 of UDL window) so it wouldn't cover the code 
+			RECT wrc;
+			::GetWindowRect(dlg->parent, &wrc);
+			wrc.left = wrc.left < 0 ? 200 : wrc.left;	// if outside of visible area
+			wrc.top = wrc.top < 0 ? 200 : wrc.top;
+			::SetWindowPos(hwnd, HWND_TOP, wrc.left, wrc.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+			
+			::SendDlgItemMessage(hwnd, IDC_STYLER_CHECK_UNDERLINE, BM_SETCHECK, style._fontStyle & FONTSTYLE_UNDERLINE, 0);
             ::SendDlgItemMessage(hwnd, IDC_STYLER_CHECK_ITALIC,    BM_SETCHECK, style._fontStyle & FONTSTYLE_ITALIC, 0);
             ::SendDlgItemMessage(hwnd, IDC_STYLER_CHECK_BOLD,      BM_SETCHECK, style._fontStyle & FONTSTYLE_BOLD, 0);
 

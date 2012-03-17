@@ -1347,11 +1347,11 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 if (isWhiteSpace(sc.ch) && !isWhiteSpace(sc.chPrev))    // quick replacement for SCE_USER_STYLE_IDENTIFIER
                 {
                     setBackwards(kwLists, sc, prefixes, ignoreCase, delimNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
-                    sc.SetState(sc.state);
+					sc.SetState(prevState);
                 }
                 else if (!isWhiteSpace(sc.ch) && isWhiteSpace(sc.chPrev))   // create new 'compare point'
                 {
-                    sc.SetState(sc.state);
+                    sc.SetState(prevState);
                 }
 
                 // third, check nested delimiter sequence

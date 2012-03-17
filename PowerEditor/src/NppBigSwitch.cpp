@@ -1243,11 +1243,14 @@ LRESULT Notepad_plus::process(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPa
 
 		case WM_NOTIFY:
 		{
-			// checkClipboard();
-			// checkUndoState();
-			// checkMacroState();
-			_pluginsManager.notify(reinterpret_cast<SCNotification *>(lParam));
-			return notify(reinterpret_cast<SCNotification *>(lParam));
+			SCNotification *notification = reinterpret_cast<SCNotification *>(lParam);
+			if (notification->nmhdr.code == SCN_UPDATEUI)
+			{
+					checkClipboard(); //6
+					checkUndoState(); //4
+			}
+			_pluginsManager.notify(notification);
+			return notify(notification);
 		}
 
 		case NPPM_INTERNAL_CHECKDOCSTATUS :

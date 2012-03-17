@@ -1,24 +1,19 @@
 Changes in this commit.
 
 Features:
-1. UDL 2.0 now supports any number of folding points per line.
-2. UDL 2.0 now rearranges WordList entries so longer multi part keywords are positioned before similar shorter keywords.
-e.g. "else if" will be positioned before (and thus processed before) "else"
+1. UDL GUI is now slimmer, leaving more space for code.
+2. Styler dialog now opens over UDL GUI (it does not cover code like before).
 
 Bug fix:
-1. GUI wan not responsive when new keywords were entered. All four tabs in UDL GUI were updated to process notofication mesagees when user enters new keywords.
+1. Keywords embeded in Delimiter were not recognized correctly.
+2. Default text was not updated when styler was changed.
 
 Performance optimization:
-case WM_NOTIFY: in NppBigSwitch.cpp is updated to remove three functions:
-// checkClipboard();
-// checkUndoState();
-// checkMacroState();
-This is a temporary solution, and it will be adjusted to solution in main CPP branch prior to finalization of UDL 2.0
+case WM_NOTIFY: in NppBigSwitch.cpp is now updated to follow Don's code in main branch.
 
 Things left to do:
-1. Finish GUI by making it slimmer, and reposition element on first tab (Fold & default)
-2. Continue with code optimizations.
-3. In the long run, C++ STD stuff (vectors and strings) should be replaced with similar C constructs (maybe a WordList2 class?) to squize more performance out of UDL.
+1. Continue with code optimizations.
+2. In the long run, C++ STD stuff (vectors and strings) should be replaced with similar C constructs (maybe a WordList2 class?) to squize more performance out of UDL.
 
 Beta release date:
 1. When GUI is finalized, UDL 2.0 will be labeled Beta1 and it will enter testing phase.
