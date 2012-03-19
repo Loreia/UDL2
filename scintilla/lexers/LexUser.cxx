@@ -967,6 +967,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
     forwards.push_back(*FWS.Set(&delim8Open,        SCE_USER_STYLE_DELIMITER8,      SCE_USER_MASK_NESTING_DELIMITER8));
     forwards.push_back(*FWS.Set(&commentOpen,       SCE_USER_STYLE_COMMENT,         SCE_USER_MASK_NESTING_COMMENT));
     forwards.push_back(*FWS.Set(&commentLineOpen,   SCE_USER_STYLE_COMMENTLINE,     SCE_USER_MASK_NESTING_COMMENT_LINE));
+	forwards.push_back(*FWS.Set(&operators1,        SCE_USER_STYLE_OPERATOR,        SCE_USER_MASK_NESTING_OPERATORS1));
 
     vvstring * delimStart[SCE_USER_TOTAL_DELIMITERS];
     delimStart[0] = &delim1Open;
@@ -1329,7 +1330,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                         nestedVector.push_back(*NI.Set(sc.currentPos + iter->length() - 1, nestedLevel--, openIndex, sc.state, NI_CLOSE));
 
                         setBackwards(kwLists, sc, prefixes, ignoreCase, delimNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
-                        sc.SetState(sc.state);
+                        sc.SetState(prevState);
                         readLastNested(lastNestedGroup, newState, openIndex);
                         if (newState != SCE_USER_STYLE_COMMENTLINE || (sc.ch != '\r' && sc.ch != '\n')) // for delimiters that end with ((EOL))
                             sc.Forward(iter->length());
@@ -1359,12 +1360,17 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 {
                     setBackwards(kwLists, sc, prefixes, ignoreCase, delimNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
 
-                    nestedVector.push_back(*NI.Set(sc.currentPos, ++nestedLevel, openIndex, newState, NI_OPEN));
-                    lastNestedGroup.push_back(NI);
+					if (newState != SCE_USER_STYLE_OPERATOR)
+					{
+						nestedVector.push_back(*NI.Set(sc.currentPos, ++nestedLevel, openIndex, newState, NI_OPEN));
+						lastNestedGroup.push_back(NI);
+					}
 
                     sc.SetState(newState);
                     sc.Forward(skipForward);
                     sc.SetState(newState);
+					if (newState == SCE_USER_STYLE_OPERATOR)
+						sc.ChangeState(prevState);
                     dontMove = true;
                     break;
                 }
@@ -1413,12 +1419,17 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 {
                     setBackwards(kwLists, sc, prefixes, ignoreCase, commentNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
 
-                    nestedVector.push_back(*NI.Set(sc.currentPos, ++nestedLevel, openIndex, newState, NI_OPEN));
-                    lastNestedGroup.push_back(NI);
+					if (newState != SCE_USER_STYLE_OPERATOR)
+					{
+						nestedVector.push_back(*NI.Set(sc.currentPos, ++nestedLevel, openIndex, newState, NI_OPEN));
+						lastNestedGroup.push_back(NI);
+					}
 
                     sc.SetState(newState);
                     sc.Forward(skipForward);
-                    sc.SetState(newState);
+					sc.SetState(newState);
+					if (newState == SCE_USER_STYLE_OPERATOR)
+						sc.ChangeState(prevState);
                     dontMove = true;
                     break;
                 }
@@ -1524,12 +1535,17 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 {
                     setBackwards(kwLists, sc, prefixes, ignoreCase, lineCommentNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
 
-                    nestedVector.push_back(*NI.Set(sc.currentPos, ++nestedLevel, openIndex, newState, NI_OPEN));
-                    lastNestedGroup.push_back(NI);
+					if (newState != SCE_USER_STYLE_OPERATOR)
+					{					
+						nestedVector.push_back(*NI.Set(sc.currentPos, ++nestedLevel, openIndex, newState, NI_OPEN));
+						lastNestedGroup.push_back(NI);
+					}
 
                     sc.SetState(newState);
                     sc.Forward(skipForward);
-                    sc.SetState(newState);
+					sc.SetState(newState);
+					if (newState == SCE_USER_STYLE_OPERATOR)
+						sc.ChangeState(prevState);
                     dontMove = true;
                     break;
                 }

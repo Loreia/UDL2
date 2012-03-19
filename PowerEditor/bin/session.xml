@@ -1,12 +1,13 @@
 <NotepadPlus>
     <Session activeView="0">
-        <mainView activeIndex="6">
+        <mainView activeIndex="5">
             <File firstVisibleLine="1253" xOffset="0" scrollWidth="1304" startPos="44201" endPos="44201" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL2\scintilla\lexers\LexUser.cxx" />
-            <File firstVisibleLine="837" xOffset="50" scrollWidth="1465" startPos="31219" endPos="31226" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx" />
+            <File firstVisibleLine="1170" xOffset="0" scrollWidth="1465" startPos="45878" endPos="45878" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx" />
             <File firstVisibleLine="203" xOffset="0" scrollWidth="1048" startPos="32855" endPos="32855" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexCPP.cxx" />
             <File firstVisibleLine="255" xOffset="0" scrollWidth="920" startPos="7490" endPos="7490" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\src\Document.h" />
             <File firstVisibleLine="0" xOffset="0" scrollWidth="1256" startPos="198" endPos="198" selMode="0" lang="ttcnv3" encoding="-1" filename="C:\Users\eivarad\Desktop\SIP_State_Machine.ttcn" />
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="48" startPos="6" endPos="6" selMode="0" lang="User-Defined" encoding="-1" filename="C:\Users\eivarad\Desktop\q_test.txt" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="656" startPos="1732" endPos="1732" selMode="0" lang="04__OPERATORS1" encoding="-1" filename="C:\Users\eivarad\Desktop\04__OPERATORS1.less" />
+            <File firstVisibleLine="0" xOffset="96" scrollWidth="1137" startPos="180" endPos="180" selMode="0" lang="XML" encoding="-1" filename="C:\Users\eivarad\Desktop\userDefineLang__04__OPERATORS1.xml" />
         </mainView>
         <subView activeIndex="0" />
     </Session>
