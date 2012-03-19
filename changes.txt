@@ -1,15 +1,10 @@
 Changes in this commit.
 
 Features:
-1. UDL GUI is now slimmer, leaving more space for code.
-2. Styler dialog now opens over UDL GUI (it does not cover code like before).
+1. Syler dialog now displays options to nest Operators1 and Operators2 
 
 Bug fix:
-1. Keywords embeded in Delimiter were not recognized correctly.
-2. Default text was not updated when styler was changed.
-
-Performance optimization:
-case WM_NOTIFY: in NppBigSwitch.cpp is now updated to follow Don's code in main branch.
+1. Operators2 was supported in nesting operations, but there was no option in Syler dialog to select Operators2.
 
 Things left to do:
 1. Continue with code optimizations.
