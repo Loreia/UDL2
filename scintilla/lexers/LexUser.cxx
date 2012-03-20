@@ -171,13 +171,13 @@ static inline int isADigit(StyleContext & sc, bool ignoreCase, vector<string> & 
     {
         iter = extrasInPrefixedTokens.begin();
         for (; iter != extrasInPrefixedTokens.end(); ++iter)
-        if (ignoreCase ? sc.MatchIgnoreCase(iter->c_str()) : sc.Match(iter->c_str()))
+        if (ignoreCase ? sc.MatchIgnoreCase2(iter->c_str()) : sc.Match(iter->c_str()))
             return NUMBER_EXTRA_CHAR;
     }
 
     iter = extraCharTokens.begin();
     for (; iter != extraCharTokens.end(); ++iter)
-        if (ignoreCase ? sc.MatchIgnoreCase(iter->c_str()) : sc.Match(iter->c_str()))
+        if (ignoreCase ? sc.MatchIgnoreCase2(iter->c_str()) : sc.Match(iter->c_str()))
             return NUMBER_RANGE_CHAR;
 
     return NUMBER_NOT_A_NUMBER;
@@ -518,7 +518,7 @@ static bool isInListForward(vvstring & openVector, StyleContext & sc, bool ignor
         iter2 = iter1->begin();
         for (; iter2 != iter1->end(); ++iter2)
         {
-            if (ignoreCase?sc.MatchIgnoreCase(iter2->c_str()):sc.Match(iter2->c_str()))
+            if (ignoreCase?sc.MatchIgnoreCase2(iter2->c_str()):sc.Match(iter2->c_str()))
             {
                 openIndex = iter1 - openVector.begin();
                 skipForward = iter2->length();
@@ -539,7 +539,20 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
     moveForward = 0;
     int offset = -1 * sc.LengthCurrent();
     unsigned char firstChar = sc.GetRelative(offset);
-    int i = list.starts[firstChar];
+	int i = list.starts[firstChar];
+	bool doUpperLoop = true;
+	if (ignoreCase)
+	{
+		i = list.starts[tolower(firstChar)];
+		if (i == -1)
+		{
+			i = list.starts[toupper(firstChar)];
+			if (i == -1)
+				return false;
+
+			doUpperLoop = false;
+		}
+	}
     int a = 0;
     int b = 0;
     int bNext = 0;
@@ -548,7 +561,7 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
     char wsChar = 0;
     int nlCountTemp = 0;
 
-    if (i >= 0)
+    while (i >= 0)
     {
         while ((ignoreCase?toupper(list.words[i][0]):list.words[i][0]) == (ignoreCase?toupper(firstChar):firstChar))
         {
@@ -623,6 +636,13 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
             nlCountTemp = 0;
             ++i;
         }
+        if (doUpperLoop)
+		{
+            i = list.starts[toupper(firstChar)];
+			doUpperLoop = false;
+		}
+		else
+			break;
     }
 
     return false;
@@ -1275,7 +1295,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                     {
                         if (ignoreCase)
                         {
-                            if (sc.MatchIgnoreCase(iter->c_str()))
+                            if (sc.MatchIgnoreCase2(iter->c_str()))
                                 break;
                         }
                         else if (sc.Match(iter->c_str()))
@@ -1314,7 +1334,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 vector<string>::iterator iter = (*delimEscape)[openIndex].begin();
                 for (; iter != (*delimEscape)[openIndex].end(); ++iter)
                 {
-                    if (ignoreCase?sc.MatchIgnoreCase(iter->c_str()):sc.Match(iter->c_str()))
+                    if (ignoreCase?sc.MatchIgnoreCase2(iter->c_str()):sc.Match(iter->c_str()))
                     {
                         sc.Forward(iter->length() + 1); // escape is found, skip escape string and one char after it.
                         break;
@@ -1325,7 +1345,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 iter = (*delimClose)[openIndex].begin();
                 for (; iter != (*delimClose)[openIndex].end(); ++iter)
                 {
-                    if (ignoreCase ? sc.MatchIgnoreCase(iter->c_str()):sc.Match(iter->c_str()))
+                    if (ignoreCase ? sc.MatchIgnoreCase2(iter->c_str()):sc.Match(iter->c_str()))
                     {
                         nestedVector.push_back(*NI.Set(sc.currentPos + iter->length() - 1, nestedLevel--, openIndex, sc.state, NI_CLOSE));
 
@@ -1383,7 +1403,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 vector<string>::iterator iter = commentClose[openIndex].begin();
                 for (; iter != commentClose[openIndex].end(); ++iter)
                 {
-                    if (ignoreCase?sc.MatchIgnoreCase(iter->c_str()):sc.Match(iter->c_str()))
+                    if (ignoreCase?sc.MatchIgnoreCase2(iter->c_str()):sc.Match(iter->c_str()))
                     {
                         nestedVector.push_back(*NI.Set(sc.currentPos + iter->length() - 1, nestedLevel--, openIndex, SCE_USER_STYLE_COMMENT, NI_CLOSE));
 
@@ -1442,7 +1462,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 vector<string>::iterator iter = commentLineClose[openIndex].begin();
                 for (; iter != commentLineClose[openIndex].end(); ++iter)
                 {
-                    if (ignoreCase?sc.MatchIgnoreCase(iter->c_str()):sc.Match(iter->c_str()))
+                    if (ignoreCase?sc.MatchIgnoreCase2(iter->c_str()):sc.Match(iter->c_str()))
                     {
                         nestedVector.push_back(*NI.Set(sc.currentPos + iter->length() - 1, nestedLevel--, openIndex, SCE_USER_STYLE_COMMENTLINE, NI_CLOSE));
 
@@ -1712,7 +1732,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 }
                 for (; iter != last; ++iter)
                 {
-                    if (ignoreCase ? sc.MatchIgnoreCase(iter->c_str()) : sc.Match(iter->c_str()))
+                    if (ignoreCase?sc.MatchIgnoreCase2(iter->c_str()) : sc.Match(iter->c_str()))
                         break;
                 }
                 if (iter != last)

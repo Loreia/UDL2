@@ -158,6 +158,23 @@ public:
 		}
 		return true;
 	}
+	bool MatchIgnoreCase2(const char *s) {
+		if (MakeLowerCase(ch) != MakeLowerCase(static_cast<unsigned char>(*s)))
+			return false;
+		s++;
+		if (!*s)
+			return true;
+		if (MakeLowerCase(chNext) != MakeLowerCase(static_cast<unsigned char>(*s)))
+			return false;
+		s++;
+		for (int n=2; *s; n++) {
+			if (MakeLowerCase(static_cast<unsigned char>(*s)) !=
+				MakeLowerCase(static_cast<unsigned char>(styler.SafeGetCharAt(currentPos+n))))
+				return false;
+			s++;
+		}
+		return true;
+	}
 	// Non-inline
 	void GetCurrent(char *s, unsigned int len);
 	void GetCurrentLowered(char *s, unsigned int len);

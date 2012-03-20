@@ -1,10 +1,10 @@
 Changes in this commit.
 
 Features:
-1. Syler dialog now displays options to nest Operators1 and Operators2 
+- none
 
 Bug fix:
-1. Operators2 was supported in nesting operations, but there was no option in Syler dialog to select Operators2.
+1. Ignore case option was not working. Added function "MatchIgnoreCase2" in class "StyleContext".
 
 Things left to do:
 1. Continue with code optimizations.
