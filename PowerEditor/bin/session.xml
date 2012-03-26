@@ -1,12 +1,12 @@
 <NotepadPlus>
     <Session activeView="0">
         <mainView activeIndex="13">
-            <File firstVisibleLine="59" xOffset="0" scrollWidth="1072" startPos="1862" endPos="1862" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL2\scintilla\lexers\LexUser.cxx" />
-            <File firstVisibleLine="1333" xOffset="0" scrollWidth="1280" startPos="51887" endPos="51887" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx" />
+            <File firstVisibleLine="443" xOffset="0" scrollWidth="1216" startPos="12040" endPos="12040" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL2\scintilla\lexers\LexUser.cxx" />
+            <File firstVisibleLine="1865" xOffset="0" scrollWidth="1280" startPos="74123" endPos="74128" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx" />
             <File firstVisibleLine="60" xOffset="0" scrollWidth="1048" startPos="1862" endPos="1862" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexCPP.cxx" />
             <File firstVisibleLine="65" xOffset="0" scrollWidth="920" startPos="1862" endPos="1862" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\src\Document.h" />
             <File firstVisibleLine="44" xOffset="0" scrollWidth="1256" startPos="1862" endPos="1862" selMode="0" lang="ttcnv3" encoding="-1" filename="C:\Users\eivarad\Desktop\SIP_State_Machine.ttcn" />
-            <File firstVisibleLine="29" xOffset="0" scrollWidth="600" startPos="1862" endPos="1862" selMode="0" lang="04__OPERATORS1" encoding="-1" filename="C:\Users\eivarad\Desktop\04__OPERATORS1.less" />
+            <File firstVisibleLine="29" xOffset="0" scrollWidth="600" startPos="1862" endPos="1862" selMode="0" lang="User-Defined" encoding="-1" filename="C:\Users\eivarad\Desktop\04__OPERATORS1.less" />
             <File firstVisibleLine="31" xOffset="0" scrollWidth="5912" startPos="5491" endPos="5491" selMode="0" lang="XML" encoding="-1" filename="C:\Users\eivarad\Desktop\userDefineLang__04__OPERATORS1.xml" />
             <File firstVisibleLine="294" xOffset="0" scrollWidth="1594" startPos="8363" endPos="8363" selMode="0" lang="ttcnv3" encoding="-1" filename="C:\Users\eivarad\Desktop\tempp.ttcn" />
             <File firstVisibleLine="296" xOffset="0" scrollWidth="1496" startPos="8363" endPos="8363" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\FindReplaceDlg.cpp" />
@@ -14,6 +14,7 @@
             <File firstVisibleLine="12" xOffset="0" scrollWidth="872" startPos="645" endPos="645" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\numbers_case_study.cpp" />
             <File firstVisibleLine="237" xOffset="0" scrollWidth="11616" startPos="23064" endPos="23083" selMode="0" lang="XML" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\userDefineLang.xml" />
             <File firstVisibleLine="128" xOffset="0" scrollWidth="736" startPos="9109" endPos="9109" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\UserDefineResource.h" />
+            <File firstVisibleLine="15" xOffset="0" scrollWidth="560" startPos="535" endPos="535" selMode="0" lang="05__NUMBERS" encoding="-1" filename="C:\Users\eivarad\AppData\Local\Temp\Rar$DR59.008\05__NUMBERS.less" />
         </mainView>
         <subView activeIndex="0" />
     </Session>

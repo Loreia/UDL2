@@ -714,7 +714,8 @@ static bool isInListNested(int nestedKey, vector<forwardStruct> & forwards, Styl
     {
         if (nestedKey & iter->maskID)
         {
-			if (iter->maskID == SCE_USER_MASK_NESTING_COMMENT_LINE && !(lineCommentAtBOL && !sc.atLineStart))
+			if ((iter->maskID != SCE_USER_MASK_NESTING_COMMENT_LINE) ||
+			    (iter->maskID == SCE_USER_MASK_NESTING_COMMENT_LINE && !(lineCommentAtBOL && !sc.atLineStart)))
 			{
 				if (isInListForward(*(iter->vec), sc, ignoreCase, openIndex, skipForward))
 				{
@@ -1093,7 +1094,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
     delimVectors[15] = &delim8Close;
 
     int delimNestings[SCE_USER_TOTAL_DELIMITERS];
-    delimNestings[0] = delim1Nesting | SCE_USER_MASK_NESTING_NUMBERS;
+    delimNestings[0] = delim1Nesting;
     delimNestings[1] = delim2Nesting;
     delimNestings[2] = delim3Nesting;
     delimNestings[3] = delim4Nesting;
@@ -1383,6 +1384,14 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                     hasPrefix = false;
                     break;
                 }
+
+				if (sc.chNext == '\r' || sc.chNext == '\n')
+				{
+					sc.Forward();
+					sc.SetState(numberParentState);
+					dontMove = true;
+				}
+
                 break;
             }
 
@@ -1445,10 +1454,13 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 else if (!isWhiteSpace(sc.ch) && isWhiteSpace(sc.chPrev))   // create new 'compare point'
                 {
                     sc.SetState(prevState);
-                    if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
-                    {
-                        numberParentState = prevState;
-                        break;
+                    if (delimNesting & SCE_USER_MASK_NESTING_NUMBERS)
+					{
+						if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
+						{
+							numberParentState = prevState;
+							break;
+						}
                     }                    
                 }
 
@@ -1469,11 +1481,20 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
 					if (newState == SCE_USER_STYLE_OPERATOR)
 					{
 						sc.ChangeState(prevState);
-						if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
+
+						if (delimNesting & SCE_USER_MASK_NESTING_NUMBERS)
 						{
-							numberParentState = prevState;
-							break;
-						} 
+							if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
+							{
+								numberParentState = prevState;
+								break;
+							}
+						}
+						//if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
+						//{
+						//	numberParentState = prevState;
+						//	break;
+						//} 
 					}
                     dontMove = true;
                     break;
@@ -1516,11 +1537,20 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 else if (!isWhiteSpace(sc.ch) && isWhiteSpace(sc.chPrev))   // create new 'compare point'
                 {
                     sc.SetState(SCE_USER_STYLE_COMMENT);
-					if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
+					if (delimNesting & SCE_USER_MASK_NESTING_NUMBERS)
 					{
-						numberParentState = SCE_USER_STYLE_COMMENT;
-						break;
-					} 
+						if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
+						{
+							numberParentState = SCE_USER_STYLE_COMMENT;
+							break;
+						}
+					}
+						
+					//	if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
+					//{
+					//	numberParentState = SCE_USER_STYLE_COMMENT;
+					//	break;
+					//} 
                 }
 
                 // third, check nested delimiter sequence
@@ -1540,11 +1570,14 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
 					if (newState == SCE_USER_STYLE_OPERATOR)
 					{
 						sc.ChangeState(prevState);
-						if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
+						if (delimNesting & SCE_USER_MASK_NESTING_NUMBERS)
 						{
-							numberParentState = SCE_USER_STYLE_COMMENT;
-							break;
-						} 
+							if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
+							{
+								numberParentState = SCE_USER_STYLE_COMMENT;
+								break;
+							}
+						}
 					}
                     dontMove = true;
                     break;
@@ -1584,11 +1617,14 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 else if (!isWhiteSpace(sc.ch) && isWhiteSpace(sc.chPrev))   // create new 'compare point'
                 {
                     sc.SetState(SCE_USER_STYLE_COMMENTLINE);
-					if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
+					if (delimNesting & SCE_USER_MASK_NESTING_NUMBERS)
 					{
-						numberParentState = SCE_USER_STYLE_COMMENTLINE;
-						break;
-					} 
+						if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
+						{
+							numberParentState = SCE_USER_STYLE_COMMENTLINE;
+							break;
+						}
+					}
                 }
 
                 // second, check line comment continuation
@@ -1668,10 +1704,13 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
 					if (newState == SCE_USER_STYLE_OPERATOR)
 					{
 						sc.ChangeState(prevState);
-						if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
+						if (delimNesting & SCE_USER_MASK_NESTING_NUMBERS)
 						{
-							numberParentState = SCE_USER_STYLE_COMMENTLINE;
-							break;
+							if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
+							{
+								numberParentState = SCE_USER_STYLE_COMMENTLINE;
+								break;
+							}
 						}
 					}
                     dontMove = true;
@@ -1855,8 +1894,6 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
     }
     sc.Complete();
 }
-
-// SCE_USER_MASK_NESTING_NUMBERS
 
 static void FoldUserDoc(unsigned int startPos, int /* length */, int /*initStyle*/, WordList *[],  Accessor & styler)
 {
