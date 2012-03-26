@@ -1,17 +1,18 @@
 Changes in this commit.
 
 Features:
-- none
+1. Added "Force line comments to start at BOL" feature
+2. Now numbers can be nested as well.
 
 Bug fix:
-1. Ignore case option was not working. Added function "MatchIgnoreCase2" in class "StyleContext".
+1. Minor adjustments in detection of numbers.
 
 Things left to do:
 1. Continue with code optimizations.
 2. In the long run, C++ STD stuff (vectors and strings) should be replaced with similar C constructs (maybe a WordList2 class?) to squize more performance out of UDL.
 
 Beta release date:
-1. When GUI is finalized, UDL 2.0 will be labeled Beta1 and it will enter testing phase.
+1. This version will be released as beta 1.
 
 BR
 Loreia

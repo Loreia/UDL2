@@ -2505,6 +2505,10 @@ void NppParameters::feedUserSettings(TiXmlNode *settingsRoot)
 		boolStr = (globalSettingNode->ToElement())->Attribute(TEXT("allowFoldOfComments"));
 		if (boolStr)
             _userLangArray[_nbUserLang - 1]->_allowFoldOfComments = !lstrcmp(TEXT("yes"), boolStr);
+
+		boolStr = (globalSettingNode->ToElement())->Attribute(TEXT("forceLineCommentsAtBOL"));
+		if (boolStr)
+            _userLangArray[_nbUserLang - 1]->_forceLineCommentsAtBOL = !lstrcmp(TEXT("yes"), boolStr);
 	}
 
 	TiXmlNode *prefixNode = settingsRoot->FirstChildElement(TEXT("Prefix"));
@@ -5204,6 +5208,7 @@ void NppParameters::insertUserLang2Tree(TiXmlNode *node, UserLangContainer *user
 		TiXmlElement *globalElement = (settingsElement->InsertEndChild(TiXmlElement(TEXT("Global"))))->ToElement();
 		globalElement->SetAttribute(TEXT("caseIgnored"), userLang->_isCaseIgnored?TEXT("yes"):TEXT("no"));
 		globalElement->SetAttribute(TEXT("allowFoldOfComments"), userLang->_allowFoldOfComments?TEXT("yes"):TEXT("no"));
+		globalElement->SetAttribute(TEXT("forceLineCommentsAtBOL"), userLang->_forceLineCommentsAtBOL?TEXT("yes"):TEXT("no"));
 
 		TiXmlElement *prefixElement = (settingsElement->InsertEndChild(TiXmlElement(TEXT("Prefix"))))->ToElement();
 		for (int i = 0 ; i < SCE_USER_TOTAL_KEYWORDS ; i++)

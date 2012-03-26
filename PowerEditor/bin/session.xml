@@ -1,13 +1,19 @@
 <NotepadPlus>
     <Session activeView="0">
-        <mainView activeIndex="7">
-            <File firstVisibleLine="1253" xOffset="0" scrollWidth="1072" startPos="44201" endPos="44201" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL2\scintilla\lexers\LexUser.cxx" />
-            <File firstVisibleLine="613" xOffset="0" scrollWidth="1040" startPos="19335" endPos="19335" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx" />
-            <File firstVisibleLine="203" xOffset="0" scrollWidth="1048" startPos="32855" endPos="32855" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexCPP.cxx" />
-            <File firstVisibleLine="255" xOffset="0" scrollWidth="920" startPos="7490" endPos="7490" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\src\Document.h" />
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="1256" startPos="198" endPos="198" selMode="0" lang="ttcnv3" encoding="-1" filename="C:\Users\eivarad\Desktop\SIP_State_Machine.ttcn" />
-            <File firstVisibleLine="26" xOffset="0" scrollWidth="600" startPos="1862" endPos="1862" selMode="0" lang="04__OPERATORS1" encoding="-1" filename="C:\Users\eivarad\Desktop\04__OPERATORS1.less" />
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="5912" startPos="180" endPos="180" selMode="0" lang="XML" encoding="-1" filename="C:\Users\eivarad\Desktop\userDefineLang__04__OPERATORS1.xml" />
+        <mainView activeIndex="13">
+            <File firstVisibleLine="59" xOffset="0" scrollWidth="1072" startPos="1862" endPos="1862" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL2\scintilla\lexers\LexUser.cxx" />
+            <File firstVisibleLine="1333" xOffset="0" scrollWidth="1280" startPos="51887" endPos="51887" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx" />
+            <File firstVisibleLine="60" xOffset="0" scrollWidth="1048" startPos="1862" endPos="1862" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexCPP.cxx" />
+            <File firstVisibleLine="65" xOffset="0" scrollWidth="920" startPos="1862" endPos="1862" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\src\Document.h" />
+            <File firstVisibleLine="44" xOffset="0" scrollWidth="1256" startPos="1862" endPos="1862" selMode="0" lang="ttcnv3" encoding="-1" filename="C:\Users\eivarad\Desktop\SIP_State_Machine.ttcn" />
+            <File firstVisibleLine="29" xOffset="0" scrollWidth="600" startPos="1862" endPos="1862" selMode="0" lang="04__OPERATORS1" encoding="-1" filename="C:\Users\eivarad\Desktop\04__OPERATORS1.less" />
+            <File firstVisibleLine="31" xOffset="0" scrollWidth="5912" startPos="5491" endPos="5491" selMode="0" lang="XML" encoding="-1" filename="C:\Users\eivarad\Desktop\userDefineLang__04__OPERATORS1.xml" />
+            <File firstVisibleLine="294" xOffset="0" scrollWidth="1594" startPos="8363" endPos="8363" selMode="0" lang="ttcnv3" encoding="-1" filename="C:\Users\eivarad\Desktop\tempp.ttcn" />
+            <File firstVisibleLine="296" xOffset="0" scrollWidth="1496" startPos="8363" endPos="8363" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\FindReplaceDlg.cpp" />
+            <File firstVisibleLine="234" xOffset="0" scrollWidth="1640" startPos="8344" endPos="8363" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\FindReplaceDlg.h" />
+            <File firstVisibleLine="12" xOffset="0" scrollWidth="872" startPos="645" endPos="645" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\numbers_case_study.cpp" />
+            <File firstVisibleLine="237" xOffset="0" scrollWidth="11616" startPos="23064" endPos="23083" selMode="0" lang="XML" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\userDefineLang.xml" />
+            <File firstVisibleLine="128" xOffset="0" scrollWidth="736" startPos="9109" endPos="9109" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\UserDefineResource.h" />
         </mainView>
         <subView activeIndex="0" />
     </Session>

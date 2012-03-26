@@ -387,6 +387,11 @@ BOOL CALLBACK CommentStyleDialog::run_dlgProc(UINT Message, WPARAM wParam, LPARA
                     return setPropertyByCheck(_hSelf, wParam, _pUserLang->_allowFoldOfComments);
                 }
 
+				case IDC_FORCE_LINE_COMMENTS_AT_BOL :
+				{
+                    return setPropertyByCheck(_hSelf, wParam, _pUserLang->_forceLineCommentsAtBOL);
+				}
+
                 case IDC_COMMENTLINE_STYLER :
                 {
                     StylerDlg stylerDlg(_hInst, _hSelf, SCE_USER_STYLE_COMMENTLINE);
@@ -578,10 +583,12 @@ void CommentStyleDialog::updateDlg()
 		::SendDlgItemMessage(_hSelf, list[i], WM_SETTEXT, 0, (LPARAM)buffer);
 	}
 
-    ::SendDlgItemMessage(_hSelf, IDC_FOLDING_OF_COMMENTS,	BM_SETCHECK, _pUserLang->_allowFoldOfComments, 0);
+    ::SendDlgItemMessage(_hSelf, IDC_FOLDING_OF_COMMENTS,			BM_SETCHECK, _pUserLang->_allowFoldOfComments, 0);
+    ::SendDlgItemMessage(_hSelf, IDC_FORCE_LINE_COMMENTS_AT_BOL,	BM_SETCHECK, _pUserLang->_forceLineCommentsAtBOL, 0);
+	
 	::SendDlgItemMessage(_hSelf, IDC_NUMBER_EXTRA_EDIT,		WM_SETTEXT, 0, (LPARAM)(_pUserLang->_keywordLists[SCE_USER_KWLIST_NUMBER_EXTRA]));
 	::SendDlgItemMessage(_hSelf, IDC_NUMBER_PREFIX_EDIT,	WM_SETTEXT, 0, (LPARAM)(_pUserLang->_keywordLists[SCE_USER_KWLIST_NUMBER_PREFIX]));
-	::SendDlgItemMessage(_hSelf, IDC_NUMBER_EXTRAPREF_EDIT, WM_SETTEXT, 0, (LPARAM)(_pUserLang->_keywordLists[SCE_USER_KWLIST_NUMBER_EXTRAPREF]));
+	::SendDlgItemMessage(_hSelf, IDC_NUMBER_EXTRAPREF_EDIT,	WM_SETTEXT, 0, (LPARAM)(_pUserLang->_keywordLists[SCE_USER_KWLIST_NUMBER_EXTRAPREF]));
 	::SendDlgItemMessage(_hSelf, IDC_NUMBER_SUFFIX_EDIT,	WM_SETTEXT, 0, (LPARAM)(_pUserLang->_keywordLists[SCE_USER_KWLIST_NUMBER_SUFFIX]));
 }
 

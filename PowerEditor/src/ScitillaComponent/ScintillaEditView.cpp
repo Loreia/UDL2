@@ -607,6 +607,7 @@ void ScintillaEditView::setUserLexer(const TCHAR *userLangName)
 	execute(SCI_SETPROPERTY, reinterpret_cast<WPARAM>("fold"), reinterpret_cast<LPARAM>("1"));
 	execute(SCI_SETPROPERTY, (WPARAM)"userDefine.isCaseIgnored", (LPARAM)(userLangContainer->_isCaseIgnored?"1":"0"));
 	execute(SCI_SETPROPERTY, (WPARAM)"userDefine.allowFoldOfComments",   (LPARAM)(userLangContainer->_allowFoldOfComments?"1":"0"));
+	execute(SCI_SETPROPERTY, (WPARAM)"userDefine.forceLineCommentsAtBOL",   (LPARAM)(userLangContainer->_forceLineCommentsAtBOL?"1":"0"));
 
 	char name[] = "userDefine.prefixKeywords0";
 	for (int i=0 ; i<SCE_USER_TOTAL_KEYWORDS ; i++)
