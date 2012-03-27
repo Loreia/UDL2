@@ -1,7 +1,7 @@
 <NotepadPlus>
     <Session activeView="0">
-        <mainView activeIndex="10">
-            <File firstVisibleLine="443" xOffset="0" scrollWidth="1216" startPos="12040" endPos="12040" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL2\scintilla\lexers\LexUser.cxx" />
+        <mainView activeIndex="9">
+            <File firstVisibleLine="412" xOffset="0" scrollWidth="1216" startPos="11223" endPos="11223" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL2\scintilla\lexers\LexUser.cxx" />
             <File firstVisibleLine="1865" xOffset="0" scrollWidth="1280" startPos="72826" endPos="72826" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx" />
             <File firstVisibleLine="60" xOffset="0" scrollWidth="1048" startPos="1862" endPos="1862" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexCPP.cxx" />
             <File firstVisibleLine="65" xOffset="0" scrollWidth="920" startPos="1862" endPos="1862" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\src\Document.h" />
@@ -10,7 +10,7 @@
             <File firstVisibleLine="296" xOffset="0" scrollWidth="1496" startPos="8363" endPos="8363" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\FindReplaceDlg.cpp" />
             <File firstVisibleLine="234" xOffset="0" scrollWidth="1640" startPos="8344" endPos="8363" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\FindReplaceDlg.h" />
             <File firstVisibleLine="12" xOffset="0" scrollWidth="872" startPos="645" endPos="645" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\numbers_case_study.cpp" />
-            <File firstVisibleLine="15" xOffset="0" scrollWidth="579" startPos="613" endPos="613" selMode="0" lang="05__NUMBERS" encoding="-1" filename="C:\Users\eivarad\AppData\Local\Temp\Rar$DR59.008\05__NUMBERS.less" />
+            <File firstVisibleLine="15" xOffset="0" scrollWidth="579" startPos="408" endPos="408" selMode="0" lang="05__NUMBERS" encoding="-1" filename="C:\Users\eivarad\AppData\Local\Temp\Rar$DR59.008\05__NUMBERS.less" />
         </mainView>
         <subView activeIndex="0" />
     </Session>
