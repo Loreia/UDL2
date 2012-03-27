@@ -449,7 +449,7 @@ static inline void ReColoringCheck( unsigned int & startPos,
         {
             if (last->state == SCE_USER_STYLE_COMMENT)
             {
-                isInComment = true;
+				isInComment = true;
                 isCommentLine = COMMENTLINE_YES;
             }
             if (last->state == SCE_USER_STYLE_COMMENTLINE)
@@ -1188,93 +1188,97 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
 
         if (sc.atLineEnd)
         {
-            if (levelCurrent != levelNext)
-                isCommentLine = COMMENTLINE_SKIP_TESTING;
-
-            if (continueCommentBlock > 0)
+            if (foldComments)
             {
-                if (continueCommentBlock & CL_PREVPREV)
-                {
-                    isInCommentBlock = true;
-                    isPrevLineComment = COMMENTLINE_YES;
-                    if (continueCommentBlock & CL_CURRENT && isCommentLine == COMMENTLINE_YES )
-                    {
-                        // do nothing, TODO: remove this scope after debugging is done
-                    }
+				if (levelCurrent != levelNext)
+					isCommentLine = COMMENTLINE_SKIP_TESTING;
 
-                    if (continueCommentBlock & CL_CURRENT && isCommentLine != COMMENTLINE_YES)
-                    {
-                        // do nothing, TODO: remove this scope after debugging is done
-                    }
-                    if (!(continueCommentBlock & CL_CURRENT) && isCommentLine == COMMENTLINE_YES)
-                    {
-                        levelNext++;    //TODO: jesu li svi isti?
-                        levelMinCurrent++;
-                        levelCurrent++;
-                        levelPrev = (levelMinCurrent | levelNext << 16) | SC_ISCOMMENTLINE;
-                    }
-                    if (!(continueCommentBlock & CL_CURRENT) && isCommentLine != COMMENTLINE_YES)
-                    {
-                        levelNext++;    //TODO: jesu li svi isti?
-                        levelMinCurrent++;
-                        levelCurrent++;
-                        levelPrev = (levelMinCurrent | levelNext << 16) | SC_ISCOMMENTLINE;
-                    }
-                }
-                else if (continueCommentBlock & CL_PREV)
-                {
-                    isPrevLineComment = COMMENTLINE_YES;
-                    if (continueCommentBlock & CL_CURRENT && isCommentLine == COMMENTLINE_YES)
-                    {
-                        levelMinCurrent--;
-                        levelNext--;
-                        levelCurrent--;
-                        levelPrev = (levelMinCurrent | levelNext << 16) | SC_ISCOMMENTLINE;
-                    }
+				if (continueCommentBlock > 0)
+				{
+					if (continueCommentBlock & CL_PREVPREV)
+					{
+						isInCommentBlock = true;
+						isPrevLineComment = COMMENTLINE_YES;
+						if (continueCommentBlock & CL_CURRENT && isCommentLine == COMMENTLINE_YES )
+						{
+							// do nothing, TODO: remove this scope after debugging is done
+						}
 
-                    if (continueCommentBlock & CL_CURRENT && isCommentLine != COMMENTLINE_YES)
-                    {
-                        levelMinCurrent--;
-                        levelNext--;
-                        levelCurrent--;
-                        levelPrev = (levelMinCurrent | levelNext << 16) | SC_ISCOMMENTLINE;
-                    }
-                    if (!(continueCommentBlock & CL_CURRENT) && isCommentLine == COMMENTLINE_YES)
-                    {
-                        // do nothing, TODO: remove this scope after debugging is done
-                    }
-                    if (!(continueCommentBlock & CL_CURRENT) && isCommentLine != COMMENTLINE_YES)
-                    {
-                        // do nothing, TODO: remove this scope after debugging is done
-                    }
-                }
-                continueCommentBlock = 0;
-            }
+						if (continueCommentBlock & CL_CURRENT && isCommentLine != COMMENTLINE_YES)
+						{
+							// do nothing, TODO: remove this scope after debugging is done
+						}
+						if (!(continueCommentBlock & CL_CURRENT) && isCommentLine == COMMENTLINE_YES)
+						{
+							levelNext++;    //TODO: jesu li svi isti?
+							levelMinCurrent++;
+							levelCurrent++;
+							levelPrev = (levelMinCurrent | levelNext << 16) | SC_ISCOMMENTLINE;
+						}
+						if (!(continueCommentBlock & CL_CURRENT) && isCommentLine != COMMENTLINE_YES)
+						{
+							levelNext++;    //TODO: jesu li svi isti?
+							levelMinCurrent++;
+							levelCurrent++;
+							levelPrev = (levelMinCurrent | levelNext << 16) | SC_ISCOMMENTLINE;
+						}
+					}
+					else if (continueCommentBlock & CL_PREV)
+					{
+						isPrevLineComment = COMMENTLINE_YES;
+						if (continueCommentBlock & CL_CURRENT && isCommentLine == COMMENTLINE_YES)
+						{
+							levelMinCurrent--;
+							levelNext--;
+							levelCurrent--;
+							levelPrev = (levelMinCurrent | levelNext << 16) | SC_ISCOMMENTLINE;
+						}
 
-            if (isInCommentBlock && isCommentLine != COMMENTLINE_YES && isPrevLineComment == COMMENTLINE_YES)
-            {
-                levelNext--;
-                levelPrev = (levelMinCurrent | levelNext << 16) | SC_ISCOMMENTLINE;
-                levelMinCurrent--;
-                isInCommentBlock = false;
-            }
+						if (continueCommentBlock & CL_CURRENT && isCommentLine != COMMENTLINE_YES)
+						{
+							levelMinCurrent--;
+							levelNext--;
+							levelCurrent--;
+							levelPrev = (levelMinCurrent | levelNext << 16) | SC_ISCOMMENTLINE;
+						}
+						if (!(continueCommentBlock & CL_CURRENT) && isCommentLine == COMMENTLINE_YES)
+						{
+							// do nothing, TODO: remove this scope after debugging is done
+						}
+						if (!(continueCommentBlock & CL_CURRENT) && isCommentLine != COMMENTLINE_YES)
+						{
+							// do nothing, TODO: remove this scope after debugging is done
+						}
+					}
+					continueCommentBlock = 0;
+				}
+            
 
-            if (!isInCommentBlock && isCommentLine == COMMENTLINE_YES && isPrevLineComment == COMMENTLINE_YES)
-            {
-                levelNext++;
-                levelPrev = (levelMinCurrent | levelNext << 16) | SC_FOLDLEVELHEADERFLAG | SC_ISCOMMENTLINE;
-                levelMinCurrent = levelNext;
-                isInCommentBlock = true;
-            }
+				if (isInCommentBlock && isCommentLine != COMMENTLINE_YES && isPrevLineComment == COMMENTLINE_YES)
+				{
+					levelNext--;
+					levelPrev = (levelMinCurrent | levelNext << 16) | SC_ISCOMMENTLINE;
+					levelMinCurrent--;
+					isInCommentBlock = false;
+				}
 
-            if (levelPrev != 0)
-            {
-                foldVector[lineCurrent - 1] = levelPrev;
-                levelPrev = 0;
-            }
+				if (!isInCommentBlock && isCommentLine == COMMENTLINE_YES && isPrevLineComment == COMMENTLINE_YES)
+				{
+					levelNext++;
+					levelPrev = (levelMinCurrent | levelNext << 16) | SC_FOLDLEVELHEADERFLAG | SC_ISCOMMENTLINE;
+					levelMinCurrent = levelNext;
+					isInCommentBlock = true;
+				}
+
+				if (levelPrev != 0)
+				{
+					foldVector[lineCurrent - 1] = levelPrev;
+					levelPrev = 0;
+				}
+			}
 
             lev = levelMinCurrent | levelNext << 16;
-            if (isCommentLine == COMMENTLINE_YES)
+            if (foldComments && isCommentLine == COMMENTLINE_YES)
                 lev |= SC_ISCOMMENTLINE;
             if (visibleChars == false && foldCompact)
                 lev |= SC_FOLDLEVELWHITEFLAG;
@@ -1293,8 +1297,11 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
             levelCurrent = levelNext;
             levelMinCurrent = levelCurrent;
             visibleChars = 0;
-            isPrevLineComment = isCommentLine==COMMENTLINE_YES ? COMMENTLINE_YES:COMMENTLINE_NO;
-            isCommentLine = isInComment ? COMMENTLINE_YES:COMMENTLINE_NO;
+			if (foldComments)
+			{
+				isPrevLineComment = isCommentLine==COMMENTLINE_YES ? COMMENTLINE_YES:COMMENTLINE_NO;
+				isCommentLine = isInComment ? COMMENTLINE_YES:COMMENTLINE_NO;
+			}
         }
 
         switch (sc.state)
@@ -1537,7 +1544,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 else if (!isWhiteSpace(sc.ch) && isWhiteSpace(sc.chPrev))   // create new 'compare point'
                 {
                     sc.SetState(SCE_USER_STYLE_COMMENT);
-					if (delimNesting & SCE_USER_MASK_NESTING_NUMBERS)
+					if (commentNesting & SCE_USER_MASK_NESTING_NUMBERS)
 					{
 						if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
 						{
@@ -1569,8 +1576,8 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
 					sc.SetState(newState);
 					if (newState == SCE_USER_STYLE_OPERATOR)
 					{
-						sc.ChangeState(prevState);
-						if (delimNesting & SCE_USER_MASK_NESTING_NUMBERS)
+						sc.ChangeState(SCE_USER_STYLE_COMMENT);
+						if (commentNesting & SCE_USER_MASK_NESTING_NUMBERS)
 						{
 							if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
 							{
@@ -1617,7 +1624,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 else if (!isWhiteSpace(sc.ch) && isWhiteSpace(sc.chPrev))   // create new 'compare point'
                 {
                     sc.SetState(SCE_USER_STYLE_COMMENTLINE);
-					if (delimNesting & SCE_USER_MASK_NESTING_NUMBERS)
+					if (lineCommentNesting & SCE_USER_MASK_NESTING_NUMBERS)
 					{
 						if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
 						{
@@ -1703,8 +1710,8 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
 					sc.SetState(newState);
 					if (newState == SCE_USER_STYLE_OPERATOR)
 					{
-						sc.ChangeState(prevState);
-						if (delimNesting & SCE_USER_MASK_NESTING_NUMBERS)
+						sc.ChangeState(SCE_USER_STYLE_COMMENTLINE);
+						if (lineCommentNesting & SCE_USER_MASK_NESTING_NUMBERS)
 						{
 							if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
 							{
@@ -1756,8 +1763,12 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 {
                     if (isInListForward(commentOpen, sc, ignoreCase, openIndex, skipForward))
                     {
-                        if (isCommentLine != COMMENTLINE_SKIP_TESTING)
-                            isCommentLine = COMMENTLINE_YES;
+						if (foldComments)
+						{
+							isInComment = true;
+							if (isCommentLine != COMMENTLINE_SKIP_TESTING)
+								isCommentLine = COMMENTLINE_YES;
+						}
 
                         setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
                         sc.SetState(SCE_USER_STYLE_COMMENT);
@@ -1768,7 +1779,6 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                         sc.Forward(skipForward);
                         sc.SetState(SCE_USER_STYLE_COMMENT);
                         dontMove = true;
-                        isInComment = true;
                         break;
                     }
                 }
@@ -1858,7 +1868,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                     }
                 }
 
-                if (isCommentLine != COMMENTLINE_SKIP_TESTING)
+                if (foldComments && isCommentLine != COMMENTLINE_SKIP_TESTING)
                     isCommentLine = COMMENTLINE_SKIP_TESTING;
 
                 break;

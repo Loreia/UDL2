@@ -13,7 +13,7 @@
         <GUIConfig name="UserDefineDlg" position="undocked">show</GUIConfig>
         <GUIConfig name="TabSetting" size="4" replaceBySpace="yes" />
         <!--App position-->
-        <GUIConfig name="AppPosition" x="231" y="0" width="1135" height="738" isMaximized="no" />
+        <GUIConfig name="AppPosition" x="122" y="1" width="1135" height="738" isMaximized="no" />
         <!-- For the primary scintilla view,
              2 status for Attribut lineNumberMargin, bookMarkMargin, indentGuideLine and currentLineHilitingShow: "show" or "hide"
              4 status for Attribut folderMarkStyle : "simple", "arrow", "circle" and "box"  -->
@@ -92,8 +92,9 @@
         </GUIConfig>
     </GUIConfigs>
     <!-- The History of opened files list -->
-    <FindHistory nbMaxFindHistoryPath="10" nbMaxFindHistoryFilter="10" nbMaxFindHistoryFind="10" nbMaxFindHistoryReplace="10" matchWord="no" matchCase="yes" wrap="yes" directionDown="yes" fifRecuisive="yes" fifInHiddenFolder="no" dlgAlwaysVisible="no" fifFilterFollowsDoc="no" fifFolderFollowsDoc="no" searchMode="0" transparencyMode="1" transparency="150">
+    <FindHistory nbMaxFindHistoryPath="10" nbMaxFindHistoryFilter="10" nbMaxFindHistoryFind="10" nbMaxFindHistoryReplace="10" matchWord="no" matchCase="yes" wrap="yes" directionDown="yes" fifRecuisive="yes" fifInHiddenFolder="no" dlgAlwaysVisible="no" fifFilterFollowsDoc="no" fifFolderFollowsDoc="no" searchMode="1" transparencyMode="1" transparency="150">
         <Path name="C:\1\Projects\C++\NPP\33_final\npp.5.9.3.src\PowerEditor" />
+        <Find name="\r" />
         <Find name="isADigit" />
         <Find name="iter2" />
         <Find name="beginNewFilesSearch" />
@@ -103,7 +104,6 @@
         <Find name=" ( " />
         <Find name="INVITE_request_r" />
         <Find name="0040" />
-        <Find name="SC_FOLDCOMMENT" />
         <Replace name="f_terminate_invite_request(context_index);" />
         <Replace name=" (" />
         <Replace name="INVITE_request" />
@@ -119,5 +119,9 @@
         <File filename="C:\Users\eivarad\Desktop\Legacy_Suit_SIP_All2.cpp" />
         <File filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\WinControls\TaskList\TaskList.cpp" />
         <File filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\UserDefineDialog.rc" />
+        <File filename="C:\Users\eivarad\Desktop\userDefineLang__04__OPERATORS1.xml" />
+        <File filename="C:\Users\eivarad\Desktop\04__OPERATORS1.less" />
+        <File filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\userDefineLang.xml" />
+        <File filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\UserDefineResource.h" />
     </History>
 </NotepadPlus>
