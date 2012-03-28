@@ -2577,7 +2577,7 @@ void NppParameters::feedUserKeywordList(TiXmlNode *node)
                 {
                     kwl = (valueNode)?valueNode->Value():TEXT("");
                     lstrcpy(_userLangArray[_nbUserLang - 1]->_keywordLists[SCE_USER_KWLIST_OPERATORS1], kwl);
-                  }
+                }
                 else if (!lstrcmp(keywordsName, TEXT("Folder+")))
                 {
                     kwl = (valueNode)?valueNode->Value():TEXT("");
