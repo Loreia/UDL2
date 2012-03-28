@@ -78,6 +78,13 @@ using namespace Scintilla;
 
 const int maskMapper[MAPPER_TOTAL] = 
 {
+    SCE_USER_MASK_NESTING_OPERATORS2,
+    SCE_USER_MASK_NESTING_FOLDERS_IN_CODE2_OPEN,
+    SCE_USER_MASK_NESTING_FOLDERS_IN_CODE2_MIDDLE,
+    SCE_USER_MASK_NESTING_FOLDERS_IN_CODE2_CLOSE,
+    SCE_USER_MASK_NESTING_FOLDERS_IN_COMMENT_OPEN,
+    SCE_USER_MASK_NESTING_FOLDERS_IN_COMMENT_MIDDLE,
+    SCE_USER_MASK_NESTING_FOLDERS_IN_COMMENT_CLOSE,
     SCE_USER_MASK_NESTING_KEYWORD1,
     SCE_USER_MASK_NESTING_KEYWORD2,
     SCE_USER_MASK_NESTING_KEYWORD3,
@@ -85,18 +92,18 @@ const int maskMapper[MAPPER_TOTAL] =
     SCE_USER_MASK_NESTING_KEYWORD5,
     SCE_USER_MASK_NESTING_KEYWORD6,
     SCE_USER_MASK_NESTING_KEYWORD7,
-    SCE_USER_MASK_NESTING_KEYWORD8,
-    SCE_USER_MASK_NESTING_OPERATORS2,
-    SCE_USER_MASK_NESTING_FOLDERS_IN_CODE2_OPEN,
-    SCE_USER_MASK_NESTING_FOLDERS_IN_CODE2_MIDDLE,
-    SCE_USER_MASK_NESTING_FOLDERS_IN_CODE2_CLOSE,
-    SCE_USER_MASK_NESTING_FOLDERS_IN_COMMENT_OPEN,
-    SCE_USER_MASK_NESTING_FOLDERS_IN_COMMENT_MIDDLE,
-    SCE_USER_MASK_NESTING_FOLDERS_IN_COMMENT_CLOSE
+    SCE_USER_MASK_NESTING_KEYWORD8
 };
 
 const int styleMapper[MAPPER_TOTAL] = 
 {
+    SCE_USER_STYLE_OPERATOR,
+    SCE_USER_STYLE_FOLDER_IN_CODE2,
+    SCE_USER_STYLE_FOLDER_IN_CODE2,
+    SCE_USER_STYLE_FOLDER_IN_CODE2,
+    SCE_USER_STYLE_FOLDER_IN_COMMENT,
+    SCE_USER_STYLE_FOLDER_IN_COMMENT,
+    SCE_USER_STYLE_FOLDER_IN_COMMENT,
     SCE_USER_STYLE_KEYWORD1,
     SCE_USER_STYLE_KEYWORD2,
     SCE_USER_STYLE_KEYWORD3,
@@ -104,33 +111,26 @@ const int styleMapper[MAPPER_TOTAL] =
     SCE_USER_STYLE_KEYWORD5,
     SCE_USER_STYLE_KEYWORD6,
     SCE_USER_STYLE_KEYWORD7,
-    SCE_USER_STYLE_KEYWORD8,
-    SCE_USER_STYLE_OPERATOR,
-    SCE_USER_STYLE_FOLDER_IN_CODE2,
-    SCE_USER_STYLE_FOLDER_IN_CODE2,
-    SCE_USER_STYLE_FOLDER_IN_CODE2,
-    SCE_USER_STYLE_FOLDER_IN_COMMENT,
-    SCE_USER_STYLE_FOLDER_IN_COMMENT,
-    SCE_USER_STYLE_FOLDER_IN_COMMENT
+    SCE_USER_STYLE_KEYWORD8
 };
 
 const int verdictMapper[MAPPER_TOTAL] = 
 {
-    FOLD_NONE,
-    FOLD_NONE,
-    FOLD_NONE,
-    FOLD_NONE,
-    FOLD_NONE,
-    FOLD_NONE,
-    FOLD_NONE,
-    FOLD_NONE,
     FOLD_NONE,
     FOLD_OPEN,
     FOLD_MIDDLE,
     FOLD_CLOSE,
     FOLD_OPEN,
     FOLD_MIDDLE,
-    FOLD_CLOSE
+    FOLD_CLOSE,
+    FOLD_NONE,
+    FOLD_NONE,
+    FOLD_NONE,
+    FOLD_NONE,
+    FOLD_NONE,
+    FOLD_NONE,
+    FOLD_NONE,
+    FOLD_NONE
 };
 
 using namespace std;
@@ -1338,7 +1338,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                     else
                     {
                         sc.SetState(numberParentState);
-                        dontMove = false;
+                        dontMove = true;
                         hasDot = false;
                         hasExp = false;
                         hasPrefix = false;
@@ -1364,7 +1364,8 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                     else
                     {
 						sc.Forward(moveForward);
-                        // dontMove = true;
+                        hasDot = false;
+                        hasExp = false; 
                     }
                 }
 

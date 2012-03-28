@@ -1,16 +1,15 @@
 <NotepadPlus>
     <Session activeView="0">
-        <mainView activeIndex="9">
-            <File firstVisibleLine="412" xOffset="0" scrollWidth="1216" startPos="11223" endPos="11223" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL2\scintilla\lexers\LexUser.cxx" />
+        <mainView activeIndex="0">
             <File firstVisibleLine="1865" xOffset="0" scrollWidth="1280" startPos="72826" endPos="72826" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx" />
             <File firstVisibleLine="60" xOffset="0" scrollWidth="1048" startPos="1862" endPos="1862" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexCPP.cxx" />
-            <File firstVisibleLine="65" xOffset="0" scrollWidth="920" startPos="1862" endPos="1862" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\src\Document.h" />
             <File firstVisibleLine="44" xOffset="0" scrollWidth="1256" startPos="1862" endPos="1862" selMode="0" lang="ttcnv3" encoding="-1" filename="C:\Users\eivarad\Desktop\SIP_State_Machine.ttcn" />
             <File firstVisibleLine="294" xOffset="0" scrollWidth="1594" startPos="8363" endPos="8363" selMode="0" lang="ttcnv3" encoding="-1" filename="C:\Users\eivarad\Desktop\tempp.ttcn" />
-            <File firstVisibleLine="296" xOffset="0" scrollWidth="1496" startPos="8363" endPos="8363" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\FindReplaceDlg.cpp" />
-            <File firstVisibleLine="234" xOffset="0" scrollWidth="1640" startPos="8344" endPos="8363" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\FindReplaceDlg.h" />
-            <File firstVisibleLine="12" xOffset="0" scrollWidth="872" startPos="645" endPos="645" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\numbers_case_study.cpp" />
-            <File firstVisibleLine="15" xOffset="0" scrollWidth="579" startPos="408" endPos="408" selMode="0" lang="05__NUMBERS" encoding="-1" filename="C:\Users\eivarad\AppData\Local\Temp\Rar$DR59.008\05__NUMBERS.less" />
+            <File firstVisibleLine="34" xOffset="0" scrollWidth="672" startPos="1916" endPos="1924" selMode="0" lang="Python" encoding="-1" filename="Z:\web2py\applications\rqs\controllers\sqr_softstat.py" />
+            <File firstVisibleLine="66" xOffset="0" scrollWidth="1232" startPos="3849" endPos="3861" selMode="0" lang="Python" encoding="-1" filename="Z:\web2py\applications\rqs\controllers\sqr_dal.py" />
+            <File firstVisibleLine="766" xOffset="0" scrollWidth="1216" startPos="30553" endPos="30553" selMode="0" lang="Python" encoding="-1" filename="Z:\web2py\applications\rqs\controllers\default.py" />
+            <File firstVisibleLine="465" xOffset="0" scrollWidth="1248" startPos="15584" endPos="15584" selMode="0" lang="Javascript" encoding="-1" filename="Z:\web2py\applications\rqs\static\js\main.js" />
+            <File firstVisibleLine="233" xOffset="0" scrollWidth="832" startPos="7148" endPos="8350" selMode="1" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\include\scilexer.h" />
         </mainView>
         <subView activeIndex="0" />
     </Session>

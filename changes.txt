@@ -1,18 +1,15 @@
 Changes in this commit.
 
 Features:
-1. Added "Force line comments to start at BOL" feature
-2. Now numbers can be nested as well.
+1. None
 
 Bug fix:
 1. Minor adjustments in detection of numbers.
+2. Changed the order in kwList (Keywords1-8 are now processed last)
 
 Things left to do:
 1. Continue with code optimizations.
 2. In the long run, C++ STD stuff (vectors and strings) should be replaced with similar C constructs (maybe a WordList2 class?) to squize more performance out of UDL.
-
-Beta release date:
-1. This version will be released as beta 1.
 
 BR
 Loreia
