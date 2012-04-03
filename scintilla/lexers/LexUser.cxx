@@ -826,18 +826,21 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
     bool foldComments     = styler.GetPropertyInt("userDefine.allowFoldOfComments",	   0) != 0;
     bool ignoreCase       = styler.GetPropertyInt("userDefine.isCaseIgnored",          0) != 0;
 
-    bool prefixes[MAPPER_TOTAL];
-    prefixes[0] = styler.GetPropertyInt("userDefine.prefixKeywords1", 0) != 0;
-    prefixes[1] = styler.GetPropertyInt("userDefine.prefixKeywords2", 0) != 0;
-    prefixes[2] = styler.GetPropertyInt("userDefine.prefixKeywords3", 0) != 0;
-    prefixes[3] = styler.GetPropertyInt("userDefine.prefixKeywords4", 0) != 0;
-    prefixes[4] = styler.GetPropertyInt("userDefine.prefixKeywords5", 0) != 0;
-    prefixes[5] = styler.GetPropertyInt("userDefine.prefixKeywords6", 0) != 0;
-    prefixes[6] = styler.GetPropertyInt("userDefine.prefixKeywords7", 0) != 0;
-    prefixes[7] = styler.GetPropertyInt("userDefine.prefixKeywords8", 0) != 0;
+    bool prefixes[MAPPER_TOTAL];	
 
-    for (int i=SCE_USER_TOTAL_KEYWORDS; i<MAPPER_TOTAL; ++i)    // other bakward kwLists can't be prefixed
+	for (int i=0; i<MAPPER_TOTAL; ++i)    // only KEYWORDS1-8 can be prefixed
         prefixes[i] = false;
+
+	// must be in synch with styleMapper !!
+    prefixes[7]  = styler.GetPropertyInt("userDefine.prefixKeywords1", 0) != 0;
+    prefixes[8]  = styler.GetPropertyInt("userDefine.prefixKeywords2", 0) != 0;
+    prefixes[9]  = styler.GetPropertyInt("userDefine.prefixKeywords3", 0) != 0;
+    prefixes[10] = styler.GetPropertyInt("userDefine.prefixKeywords4", 0) != 0;
+    prefixes[11] = styler.GetPropertyInt("userDefine.prefixKeywords5", 0) != 0;
+    prefixes[12] = styler.GetPropertyInt("userDefine.prefixKeywords6", 0) != 0;
+    prefixes[13] = styler.GetPropertyInt("userDefine.prefixKeywords7", 0) != 0;
+    prefixes[14] = styler.GetPropertyInt("userDefine.prefixKeywords8", 0) != 0;
+
 
     char nestingBuffer[] = "userDefine.nesting.00";     // 00 is only a placeholder, the actual number is set by _itoa
     _itoa(SCE_USER_STYLE_COMMENT,       (nestingBuffer+20), 10);    int commentNesting      = styler.GetPropertyInt(nestingBuffer, 0);

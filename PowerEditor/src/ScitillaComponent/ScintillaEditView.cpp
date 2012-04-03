@@ -664,7 +664,7 @@ void ScintillaEditView::setUserLexer(const TCHAR *userLangName)
 		{
 			execute(SCI_SETPROPERTY, (WPARAM)"userDefine.foldersInCode1Close", reinterpret_cast<LPARAM>(keyWords_char));
 		}
-		else // if (i >= SCE_USER_KWLIST_KEYWORDS1 && i <= (SCE_USER_KWLIST_KEYWORDS1 + SCE_USER_TOTAL_KEYWORDS))
+		else // OPERATORS2, FOLDERS_IN_CODE2, FOLDERS_IN_COMMENT, KEYWORDS1-8
 		{
 			char temp[max_char];
 			bool inDoubleQuote = false;

@@ -73,14 +73,6 @@ const TCHAR keywordListMapper[SCE_USER_KWLIST_TOTAL][32] = {
     TEXT("Numbers, prefixes"),				// SCE_USER_KWLIST_NUMBER_PREFIX     
     TEXT("Numbers, extras with prefixes"),	// SCE_USER_KWLIST_NUMBER_EXTRAPREF     
     TEXT("Numbers, suffixes"),				// SCE_USER_KWLIST_NUMBER_SUFFIX     
-    TEXT("Keywords1"),	                    // SCE_USER_KWLIST_KEYWORDS1    
-    TEXT("Keywords2"),	                    // SCE_USER_KWLIST_KEYWORDS2    
-    TEXT("Keywords3"),	                    // SCE_USER_KWLIST_KEYWORDS3    
-    TEXT("Keywords4"),	                    // SCE_USER_KWLIST_KEYWORDS4    
-    TEXT("Keywords5"),	                    // SCE_USER_KWLIST_KEYWORDS5    
-    TEXT("Keywords6"),	                    // SCE_USER_KWLIST_KEYWORDS6    
-    TEXT("Keywords7"),	                    // SCE_USER_KWLIST_KEYWORDS7    
-    TEXT("Keywords8"),	                    // SCE_USER_KWLIST_KEYWORDS8    
     TEXT("Operators1"),	                    // SCE_USER_KWLIST_OPERATORS1		
     TEXT("Operators2"),	                    // SCE_USER_KWLIST_OPERATORS2		
     TEXT("Folders in code1, open"),			// SCE_USER_KWLIST_FOLDERS_IN_CODE1_OPEN		
@@ -92,6 +84,14 @@ const TCHAR keywordListMapper[SCE_USER_KWLIST_TOTAL][32] = {
     TEXT("Folders in comment, open"),		// SCE_USER_KWLIST_FOLDERS_IN_COMMENT_OPEN		
     TEXT("Folders in comment, middle"),		// SCE_USER_KWLIST_FOLDERS_IN_COMMENT_MIDDLE		
     TEXT("Folders in comment, close"),		// SCE_USER_KWLIST_FOLDERS_IN_COMMENT_CLOSE		
+    TEXT("Keywords1"),	                    // SCE_USER_KWLIST_KEYWORDS1    
+    TEXT("Keywords2"),	                    // SCE_USER_KWLIST_KEYWORDS2    
+    TEXT("Keywords3"),	                    // SCE_USER_KWLIST_KEYWORDS3    
+    TEXT("Keywords4"),	                    // SCE_USER_KWLIST_KEYWORDS4    
+    TEXT("Keywords5"),	                    // SCE_USER_KWLIST_KEYWORDS5    
+    TEXT("Keywords6"),	                    // SCE_USER_KWLIST_KEYWORDS6    
+    TEXT("Keywords7"),	                    // SCE_USER_KWLIST_KEYWORDS7    
+    TEXT("Keywords8"),	                    // SCE_USER_KWLIST_KEYWORDS8    
     TEXT("Delimiters")	 					// SCE_USER_KWLIST_DELIMITERS   
 };
 

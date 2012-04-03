@@ -1,15 +1,17 @@
 <NotepadPlus>
     <Session activeView="0">
-        <mainView activeIndex="0">
-            <File firstVisibleLine="1865" xOffset="0" scrollWidth="1280" startPos="72826" endPos="72826" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx" />
+        <mainView activeIndex="11">
+            <File firstVisibleLine="1865" xOffset="0" scrollWidth="1280" startPos="73626" endPos="73626" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx" />
             <File firstVisibleLine="60" xOffset="0" scrollWidth="1048" startPos="1862" endPos="1862" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexCPP.cxx" />
-            <File firstVisibleLine="44" xOffset="0" scrollWidth="1256" startPos="1862" endPos="1862" selMode="0" lang="ttcnv3" encoding="-1" filename="C:\Users\eivarad\Desktop\SIP_State_Machine.ttcn" />
-            <File firstVisibleLine="294" xOffset="0" scrollWidth="1594" startPos="8363" endPos="8363" selMode="0" lang="ttcnv3" encoding="-1" filename="C:\Users\eivarad\Desktop\tempp.ttcn" />
-            <File firstVisibleLine="34" xOffset="0" scrollWidth="672" startPos="1916" endPos="1924" selMode="0" lang="Python" encoding="-1" filename="Z:\web2py\applications\rqs\controllers\sqr_softstat.py" />
-            <File firstVisibleLine="66" xOffset="0" scrollWidth="1232" startPos="3849" endPos="3861" selMode="0" lang="Python" encoding="-1" filename="Z:\web2py\applications\rqs\controllers\sqr_dal.py" />
-            <File firstVisibleLine="766" xOffset="0" scrollWidth="1216" startPos="30553" endPos="30553" selMode="0" lang="Python" encoding="-1" filename="Z:\web2py\applications\rqs\controllers\default.py" />
-            <File firstVisibleLine="465" xOffset="0" scrollWidth="1248" startPos="15584" endPos="15584" selMode="0" lang="Javascript" encoding="-1" filename="Z:\web2py\applications\rqs\static\js\main.js" />
-            <File firstVisibleLine="233" xOffset="0" scrollWidth="832" startPos="7148" endPos="8350" selMode="1" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\include\scilexer.h" />
+            <File firstVisibleLine="44" xOffset="0" scrollWidth="1256" startPos="1862" endPos="1862" selMode="0" lang="Normal Text" encoding="-1" filename="C:\Users\eivarad\Desktop\SIP_State_Machine.ttcn" />
+            <File firstVisibleLine="294" xOffset="0" scrollWidth="1594" startPos="8363" endPos="8363" selMode="0" lang="Normal Text" encoding="-1" filename="C:\Users\eivarad\Desktop\tempp.ttcn" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="340424" startPos="48990" endPos="48990" selMode="0" lang="XML" encoding="-1" filename="C:\Users\eivarad\AppData\Local\Temp\Rar$DR97.320\userDefineLang - after v11.xml" />
+            <File firstVisibleLine="18" xOffset="0" scrollWidth="339976" startPos="0" endPos="0" selMode="0" lang="XML" encoding="-1" filename="C:\Users\eivarad\AppData\Local\Temp\Rar$DR97.320\userDefineLang - before v11.xml" />
+            <File firstVisibleLine="258" xOffset="0" scrollWidth="832" startPos="7269" endPos="7269" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\include\scilexer.h" />
+            <File firstVisibleLine="29" xOffset="0" scrollWidth="1424" startPos="0" endPos="0" selMode="0" lang="XML" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\userDefineLang.xml" />
+            <File firstVisibleLine="4" xOffset="0" scrollWidth="686" startPos="4686" endPos="4297" selMode="0" lang="Python" encoding="-1" filename="C:\Users\eivarad\Desktop\test\sqr.py" />
+            <File firstVisibleLine="17377" xOffset="0" scrollWidth="776" startPos="537818" endPos="537818" selMode="0" lang="User-Defined" encoding="-1" filename="C:\Users\eivarad\Desktop\test\temp.txt" />
+            <File firstVisibleLine="1706" xOffset="0" scrollWidth="872" startPos="125494" endPos="125498" selMode="0" lang="Normal Text" encoding="-1" filename="C:\Users\eivarad\Desktop\test\upltdu.program" />
         </mainView>
         <subView activeIndex="0" />
     </Session>

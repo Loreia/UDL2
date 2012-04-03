@@ -4,8 +4,7 @@ Features:
 1. None
 
 Bug fix:
-1. Minor adjustments in detection of numbers.
-2. Changed the order in kwList (Keywords1-8 are now processed last)
+1. Prefix option wasn't working after changing the order in kwList.
 
 Things left to do:
 1. Continue with code optimizations.
