@@ -540,7 +540,7 @@ static bool isInListForward(vvstring & openVector, StyleContext & sc, bool ignor
 }
 
 static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMode, bool ignoreCase,
-                             int & moveForward, vvstring * fwEVectors[], int & nlCount)
+                             int & moveForward, vvstring * fwEndVectors[], int & nlCount, unsigned int docLength)
 {
     if (!list.words)
         return false;
@@ -549,7 +549,7 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
     int offset = -1 * sc.LengthCurrent();
     unsigned char firstChar = sc.GetRelative(offset);
 	int i = list.starts[firstChar];
-	bool doUpperLoop = true;
+	bool doUpperLoop = ignoreCase ? true:false;
 	if (ignoreCase)
 	{
 		i = list.starts[tolower(firstChar)];
@@ -562,13 +562,14 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
 			doUpperLoop = false;
 		}
 	}
-    int a = 0;
-    int b = 0;
+    unsigned char a = 0;
+    unsigned char b = 0;
     int bNext = 0;
     int indexa = 0;
     int indexb = 0;
     char wsChar = 0;
     int nlCountTemp = 0;
+	bool fwDelimiterFound = false;
 
     while (i >= 0)
     {
@@ -580,10 +581,11 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
             indexa = 0;
             indexb = 0;
             wsChar = 0;
+			fwDelimiterFound = false;
 
             do
             {
-                a = ignoreCase?toupper(list.words[i][indexa++]):list.words[i][indexa++];
+                a = static_cast<unsigned char>(ignoreCase?toupper(list.words[i][indexa++]):list.words[i][indexa++]);
                 if (a == '\v' || a == '\b')
                 {
                     wsChar = a;
@@ -595,31 +597,48 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
                             b = sc.GetRelative(offset + indexb++);
                             bNext = sc.GetRelative(offset + indexb);
                         }
-                        while(isWhiteSpace2(b, nlCountTemp, wsChar, bNext));
+						while((sc.currentPos + offset + indexb) <= docLength && isWhiteSpace2(b, nlCountTemp, wsChar, bNext));
 
-                        a = ignoreCase?toupper(list.words[i][indexa++]):list.words[i][indexa++];
+                        a = static_cast<unsigned char>(ignoreCase?toupper(list.words[i][indexa++]):list.words[i][indexa++]);
                     }
                 }
                 else
                     b = ignoreCase?toupper(sc.GetRelative(offset + indexb++)):sc.GetRelative(offset + indexb++);
             }
             while (a && (a == b));
+			
+			bNext = sc.GetRelative(offset + indexb);
+			if (isWhiteSpace2(b, nlCountTemp, wsChar, bNext))
+				fwDelimiterFound = true;
+
+			if (!fwDelimiterFound && !specialMode)	// multi-part keywords can be delimited by whitespace or by any 'forward' keyword
+			{
+                for (int i=0; i<FW_VECTORS_TOTAL; ++i)
+                {
+                    if (!fwEndVectors[i]->empty() && isInListForward2(*fwEndVectors[i], sc, ignoreCase, indexb - 1))
+                    {
+                        fwDelimiterFound = true;
+                        break;
+                    }
+                }
+			}
 
             if (!a && specialMode && wsChar)
             {
-                bNext = sc.GetRelative(offset + indexb);
-                if (isWhiteSpace2(b, nlCountTemp, wsChar, bNext))    // there must be a white space !!
+                if (fwDelimiterFound)    // there must be a white space !!
                 {
                     // first, skip whitespace
-                    while(isWhiteSpace2(sc.GetRelative(offset + indexb++), nlCountTemp, wsChar, sc.GetRelative(offset + indexb)));
+                    while((sc.currentPos + offset + indexb) <= docLength && 
+						   isWhiteSpace2(sc.GetRelative(offset + indexb++), nlCountTemp, wsChar, sc.GetRelative(offset + indexb)));
 
                     // second, skip next "word"
                     bool breakOut = false;
+					// it is not necessary to check EOF position here, because sc.GetRelative returns ' ' beyond EOF
                     while (!isWhiteSpace2(sc.GetRelative(indexb + offset), nlCountTemp, wsChar, sc.GetRelative(offset + indexb)))
                     {
                         for (int i=0; i<FW_VECTORS_TOTAL; ++i)
                         {
-                            if (!fwEVectors[i]->empty() && isInListForward2(*fwEVectors[i], sc, ignoreCase, indexb + offset))
+                            if (!fwEndVectors[i]->empty() && isInListForward2(*fwEndVectors[i], sc, ignoreCase, indexb + offset))
                             {
                                 breakOut = true;
                                 break;
@@ -637,10 +656,14 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
             {
                 nlCount += nlCountTemp;
                 moveForward = indexb + offset - 1;  // offset is already negative
-                if (moveForward >= 0)
-                    return true;
-                else if (specialMode)
-                    return true;
+
+				if (fwDelimiterFound)
+				{
+					if (moveForward >= 0)
+						return true;
+					else if (specialMode)
+						return true;
+				}
             }
             nlCountTemp = 0;
             ++i;
@@ -658,8 +681,8 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
 }
 
 static void setBackwards(WordList * kwLists[], StyleContext & sc, bool prefixes[], bool ignoreCase,
-                         int nestedKey, vvstring * fwEVectors[], int & levelMinCurrent,
-                         int & levelNext, int & nlCount, bool & dontMove)
+                         int nestedKey, vvstring * fwEndVectors[], int & levelMinCurrent,
+                         int & levelNext, int & nlCount, bool & dontMove, unsigned int docLength)
 {
     if (sc.LengthCurrent() == 0)
         return;
@@ -671,7 +694,7 @@ static void setBackwards(WordList * kwLists[], StyleContext & sc, bool prefixes[
     {
         if (nestedKey & maskMapper[i])
         {
-            if (isInListBackward(*kwLists[i], sc, prefixes[i], ignoreCase, moveForward, fwEVectors, nlCount))
+            if (isInListBackward(*kwLists[i], sc, prefixes[i], ignoreCase, moveForward, fwEndVectors, nlCount, docLength))
             {
                 verdict = verdictMapper[i];
                 if (moveForward > 0)
@@ -1062,21 +1085,21 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
     delimStart[6] = &delim7Open;
     delimStart[7] = &delim8Open;
 
-    vvstring * fwEVectors[FW_VECTORS_TOTAL];  // forward end vectors for multi-part forward search
-    fwEVectors[0]  = &operators1;
-    fwEVectors[1]  = &commentLineOpen;
-    fwEVectors[2]  = &commentLineContinue;
-    fwEVectors[3]  = &commentLineClose;
-    fwEVectors[4]  = &commentOpen;
-    fwEVectors[5]  = &commentClose;
-    fwEVectors[6]  = &delim1Close;
-    fwEVectors[7]  = &delim2Close;
-    fwEVectors[8]  = &delim3Close;
-    fwEVectors[9]  = &delim4Close;
-    fwEVectors[10] = &delim5Close;
-    fwEVectors[11] = &delim6Close;
-    fwEVectors[12] = &delim7Close;
-    fwEVectors[13] = &delim8Close;
+    vvstring * fwEndVectors[FW_VECTORS_TOTAL];  // forward end vectors for multi-part forward search
+    fwEndVectors[0]  = &operators1;
+    fwEndVectors[1]  = &commentLineOpen;
+    fwEndVectors[2]  = &commentLineContinue;
+    fwEndVectors[3]  = &commentLineClose;
+    fwEndVectors[4]  = &commentOpen;
+    fwEndVectors[5]  = &commentClose;
+    fwEndVectors[6]  = &delim1Close;
+    fwEndVectors[7]  = &delim2Close;
+    fwEndVectors[8]  = &delim3Close;
+    fwEndVectors[9]  = &delim4Close;
+    fwEndVectors[10] = &delim5Close;
+    fwEndVectors[11] = &delim6Close;
+    fwEndVectors[12] = &delim7Close;
+    fwEndVectors[13] = &delim8Close;
 
     vvstring * delimVectors[SCE_USER_TOTAL_DELIMITERS * 2];
     delimVectors[0]  = &delim1Escape;
@@ -1142,6 +1165,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
     vvstring * delimEscape = NULL;
     vvstring * delimClose  = NULL;
     int delimNesting = 0;
+	unsigned int docLength = startPos + length;
     
     int numberParentState = SCE_USER_STYLE_DEFAULT;
 	//bool lineCommentAtBOL = true;	// TODO: change back to false!!
@@ -1161,6 +1185,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
 
         // offset move to previous line
         length += (oldStartPos - startPos);
+		docLength = startPos + length;
     }
 
     lineCurrent = styler.GetLine(startPos);
@@ -1441,7 +1466,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                     {
                         nestedVector.push_back(*NI.Set(sc.currentPos + iter->length() - 1, nestedLevel--, openIndex, sc.state, NI_CLOSE));
 
-                        setBackwards(kwLists, sc, prefixes, ignoreCase, delimNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
+                        setBackwards(kwLists, sc, prefixes, ignoreCase, delimNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
                         sc.SetState(prevState);
                         readLastNested(lastNestedGroup, newState, openIndex);
                         if (newState != SCE_USER_STYLE_COMMENTLINE || (sc.ch != '\r' && sc.ch != '\n')) // for delimiters that end with ((EOL))
@@ -1459,7 +1484,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
 
                 if (isWhiteSpace(sc.ch) && !isWhiteSpace(sc.chPrev))    // quick replacement for SCE_USER_STYLE_IDENTIFIER
                 {
-                    setBackwards(kwLists, sc, prefixes, ignoreCase, delimNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
+                    setBackwards(kwLists, sc, prefixes, ignoreCase, delimNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
 					sc.SetState(prevState);
                 }
                 else if (!isWhiteSpace(sc.ch) && isWhiteSpace(sc.chPrev))   // create new 'compare point'
@@ -1478,7 +1503,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 // third, check nested delimiter sequence
                 if (isInListNested(delimNesting, forwards, sc, ignoreCase, openIndex, skipForward, newState, lineCommentAtBOL))
                 {
-                    setBackwards(kwLists, sc, prefixes, ignoreCase, delimNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
+                    setBackwards(kwLists, sc, prefixes, ignoreCase, delimNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
 
 					if (newState != SCE_USER_STYLE_OPERATOR)
 					{
@@ -1523,7 +1548,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                     {
                         nestedVector.push_back(*NI.Set(sc.currentPos + iter->length() - 1, nestedLevel--, openIndex, SCE_USER_STYLE_COMMENT, NI_CLOSE));
 
-                        setBackwards(kwLists, sc, prefixes, ignoreCase, commentNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
+                        setBackwards(kwLists, sc, prefixes, ignoreCase, commentNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
                         sc.SetState(SCE_USER_STYLE_COMMENT);
                         sc.Forward(iter->length());
 
@@ -1542,7 +1567,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
 
                 if (isWhiteSpace(sc.ch) && !isWhiteSpace(sc.chPrev))    // quick replacement for SCE_USER_STYLE_IDENTIFIER
                 {
-                    setBackwards(kwLists, sc, prefixes, ignoreCase, commentNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
+                    setBackwards(kwLists, sc, prefixes, ignoreCase, commentNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
                     sc.SetState(SCE_USER_STYLE_COMMENT);
                 }
                 else if (!isWhiteSpace(sc.ch) && isWhiteSpace(sc.chPrev))   // create new 'compare point'
@@ -1567,7 +1592,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 // third, check nested delimiter sequence
                 if (isInListNested(commentNesting, forwards, sc, ignoreCase, openIndex, skipForward, newState, lineCommentAtBOL))
                 {
-                    setBackwards(kwLists, sc, prefixes, ignoreCase, commentNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
+                    setBackwards(kwLists, sc, prefixes, ignoreCase, commentNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
 
 					if (newState != SCE_USER_STYLE_OPERATOR)
 					{
@@ -1606,7 +1631,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                     {
                         nestedVector.push_back(*NI.Set(sc.currentPos + iter->length() - 1, nestedLevel--, openIndex, SCE_USER_STYLE_COMMENTLINE, NI_CLOSE));
 
-                        setBackwards(kwLists, sc, prefixes, ignoreCase, lineCommentNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
+                        setBackwards(kwLists, sc, prefixes, ignoreCase, lineCommentNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
                         sc.SetState(SCE_USER_STYLE_COMMENTLINE);
                         sc.Forward(iter->length());
                         readLastNested(lastNestedGroup, newState, openIndex);
@@ -1622,7 +1647,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
 
                 if (isWhiteSpace(sc.ch) && !isWhiteSpace(sc.chPrev))    // quick replacement for SCE_USER_STYLE_IDENTIFIER
                 {
-                    setBackwards(kwLists, sc, prefixes, ignoreCase, lineCommentNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
+                    setBackwards(kwLists, sc, prefixes, ignoreCase, lineCommentNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
                     sc.SetState(SCE_USER_STYLE_COMMENTLINE);
                 }
                 else if (!isWhiteSpace(sc.ch) && isWhiteSpace(sc.chPrev))   // create new 'compare point'
@@ -1701,7 +1726,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 // third, check nested delimiter sequence
                 if (isInListNested(lineCommentNesting, forwards, sc, ignoreCase, openIndex, skipForward, newState, lineCommentAtBOL))
                 {
-                    setBackwards(kwLists, sc, prefixes, ignoreCase, lineCommentNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
+                    setBackwards(kwLists, sc, prefixes, ignoreCase, lineCommentNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
 
 					if (newState != SCE_USER_STYLE_OPERATOR)
 					{					
@@ -1735,7 +1760,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
             {
                 if (isWhiteSpace(sc.ch))
                 {
-                    setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
+                    setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
                     sc.SetState(SCE_USER_STYLE_DEFAULT);
                     break;
                 }
@@ -1749,7 +1774,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
 							if (foldComments && isCommentLine != COMMENTLINE_SKIP_TESTING)
 								isCommentLine = COMMENTLINE_YES;
 
-							setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
+							setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
 							sc.SetState(SCE_USER_STYLE_COMMENTLINE);
 
 							nestedVector.push_back(*NI.Set(sc.currentPos, ++nestedLevel, openIndex, SCE_USER_STYLE_COMMENTLINE, NI_OPEN));
@@ -1774,7 +1799,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
 								isCommentLine = COMMENTLINE_YES;
 						}
 
-                        setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
+                        setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
                         sc.SetState(SCE_USER_STYLE_COMMENT);
 
                         nestedVector.push_back(*NI.Set(sc.currentPos, ++nestedLevel, openIndex, SCE_USER_STYLE_COMMENT, NI_OPEN));
@@ -1793,7 +1818,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                     {
                         if (isInListForward(*delimStart[i], sc, ignoreCase, openIndex, skipForward))
                         {
-                            setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
+                            setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
                             sc.SetState(i+SCE_USER_STYLE_DELIMITER1);
                             nestedVector.push_back(*NI.Set(sc.currentPos, ++nestedLevel, openIndex, i+SCE_USER_STYLE_DELIMITER1, NI_OPEN));
                             lastNestedGroup.push_back(NI);
@@ -1812,7 +1837,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 {
                     if (isInListForward(operators1, sc, ignoreCase, openIndex, skipForward))
                     {
-                        setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
+                        setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
                         sc.SetState(SCE_USER_STYLE_OPERATOR);
                         sc.Forward(skipForward);
                         sc.ChangeState(SCE_USER_STYLE_OPERATOR);
@@ -1826,7 +1851,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 {
                     if (isInListForward(foldersInCode1Open, sc, ignoreCase, openIndex, skipForward))
                     {
-                        setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
+                        setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
                         sc.SetState(SCE_USER_STYLE_FOLDER_IN_CODE1);
                         sc.Forward(skipForward);
                         sc.ChangeState(SCE_USER_STYLE_FOLDER_IN_CODE1);
@@ -1843,7 +1868,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 {
                     if (isInListForward(foldersInCode1Middle, sc, ignoreCase, openIndex, skipForward))
                     {
-                        setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
+                        setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
                         sc.SetState(SCE_USER_STYLE_FOLDER_IN_CODE1);
                         sc.Forward(skipForward);
                         sc.ChangeState(SCE_USER_STYLE_FOLDER_IN_CODE1);
@@ -1861,7 +1886,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 {
                     if (isInListForward(foldersInCode1Close, sc, ignoreCase, openIndex, skipForward))
                     {
-                        setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEVectors, levelMinCurrent, levelNext, nlCount, dontMove);
+                        setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
                         sc.SetState(SCE_USER_STYLE_FOLDER_IN_CODE1);
                         sc.Forward(skipForward);
                         sc.ChangeState(SCE_USER_STYLE_FOLDER_IN_CODE1);

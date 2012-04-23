@@ -261,7 +261,8 @@ BEGIN
 			MENUITEM "Remove Unnecessary Blank and EOL",   IDM_EDIT_TRIMALL
 			MENUITEM SEPARATOR
 			MENUITEM "TAB to Space",                       IDM_EDIT_TAB2SW
-			MENUITEM "Space to TAB",                       IDM_EDIT_SW2TAB
+			MENUITEM "Space to TAB (All)",                 IDM_EDIT_SW2TAB_ALL
+			MENUITEM "Space to TAB (Leading)",             IDM_EDIT_SW2TAB_LEADING
 		END
 		POPUP "Paste Special"
 		BEGIN
