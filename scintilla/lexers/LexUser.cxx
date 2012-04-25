@@ -501,14 +501,14 @@ static bool isInListForward2(vvstring & openVector, StyleContext & sc, bool igno
         {
             iter3 = iter2->begin();
             index = 0;
-            for (; iter3 != iter2->end(); ++iter3)
+            for (; ; ++iter3)
             {
                 a = ignoreCase?toupper(*iter3):*iter3;
                 b = ignoreCase?toupper(sc.GetRelative(forward + index++)):sc.GetRelative(forward + index++);
-                if (!a)
-                    return true;
                 if (a != b)
                     break;
+				if (iter3 != iter2->end())
+                    return true;
             }
         }
     }
@@ -611,11 +611,11 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
 			if (isWhiteSpace2(b, nlCountTemp, wsChar, bNext))
 				fwDelimiterFound = true;
 
-			if (!fwDelimiterFound && !specialMode)	// multi-part keywords can be delimited by whitespace or by any 'forward' keyword
+			if (!fwDelimiterFound && !specialMode && wsChar)	// multi-part keywords can be delimited by whitespace or by any 'forward' keyword
 			{
                 for (int i=0; i<FW_VECTORS_TOTAL; ++i)
                 {
-                    if (!fwEndVectors[i]->empty() && isInListForward2(*fwEndVectors[i], sc, ignoreCase, indexb - 1))
+                    if (!fwEndVectors[i]->empty() && isInListForward2(*fwEndVectors[i], sc, ignoreCase, indexb + offset - 1))
                     {
                         fwDelimiterFound = true;
                         break;
@@ -638,7 +638,7 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
                     {
                         for (int i=0; i<FW_VECTORS_TOTAL; ++i)
                         {
-                            if (!fwEndVectors[i]->empty() && isInListForward2(*fwEndVectors[i], sc, ignoreCase, indexb + offset))
+                            if (!fwEndVectors[i]->empty() && isInListForward2(*fwEndVectors[i], sc, ignoreCase, indexb + offset - 1))
                             {
                                 breakOut = true;
                                 break;
@@ -657,7 +657,7 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
                 nlCount += nlCountTemp;
                 moveForward = indexb + offset - 1;  // offset is already negative
 
-				if (fwDelimiterFound)
+				if (fwDelimiterFound || !wsChar)
 				{
 					if (moveForward >= 0)
 						return true;

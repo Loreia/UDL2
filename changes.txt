@@ -1,12 +1,10 @@
 Changes in this commit.
 
 Features:
-1. Changed "Space to TAB" functionallity, and added two new options "TAB to space (All)" and "TAB to space (Leading)"
-2. Dave Brotherstone created a fork that merges UDL2 (based on Notepad++ 5.9.3) with latest version from v6.X branch.
+- none
 
 Bug fix:
-1. Keyword1-8 did not work well with accented characters due to a mismatch when comparing of char and unsigned char in isInListBackward.
-2. isInListBackward did not check for EOF position, so it wass possible to go beyod EOF when searchine for multi-part keywords.
+1. Last Beta (8) introduced an error when detecting keywords (single or multi-part) followed by non whitespace (like an Operator1).
 
 Things left to do:
 1. Continue with code optimizations.
