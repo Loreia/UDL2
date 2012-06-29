@@ -90,7 +90,7 @@ ToolBarButtonUnit toolBarIcons[] = {
 	{IDM_VIEW_WRAP,  IDI_VIEW_WRAP_OFF_ICON,	IDI_VIEW_WRAP_ON_ICON,	IDI_VIEW_WRAP_OFF_ICON, IDR_WRAP},
 	{IDM_VIEW_ALL_CHARACTERS,  IDI_VIEW_ALL_CHAR_OFF_ICON,	IDI_VIEW_ALL_CHAR_ON_ICON,	IDI_VIEW_ALL_CHAR_OFF_ICON, IDR_INVISIBLECHAR},
 	{IDM_VIEW_INDENT_GUIDE,  IDI_VIEW_INDENT_OFF_ICON,	IDI_VIEW_INDENT_ON_ICON,	IDI_VIEW_INDENT_OFF_ICON, IDR_INDENTGUIDE},
-	{IDM_VIEW_USER_DLG,  IDI_VIEW_UD_DLG_OFF_ICON,	IDI_VIEW_UD_DLG_ON_ICON,	IDI_VIEW_UD_DLG_OFF_ICON, IDR_SHOWPANNEL},
+	{IDM_LANG_USER_DLG,  IDI_VIEW_UD_DLG_OFF_ICON,	IDI_VIEW_UD_DLG_ON_ICON,	IDI_VIEW_UD_DLG_OFF_ICON, IDR_SHOWPANNEL},
 
 	//-------------------------------------------------------------------------------------//
 	{0,					IDI_SEPARATOR_ICON,		IDI_SEPARATOR_ICON,		IDI_SEPARATOR_ICON, IDI_SEPARATOR_ICON},
@@ -572,8 +572,8 @@ LRESULT Notepad_plus::init(HWND hwnd)
     }
     		// UserDefine Dialog
 
-	checkMenuItem(IDM_VIEW_USER_DLG, uddShow);
-	_toolBar.setCheck(IDM_VIEW_USER_DLG, uddShow);
+	checkMenuItem(IDM_LANG_USER_DLG, uddShow);
+	_toolBar.setCheck(IDM_LANG_USER_DLG, uddShow);
 
 	//launch the plugin dlg memorized at the last session
 	DockingManagerData &dmd = nppGUI._dockingData;

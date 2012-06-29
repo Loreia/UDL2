@@ -10,14 +10,14 @@
         <!-- 2 positions : "horizontal" or "vertical"-->
         <GUIConfig name="ScintillaViewsSplitter">vertical</GUIConfig>
         <!-- For the attribut of position, 2 status : docked or undocked ; 2 status : "show" or "hide" -->
-        <GUIConfig name="UserDefineDlg" position="undocked">show</GUIConfig>
+        <GUIConfig name="UserDefineDlg" position="undocked">hide</GUIConfig>
         <GUIConfig name="TabSetting" size="4" replaceBySpace="yes" />
         <!--App position-->
-        <GUIConfig name="AppPosition" x="178" y="0" width="1135" height="738" isMaximized="yes" />
+        <GUIConfig name="AppPosition" x="231" y="0" width="1135" height="738" isMaximized="yes" />
         <!-- For the primary scintilla view,
              2 status for Attribut lineNumberMargin, bookMarkMargin, indentGuideLine and currentLineHilitingShow: "show" or "hide"
              4 status for Attribut folderMarkStyle : "simple", "arrow", "circle" and "box"  -->
-        <GUIConfig name="ScintillaPrimaryView" lineNumberMargin="show" bookMarkMargin="show" folderMarkStyle="box" indentGuideLine="show" currentLineHilitingShow="show" Wrap="no" edge="no" edgeNbColumn="100" wrapSymbolShow="hide" zoom="0" whiteSpaceShow="show" eolShow="show" lineWrapMethod="aligned" zoom2="0" />
+        <GUIConfig name="ScintillaPrimaryView" lineNumberMargin="show" bookMarkMargin="show" folderMarkStyle="box" indentGuideLine="show" currentLineHilitingShow="show" Wrap="no" edge="no" edgeNbColumn="100" wrapSymbolShow="hide" zoom="0" whiteSpaceShow="hide" eolShow="hide" lineWrapMethod="aligned" zoom2="0" />
         <!-- For the secodary scintilla view,
              2 status for Attribut lineNumberMargin, bookMarkMargin, indentGuideLine and currentLineHilitingShow: "show" or "hide"
              4 status for Attribut folderMarkStyle : "simple", "arrow", "circle" and "box" -->
@@ -71,7 +71,7 @@
         <GUIConfig name="noUpdate" intervalDays="15" nextUpdateDate="20080426">no</GUIConfig>
         <GUIConfig name="MaitainIndent">yes</GUIConfig>
         <GUIConfig name="MRU">yes</GUIConfig>
-        <GUIConfig name="URL">0</GUIConfig>
+        <GUIConfig name="URL">2</GUIConfig>
         <GUIConfig name="globalOverride" fg="no" bg="no" font="no" fontSize="no" bold="no" italic="no" underline="no" />
         <GUIConfig name="auto-completion" autoCAction="2" triggerFromNbChar="3" funcParams="yes" />
         <GUIConfig name="sessionExt"></GUIConfig>
@@ -84,8 +84,8 @@
         <GUIConfig name="titleBar" short="no" />
         <GUIConfig name="stylerTheme" path="c:\1\code\c++\npp\01\33_final_released_01\npp.5.9.3.src\PowerEditor\bin\stylers.xml" />
         <GUIConfig name="DockingManager" leftWidth="200" rightWidth="200" topHeight="200" bottomHeight="274">
+            <PluginDlg pluginName="dummy" id="0" curr="3" prev="-1" isVisible="yes" />
             <PluginDlg pluginName="Notepad++::InternalFunction" id="42051" curr="1" prev="-1" isVisible="no" />
-            <PluginDlg pluginName="dummy" id="0" curr="3" prev="-1" isVisible="no" />
             <ActiveTabs cont="0" activeTab="-1" />
             <ActiveTabs cont="1" activeTab="-1" />
             <ActiveTabs cont="2" activeTab="-1" />
@@ -93,28 +93,40 @@
         </GUIConfig>
     </GUIConfigs>
     <!-- The History of opened files list -->
-    <FindHistory nbMaxFindHistoryPath="10" nbMaxFindHistoryFilter="10" nbMaxFindHistoryFind="10" nbMaxFindHistoryReplace="10" matchWord="no" matchCase="yes" wrap="yes" directionDown="yes" fifRecuisive="yes" fifInHiddenFolder="no" dlgAlwaysVisible="no" fifFilterFollowsDoc="no" fifFolderFollowsDoc="no" searchMode="1" transparencyMode="1" transparency="150">
+    <FindHistory nbMaxFindHistoryPath="10" nbMaxFindHistoryFilter="10" nbMaxFindHistoryFind="10" nbMaxFindHistoryReplace="10" matchWord="yes" matchCase="yes" wrap="yes" directionDown="yes" fifRecuisive="yes" fifInHiddenFolder="no" dlgAlwaysVisible="no" fifFilterFollowsDoc="no" fifFolderFollowsDoc="no" searchMode="0" transparencyMode="1" transparency="150">
+        <Path name="C:\1\code\cpp\UDL24\v1 on github" />
         <Path name="C:\1\Projects\C++\NPP\33_final\npp.5.9.3.src\PowerEditor" />
-        <Find name="\0" />
-        <Find name="position" />
-        <Find name="f_SIP_timer_Tafter_bye_expired" />
-        <Find name="T_INVITE_receive" />
-        <Find name=";[^;]*;[^;]*;$" />
-        <Find name=";.?*;.?*;$" />
-        <Find name=";.*;.*;$" />
-        <Find name="Latest .emucov file is:" />
-        <Find name="Latest .emucov file is: " />
-        <Find name="f" />
+        <Find name="stringToVector" />
+        <Find name="verdict" />
+        <Find name="verdictMapper" />
+        <Find name="isInListForward2" />
+        <Find name="isWhiteSpace" />
+        <Find name="isspacechar" />
+        <Find name="ny backward keyword &apos;glued&apos; with star" />
+        <Find name="*NI." />
+        <Find name="foldVectorStatic" />
+        <Find name="name" />
+        <Replace name="StringToVector" />
+        <Replace name="folding" />
+        <Replace name="foldingtMapper" />
+        <Replace name="beginning" />
         <Replace name="column" />
         <Replace name="all" />
         <Replace name="all3" />
         <Replace name="all2" />
         <Replace name="/rqs/" />
         <Replace name="f_terminate_invite_request(context_index);" />
-        <Replace name=" (" />
-        <Replace name="INVITE_request" />
-        <Replace name="SC_ISCOMMENTLINE" />
-        <Replace name=", levelMinCurrent, levelNext, nlCount);" />
     </FindHistory>
-    <History nbMaxFile="10" inSubMenu="no" customLength="-1" />
+    <History nbMaxFile="10" inSubMenu="no" customLength="-1">
+        <File filename="C:\Users\eivarad\Desktop\test\temp.txt" />
+        <File filename="C:\Users\eivarad\Desktop\test\sqr.py" />
+        <File filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\include\scilexer.h" />
+        <File filename="C:\Users\eivarad\Desktop\SIP_State_Machine.ttcn" />
+        <File filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexCPP.cxx" />
+        <File filename="c:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\contextMenu.xml" />
+        <File filename="C:\Users\eivarad\Desktop\unicode 6\langs.xml" />
+        <File filename="C:\Users\eivarad\Desktop\wscite\cpp.properties" />
+        <File filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\UserDefineResource.h" />
+        <File filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\UserDefineDialog.rc" />
+    </History>
 </NotepadPlus>

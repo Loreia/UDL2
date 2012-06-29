@@ -1,23 +1,10 @@
 <NotepadPlus>
     <Session activeView="0">
-        <mainView activeIndex="17">
-            <File firstVisibleLine="1847" xOffset="0" scrollWidth="1280" startPos="72602" endPos="72602" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx" />
-            <File firstVisibleLine="60" xOffset="0" scrollWidth="1048" startPos="1862" endPos="1862" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexCPP.cxx" />
-            <File firstVisibleLine="44" xOffset="0" scrollWidth="1256" startPos="1862" endPos="1862" selMode="0" lang="Normal Text" encoding="-1" filename="C:\Users\eivarad\Desktop\SIP_State_Machine.ttcn" />
-            <File firstVisibleLine="294" xOffset="0" scrollWidth="1594" startPos="8363" endPos="8363" selMode="0" lang="Normal Text" encoding="-1" filename="C:\Users\eivarad\Desktop\tempp.ttcn" />
-            <File firstVisibleLine="258" xOffset="0" scrollWidth="832" startPos="10054" endPos="8354" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\include\scilexer.h" />
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="1424" startPos="1467" endPos="1467" selMode="0" lang="XML" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\userDefineLang.xml" />
-            <File firstVisibleLine="4" xOffset="0" scrollWidth="686" startPos="4686" endPos="4297" selMode="0" lang="Python" encoding="-1" filename="C:\Users\eivarad\Desktop\test\sqr.py" />
-            <File firstVisibleLine="17377" xOffset="0" scrollWidth="776" startPos="537818" endPos="537818" selMode="0" lang="User-Defined" encoding="-1" filename="C:\Users\eivarad\Desktop\test\temp.txt" />
-            <File firstVisibleLine="1706" xOffset="0" scrollWidth="872" startPos="125494" endPos="125498" selMode="0" lang="Normal Text" encoding="-1" filename="C:\Users\eivarad\Desktop\test\upltdu.program" />
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="5128" startPos="0" endPos="0" selMode="0" lang="XML" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\userDefineLang2.xml" />
-            <File firstVisibleLine="29" xOffset="0" scrollWidth="340424" startPos="4108" endPos="4108" selMode="0" lang="XML" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\userDefineLang3.xml" />
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="1352" startPos="0" endPos="0" selMode="0" lang="ttcnv3" encoding="-1" filename="C:\Users\eivarad\Desktop\SIP_State_Machine_new.ttcn" />
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="686" startPos="0" endPos="0" selMode="0" lang="Normal Text" encoding="-1" filename="C:\Users\eivarad\Desktop\test\test3.txt" />
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="4304" startPos="0" endPos="0" selMode="0" lang="Normal Text" encoding="-1" filename="C:\Users\eivarad\Desktop\test\test4.txt" />
-            <File firstVisibleLine="11" xOffset="0" scrollWidth="854" startPos="448" endPos="448" selMode="0" lang="Python" encoding="-1" filename="C:\Users\eivarad\Desktop\test\try2.py" />
-            <File firstVisibleLine="1008" xOffset="0" scrollWidth="1486" startPos="38509" endPos="38509" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\Notepad_plus.cpp" />
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="2442" startPos="0" endPos="0" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL21\npp.5.9.3.src\merged_code.cpp" />
+        <mainView activeIndex="0">
+            <File firstVisibleLine="1049" xOffset="0" scrollWidth="1350" startPos="43275" endPos="43275" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="42824" startPos="0" endPos="0" selMode="0" lang="XML" encoding="1252" filename="C:\Users\eivarad\Desktop\unicode 6\langs.model.xml" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="1256" startPos="0" endPos="0" selMode="0" lang="XML" encoding="1252" filename="C:\Users\eivarad\Desktop\unicode 6\stylers.xml" />
+            <File firstVisibleLine="150" xOffset="0" scrollWidth="11662" startPos="17942" endPos="17942" selMode="0" lang="XML" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\userDefineLang.xml" />
         </mainView>
         <subView activeIndex="0" />
     </Session>

@@ -7,7 +7,8 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "afxres.h"
+#include "afxres.h"
+
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
@@ -45,8 +46,8 @@ BEGIN
     PUSHBUTTON      "Styler",IDC_FOLDER_IN_CODE1_STYLER,22,203,54,13
     LTEXT           "Open:",IDC_FOLDER_IN_CODE1_OPEN_STATIC,23,224,113,9
     PUSHBUTTON      "Styler",IDC_FOLDER_IN_COMMENT_STYLER,186,30,54,13
-    GROUPBOX        "Default style:",IDC_STATIC,12,103,152,67
-    PUSHBUTTON      "Styler",IDC_DEFAULT_STYLER,59,132,54,13
+    GROUPBOX        "Default style:",IDC_STATIC,12,71,152,49
+    PUSHBUTTON      "Styler",IDC_DEFAULT_STYLER,62,94,54,13
     EDITTEXT        IDC_FOLDER_IN_CODE2_OPEN_EDIT,187,236,131,22,ES_MULTILINE | WS_VSCROLL
     GROUPBOX        "Folding in code 2 style (separators needed):",IDC_FOLDER_IN_CODE2_DESCGROUP_STATIC,176,186,152,156,BS_CENTER
     EDITTEXT        IDC_FOLDER_IN_CODE2_MIDDLE_EDIT,187,273,131,22,ES_MULTILINE | WS_VSCROLL
@@ -55,9 +56,11 @@ BEGIN
     LTEXT           "Close:",IDC_FOLDER_IN_CODE2_CLOSE_STATIC,187,298,113,9
     PUSHBUTTON      "Styler",IDC_FOLDER_IN_CODE2_STYLER,187,202,54,13
     LTEXT           "Open:",IDC_FOLDER_IN_CODE2_OPEN_STATIC,187,224,113,9
-    LTEXT           "http://udl20.weebly.com/",IDC_WEB_HELP,34,54,114,13
-    LTEXT           "Temporary doc site:",IDC_STATIC_WEB_HELP,34,36,114,13
-    GROUPBOX        "Documentation:",IDC_STATIC,12,14,152,67
+    LTEXT           "http://udl20.weebly.com/",IDC_WEB_HELP,44,45,114,13
+    LTEXT           "Temporary doc site:",IDC_STATIC_WEB_HELP,44,31,114,13
+    GROUPBOX        "Documentation:",IDC_STATIC,12,14,152,49
+    CONTROL         "Fold &compact (fold empty lines too)",IDC_FOLDER_FOLD_COMPACT,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,143,152,11
 END
 
 IDD_SYMBOL_STYLE_DLG DIALOGEX 36, 44, 337, 550
@@ -334,7 +337,8 @@ END
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
-
+
+
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
 

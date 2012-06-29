@@ -80,6 +80,10 @@ BOOL CALLBACK FolderStyleDialog::run_dlgProc(UINT Message, WPARAM wParam, LPARAM
         {
             switch (wParam)
             {
+                case IDC_FOLDER_FOLD_COMPACT :
+                {
+                    return setPropertyByCheck(_hSelf, wParam, _pUserLang->_foldCompact);
+                } 
                 case IDC_FOLDER_IN_CODE1_STYLER :
                 {
                     StylerDlg stylerDlg(_hInst, _hSelf, SCE_USER_STYLE_FOLDER_IN_CODE1, SCE_USER_MASK_NESTING_NONE);
@@ -140,6 +144,8 @@ void FolderStyleDialog::setKeywords2List(int id)
 
 void FolderStyleDialog::updateDlg()
 {
+	::SendDlgItemMessage(_hSelf, IDC_FOLDER_FOLD_COMPACT,			BM_SETCHECK, _pUserLang->_foldCompact, 0);
+
     ::SendDlgItemMessage(_hSelf, IDC_FOLDER_IN_CODE1_OPEN_EDIT,		WM_SETTEXT, 0, (LPARAM)(_pUserLang->_keywordLists[SCE_USER_KWLIST_FOLDERS_IN_CODE1_OPEN]));
     ::SendDlgItemMessage(_hSelf, IDC_FOLDER_IN_CODE1_MIDDLE_EDIT,	WM_SETTEXT, 0, (LPARAM)(_pUserLang->_keywordLists[SCE_USER_KWLIST_FOLDERS_IN_CODE1_MIDDLE]));
     ::SendDlgItemMessage(_hSelf, IDC_FOLDER_IN_CODE1_CLOSE_EDIT,	WM_SETTEXT, 0, (LPARAM)(_pUserLang->_keywordLists[SCE_USER_KWLIST_FOLDERS_IN_CODE1_CLOSE]));
@@ -235,17 +241,7 @@ BOOL CALLBACK KeyWordsStyleDialog::run_dlgProc(UINT Message, WPARAM wParam, LPAR
             switch (wParam)
             {
                 case IDC_KEYWORD1_PREFIX_CHECK :
-					{	
-					//HFONT hFont=CreateFont(18,0,0,0,FW_DONTCARE,FALSE,FALSE,FALSE,DEFAULT_CHARSET,OUT_OUTLINE_PRECIS,
-     //               CLIP_DEFAULT_PRECIS,ANTIALIASED_QUALITY, VARIABLE_PITCH,TEXT("Courier New"));
-
-					//SendMessage(GetDlgItem(_hSelf, IDC_KEYWORD1_DESCGROUP_STATIC/*IDC_KEYWORD1_EDIT*/),             // Handle of edit control
-     //               WM_SETFONT,         // Message to change the font
-     //               (WPARAM) hFont,     // handle of the font
-     //               MAKELPARAM(TRUE, 0) // Redraw text
-     //               );
-						return setPropertyByCheck(_hSelf, wParam, _pUserLang->_isPrefix[0]);
-					}
+					return setPropertyByCheck(_hSelf, wParam, _pUserLang->_isPrefix[0]);
 
                 case IDC_KEYWORD2_PREFIX_CHECK :
                     return setPropertyByCheck(_hSelf, wParam, _pUserLang->_isPrefix[1]);
@@ -375,15 +371,6 @@ BOOL CALLBACK CommentStyleDialog::run_dlgProc(UINT Message, WPARAM wParam, LPARA
             {
                 case IDC_FOLDING_OF_COMMENTS :
                 {
-					//HFONT hFont=CreateFont(28,0,0,0,FW_DONTCARE,FALSE,FALSE,FALSE,DEFAULT_CHARSET,OUT_OUTLINE_PRECIS,
-     //               CLIP_DEFAULT_PRECIS,ANTIALIASED_QUALITY, VARIABLE_PITCH,TEXT("Courier New"));
-
-					//SendMessage(GetDlgItem(_hSelf, IDC_KEYWORD1_DESCGROUP_STATIC/*IDC_COMMENTLINE_OPEN_EDIT*/),             // Handle of edit control
-     //               WM_SETFONT,         // Message to change the font
-     //               (WPARAM) hFont,     // handle of the font
-     //               MAKELPARAM(TRUE, 0) // Redraw text
-     //               );
-
                     return setPropertyByCheck(_hSelf, wParam, _pUserLang->_allowFoldOfComments);
                 }
 
@@ -583,8 +570,8 @@ void CommentStyleDialog::updateDlg()
 		::SendDlgItemMessage(_hSelf, list[i], WM_SETTEXT, 0, (LPARAM)buffer);
 	}
 
-    ::SendDlgItemMessage(_hSelf, IDC_FOLDING_OF_COMMENTS,			BM_SETCHECK, _pUserLang->_allowFoldOfComments, 0);
     ::SendDlgItemMessage(_hSelf, IDC_FORCE_LINE_COMMENTS_AT_BOL,	BM_SETCHECK, _pUserLang->_forceLineCommentsAtBOL, 0);
+    ::SendDlgItemMessage(_hSelf, IDC_FOLDING_OF_COMMENTS,			BM_SETCHECK, _pUserLang->_allowFoldOfComments,    0);
 	
 	::SendDlgItemMessage(_hSelf, IDC_NUMBER_EXTRA_EDIT,		WM_SETTEXT, 0, (LPARAM)(_pUserLang->_keywordLists[SCE_USER_KWLIST_NUMBER_EXTRA]));
 	::SendDlgItemMessage(_hSelf, IDC_NUMBER_PREFIX_EDIT,	WM_SETTEXT, 0, (LPARAM)(_pUserLang->_keywordLists[SCE_USER_KWLIST_NUMBER_PREFIX]));

@@ -878,6 +878,7 @@ public :
 		_udlVersion = TEXT("");
         _allowFoldOfComments = false;
 		_forceLineCommentsAtBOL = false;
+		_foldCompact = false;
 
 		for (int i = 0 ; i < SCE_USER_KWLIST_TOTAL ; i++)
 			*_keywordLists[i] = '\0';
@@ -885,6 +886,7 @@ public :
 	UserLangContainer(const TCHAR *name, const TCHAR *ext, const TCHAR *udlVer) : _name(name), _ext(ext), _udlVersion(udlVer) {
         _allowFoldOfComments = false;
 		_forceLineCommentsAtBOL = false;
+		_foldCompact = false;
 
 		for (int j = 0 ; j < SCE_USER_KWLIST_TOTAL ; j++)
 			*_keywordLists[j] = '\0';
@@ -900,6 +902,7 @@ public :
 			this->_styleArray = ulc._styleArray;
 			this->_allowFoldOfComments = ulc._allowFoldOfComments;
 			this->_forceLineCommentsAtBOL = ulc._forceLineCommentsAtBOL;
+			this->_foldCompact = ulc._foldCompact;
 			int nbStyler = this->_styleArray.getNbStyler();
 			for (int i = 0 ; i < nbStyler ; i++)
 			{
@@ -930,8 +933,9 @@ private:
 	TCHAR _keywordLists[SCE_USER_KWLIST_TOTAL][max_char];
 
 	bool _isCaseIgnored;
-	bool _allowFoldOfComments; 
-	bool _forceLineCommentsAtBOL; 
+	bool _allowFoldOfComments;
+	bool _forceLineCommentsAtBOL;
+	bool _foldCompact;
 	bool _isPrefix[SCE_USER_TOTAL_KEYWORDS];
 };
 

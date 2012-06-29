@@ -43,6 +43,7 @@
         #define    IDC_DEFAULT_STYLER                       (IDC_DEFAULT + 2)
         #define    IDC_WEB_HELP                             (IDC_DEFAULT + 3)
         #define    IDC_STATIC_WEB_HELP                      (IDC_DEFAULT + 4)
+        #define    IDC_FOLDER_FOLD_COMPACT                  (IDC_DEFAULT + 5)
 
     #define    IDC_FOLDER_IN_CODE1                          (IDD_FOLDER_STYLE_DLG + 200)
         #define IDC_FOLDER_IN_CODE1_DESCGROUP_STATIC            (IDC_FOLDER_IN_CODE1 + 20)
