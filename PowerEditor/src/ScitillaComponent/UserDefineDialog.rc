@@ -1,30 +1,27 @@
-// Microsoft Visual C++ generated resource script.
-//
+/*
+this file is part of notepad++
+Copyright (C)2003 Don HO < donho@altern.org >
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+*/
+
+#ifndef USERDEFINEDIALOG_RC
+#define USERDEFINEDIALOG_RC
+
+#include <windows.h>
 #include "UserDefineResource.h"
-
-#define APSTUDIO_READONLY_SYMBOLS
-/////////////////////////////////////////////////////////////////////////////
-//
-// Generated from the TEXTINCLUDE 2 resource.
-//
-#include "afxres.h"
-
-/////////////////////////////////////////////////////////////////////////////
-#undef APSTUDIO_READONLY_SYMBOLS
-
-/////////////////////////////////////////////////////////////////////////////
-// Croatian resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_HRV)
-#ifdef _WIN32
-LANGUAGE LANG_CROATIAN, SUBLANG_DEFAULT
-#pragma code_page(1250)
-#endif //_WIN32
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Dialog
-//
 
 IDD_FOLDER_STYLE_DLG DIALOGEX 36, 44, 337, 400
 STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | WS_CHILD
@@ -46,7 +43,7 @@ BEGIN
     PUSHBUTTON      "Styler",IDC_FOLDER_IN_CODE1_STYLER,22,203,54,13
     LTEXT           "Open:",IDC_FOLDER_IN_CODE1_OPEN_STATIC,23,224,113,9
     PUSHBUTTON      "Styler",IDC_FOLDER_IN_COMMENT_STYLER,186,30,54,13
-    GROUPBOX        "Default style:",IDC_STATIC,12,71,152,49
+    GROUPBOX        "Default style:",IDC_DEFAULT_DESCGROUP_STATIC,12,71,152,49
     PUSHBUTTON      "Styler",IDC_DEFAULT_STYLER,62,94,54,13
     EDITTEXT        IDC_FOLDER_IN_CODE2_OPEN_EDIT,187,236,131,22,ES_MULTILINE | WS_VSCROLL
     GROUPBOX        "Folding in code 2 style (separators needed):",IDC_FOLDER_IN_CODE2_DESCGROUP_STATIC,176,186,152,156,BS_CENTER
@@ -56,9 +53,9 @@ BEGIN
     LTEXT           "Close:",IDC_FOLDER_IN_CODE2_CLOSE_STATIC,187,298,113,9
     PUSHBUTTON      "Styler",IDC_FOLDER_IN_CODE2_STYLER,187,202,54,13
     LTEXT           "Open:",IDC_FOLDER_IN_CODE2_OPEN_STATIC,187,224,113,9
-    LTEXT           "http://udl20.weebly.com/",IDC_WEB_HELP,44,45,114,13
-    LTEXT           "Temporary doc site:",IDC_STATIC_WEB_HELP,44,31,114,13
-    GROUPBOX        "Documentation:",IDC_STATIC,12,14,152,49
+    LTEXT           "http://udl20.weebly.com/",IDC_WEB_HELP_LINK,44,45,114,13
+    LTEXT           "Temporary doc site:",IDC_WEB_HELP_STATIC,44,31,114,13
+    GROUPBOX        "Documentation:",IDC_WEB_HELP_DESCGROUP_STATIC,12,14,152,49
     CONTROL         "Fold &compact (fold empty lines too)",IDC_FOLDER_FOLD_COMPACT,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,143,152,11
 END
@@ -279,66 +276,11 @@ BEGIN
     CONTROL         "Keyword 6",IDC_STYLER_CHECK_NESTING_KEYWORD6,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,119,217,76,13
     CONTROL         "Keyword 7",IDC_STYLER_CHECK_NESTING_KEYWORD7,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,119,234,76,13
     CONTROL         "Keyword 8",IDC_STYLER_CHECK_NESTING_KEYWORD8,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,119,251,76,13
-    RTEXT           "Name:",IDC_STATIC,23,32,36,12
-    RTEXT           "Size:",IDC_STATIC,22,53,36,12
+    RTEXT           "Name:",IDC_STYLER_NAME_STATIC,23,32,36,12
+    RTEXT           "Size:",IDC_STYLER_SIZE_STATIC,22,53,36,12
     CONTROL         "Operators 1",IDC_STYLER_CHECK_NESTING_OPERATORS1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,209,166,76,13
     CONTROL         "Operators 2",IDC_STYLER_CHECK_NESTING_OPERATORS2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,209,183,76,13
     CONTROL         "Numbers",IDC_STYLER_CHECK_NESTING_NUMBERS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,209,200,76,13
 END
 
-
-#ifdef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// TEXTINCLUDE
-//
-
-1 TEXTINCLUDE 
-BEGIN
-    "resource.\0"
-END
-
-3 TEXTINCLUDE 
-BEGIN
-    "\r\0"
-END
-
-2 TEXTINCLUDE 
-BEGIN
-    "#include ""afxres.h""\r\0"
-END
-
-#endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// DESIGNINFO
-//
-
-#ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
-BEGIN
-    IDD_STYLER_POPUP_DLG, DIALOG
-    BEGIN
-        RIGHTMARGIN, 309
-        BOTTOMMARGIN, 294
-    END
-END
-#endif    // APSTUDIO_INVOKED
-
-#endif    // Croatian resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-
-#ifndef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// Generated from the TEXTINCLUDE 3 resource.
-//
-
-
-/////////////////////////////////////////////////////////////////////////////
-#endif    // not APSTUDIO_INVOKED
-
+#endif //USERDEFINEDIALOG_RC

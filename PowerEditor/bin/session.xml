@@ -1,10 +1,12 @@
 <NotepadPlus>
     <Session activeView="0">
-        <mainView activeIndex="0">
-            <File firstVisibleLine="1049" xOffset="0" scrollWidth="1350" startPos="43275" endPos="43275" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx" />
+        <mainView activeIndex="5">
+            <File firstVisibleLine="1049" xOffset="0" scrollWidth="1350" startPos="43069" endPos="43069" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx" />
             <File firstVisibleLine="0" xOffset="0" scrollWidth="42824" startPos="0" endPos="0" selMode="0" lang="XML" encoding="1252" filename="C:\Users\eivarad\Desktop\unicode 6\langs.model.xml" />
             <File firstVisibleLine="0" xOffset="0" scrollWidth="1256" startPos="0" endPos="0" selMode="0" lang="XML" encoding="1252" filename="C:\Users\eivarad\Desktop\unicode 6\stylers.xml" />
-            <File firstVisibleLine="150" xOffset="0" scrollWidth="11662" startPos="17942" endPos="17942" selMode="0" lang="XML" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\userDefineLang.xml" />
+            <File firstVisibleLine="149" xOffset="0" scrollWidth="11662" startPos="17942" endPos="17942" selMode="0" lang="XML" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\userDefineLang.xml" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="736" startPos="0" endPos="0" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\UserDefineResource.h" />
+            <File firstVisibleLine="254" xOffset="0" scrollWidth="1056" startPos="20735" endPos="20735" selMode="0" lang="Resource file" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\UserDefineDialog.rc" />
         </mainView>
         <subView activeIndex="0" />
     </Session>

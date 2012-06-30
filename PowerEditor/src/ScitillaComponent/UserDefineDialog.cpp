@@ -72,7 +72,7 @@ BOOL CALLBACK FolderStyleDialog::run_dlgProc(UINT Message, WPARAM wParam, LPARAM
         case WM_INITDIALOG :
         {
 			_pageLink.init(_hInst, _hSelf);
-            _pageLink.create(::GetDlgItem(_hSelf, IDC_WEB_HELP), TEXT("http://udl20.weebly.com/"));
+            _pageLink.create(::GetDlgItem(_hSelf, IDC_WEB_HELP_LINK), TEXT("http://udl20.weebly.com/"));
             return TRUE;
         }
 

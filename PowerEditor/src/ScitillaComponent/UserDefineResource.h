@@ -41,9 +41,10 @@
      #define    IDC_DEFAULT                                 (IDD_FOLDER_STYLE_DLG + 100)
         #define    IDC_DEFAULT_DESCGROUP_STATIC             (IDC_DEFAULT + 1)
         #define    IDC_DEFAULT_STYLER                       (IDC_DEFAULT + 2)
-        #define    IDC_WEB_HELP                             (IDC_DEFAULT + 3)
-        #define    IDC_STATIC_WEB_HELP                      (IDC_DEFAULT + 4)
-        #define    IDC_FOLDER_FOLD_COMPACT                  (IDC_DEFAULT + 5)
+        #define    IDC_WEB_HELP_LINK                        (IDC_DEFAULT + 3)
+        #define    IDC_WEB_HELP_STATIC                      (IDC_DEFAULT + 4)
+        #define    IDC_WEB_HELP_DESCGROUP_STATIC            (IDC_DEFAULT + 5)
+        #define    IDC_FOLDER_FOLD_COMPACT                  (IDC_DEFAULT + 6)
 
     #define    IDC_FOLDER_IN_CODE1                          (IDD_FOLDER_STYLE_DLG + 200)
         #define IDC_FOLDER_IN_CODE1_DESCGROUP_STATIC            (IDC_FOLDER_IN_CODE1 + 20)
@@ -280,6 +281,8 @@
     #define IDC_STYLER_CHECK_NESTING_NUMBERS                (IDD_STYLER_POPUP_DLG + 28)
     #define IDC_STYLER_STATIC_NESTING_GROUP                 (IDD_STYLER_POPUP_DLG + 29)
     #define IDC_STYLER_STATIC_FONT_OPTIONS                  (IDD_STYLER_POPUP_DLG + 30)
+    #define IDC_STYLER_NAME_STATIC                          (IDD_STYLER_POPUP_DLG + 31)
+    #define IDC_STYLER_SIZE_STATIC                          (IDD_STYLER_POPUP_DLG + 32)
 
 #define    IDD_STRING_DLG   26000   //IDD_GLOBAL_USERDEFINE_DLG + 6000
     #define    IDC_STRING_STATIC                            (IDD_STRING_DLG + 1)
