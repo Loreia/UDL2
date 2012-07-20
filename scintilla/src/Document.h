@@ -258,7 +258,7 @@ public:
 
 	// UserDefineLanguage specific
 	std::vector<nestedInfo> nestedVector;
-	std::vector<int> foldVector;
+	// std::vector<int> foldVector;
 
 	vvstring commentLineOpen, commentLineContinue, commentLineClose;
 	vvstring commentOpen, commentClose;

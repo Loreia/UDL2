@@ -418,7 +418,7 @@ static inline void StringToVector(char * original, vector<string> & tokenVector,
 
 static inline void ReColoringCheck(unsigned int & startPos, unsigned int & nestedLevel, int & initStyle, int & openIndex,
                                    int & isCommentLine, bool & isInComment, Accessor & styler, vector<nestedInfo> & lastNestedGroup,
-                                   vector<nestedInfo> & nestedVector, vector<int> & foldVector, int & continueCommentBlock)
+                                   vector<nestedInfo> & nestedVector, /* vector<int> & foldVector, */ int & continueCommentBlock)
 {
     // re-coloring always starts at line beginning !!
 
@@ -452,7 +452,7 @@ static inline void ReColoringCheck(unsigned int & startPos, unsigned int & neste
 
     if (startPos == 0)
     {
-        foldVector.clear();
+        // foldVector.clear();
         nestedVector.clear();
         lastNestedGroup.clear();
         initStyle = SCE_USER_STYLE_DEFAULT;
@@ -481,7 +481,7 @@ static inline void ReColoringCheck(unsigned int & startPos, unsigned int & neste
     }
     else
     {
-        iter = lastNestedGroup.end();
+        iter = nestedVector.end();
     }
 
     // recreate lastNestedGroup, skip adjecent OPEN/CLOSE pairs
@@ -551,7 +551,7 @@ static inline void ReColoringCheck(unsigned int & startPos, unsigned int & neste
             if (continueCommentBlock & CL_PREV)
                 continueCommentBlock |= CL_PREVPREV;
 
-    foldVector.erase(foldVector.begin() + lineCurrent, foldVector.end());
+    // foldVector.erase(foldVector.begin() + lineCurrent, foldVector.end());
 }
 
 static bool isInListForward2(vvstring & openVector, StyleContext & sc, bool ignoreCase, int forward)
@@ -965,7 +965,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
     vector<string> & suffixTokens           = (static_cast<Document *>(styler.GetDocumentPointer()))->suffixTokens;
 
     vector<nestedInfo> & nestedVector = (static_cast<Document *>(styler.GetDocumentPointer()))->nestedVector;
-    vector<int> & foldVector          = (static_cast<Document *>(styler.GetDocumentPointer()))->foldVector;
+    // vector<int> & foldVector          = (static_cast<Document *>(styler.GetDocumentPointer()))->foldVector;
     // foldVectorStatic                  = &foldVector;    // foldVectorStatic is used for debugging only, it should be commented out in production code !
 
     if (startPos == 0)
@@ -1065,10 +1065,10 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
         foldersInCode1Middle.clear();
         foldersInCode1Close.clear();
 
-        SubGroup(sOperators1,             operators1,               true);
         SubGroup(sFoldersInCode1Open,     foldersInCode1Open,       true);
         SubGroup(sFoldersInCode1Middle,   foldersInCode1Middle,     true);
         SubGroup(sFoldersInCode1Close,    foldersInCode1Close,      true);
+        SubGroup(sOperators1,             operators1,               true);
 
         char * numberRanges         = (char *)styler.pprops->Get("userDefine.numberRanges");
         char * extraCharsInPrefixed = (char *)styler.pprops->Get("userDefine.extraCharsInPrefixed");
@@ -1202,7 +1202,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
 
     if (startPos == 0)
     {
-        foldVector.clear();
+        // foldVector.clear();
         nestedVector.clear();
         lastNestedGroup.clear();
         initStyle = SCE_USER_STYLE_DEFAULT;
@@ -1211,7 +1211,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
     {
         int oldStartPos = startPos;
         ReColoringCheck(startPos, nestedLevel, initStyle, openIndex, isCommentLine, isInComment,
-                        styler, lastNestedGroup, nestedVector, foldVector, continueCommentBlock);
+                        styler, lastNestedGroup, nestedVector, /* foldVector, */ continueCommentBlock);
 
         // offset move to previous line
         length += (oldStartPos - startPos);
@@ -1298,7 +1298,8 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
 
                 if (levelPrev != 0)
                 {
-                    foldVector[lineCurrent - 1] = levelPrev;
+                    // foldVector[lineCurrent - 1] = levelPrev;
+					styler.SetLevel(lineCurrent - 1, levelPrev);
                     levelPrev = 0;
                 }
             }
@@ -1310,12 +1311,12 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 lev |= SC_FOLDLEVELWHITEFLAG;
             if (levelMinCurrent < levelNext)
                 lev |= SC_FOLDLEVELHEADERFLAG;
-            foldVector.push_back(lev);
+            // foldVector.push_back(lev);
             styler.SetLevel(lineCurrent, lev);
 
             for (int i=0; i<nlCount; ++i)   // multi-line multi-part keyword
             {
-                foldVector.push_back(levelNext | levelNext << 16);  // TODO: what about SC_ISCOMMENTLINE?
+                // foldVector.push_back(levelNext | levelNext << 16);  // TODO: what about SC_ISCOMMENTLINE?
                 styler.SetLevel(lineCurrent++, levelNext | levelNext << 16);
             }
             nlCount = 0;

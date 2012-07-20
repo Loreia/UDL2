@@ -1,12 +1,11 @@
 Changes in this commit.
 
 Features:
-- Added foldCompact option to UDL2 GUI
-- Changed GUI menu entry "User define dilog..." in EDIT menu, to "Define your language..." in LANGUAGE menu
-- Added comments to LexUser.cpp code. I tried to use minimal amount of comments but to still cover all parts of the code.
+- none
 
 Bug fix:
-- none
+- fixed regression: Notepad++ would crash in function 'ReColoringCheck' (regression introduced in Beta 10)
+- fixed regression: Folding of comment lines wasn't working after removing 'foldVectorStatic' from the code (regression introduced in Beta 10)
 
 Things left to do:
 1. Continue with code optimizations.
