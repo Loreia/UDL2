@@ -1,19 +1,30 @@
-//this file is part of notepad++
-//Copyright (C)2003 Don HO <donho@altern.org>
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
 //
-//This program is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License
-//as published by the Free Software Foundation; either
-//version 2 of the License, or (at your option) any later version.
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
 //
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
 //
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
 
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
@@ -100,6 +111,7 @@ const int COPYDATA_FILENAMESW = 2;
 const TCHAR fontSizeStrs[][3] = {TEXT(""), TEXT("8"), TEXT("9"), TEXT("10"), TEXT("11"), TEXT("12"), TEXT("14"), TEXT("16"), TEXT("18"), TEXT("20"), TEXT("22"), TEXT("24"), TEXT("26"), TEXT("28")};
 
 const TCHAR localConfFile[] = TEXT("doLocalConf.xml");
+const TCHAR allowAppDataPluginsFile[] = TEXT("allowAppDataPlugins.xml");
 const TCHAR notepadStyleFile[] = TEXT("asNotepad.xml");
 
 void cutString(const TCHAR *str2cut, vector<generic_string> & patternVect);
@@ -162,7 +174,7 @@ struct CmdLineParams {
 	bool _isPointXValid;
 	bool _isPointYValid;
 	bool isPointValid() {
-		return _isPointXValid && _isPointXValid;
+		return _isPointXValid && _isPointYValid;
 	};
 
 	LangType _langType;
@@ -222,13 +234,19 @@ struct DockingManagerData {
 	vector<PluginDlgDockingInfo>	_pluginDockInfo;
 	vector<ContainerTabInfo>		_containerTabInfo;
 
-	RECT * getFloatingRCFrom(int floatCont) {
+	bool getFloatingRCFrom(int floatCont, RECT & rc) {
 		for (size_t i = 0 ; i < _flaotingWindowInfo.size() ; i++)
 		{
 			if (_flaotingWindowInfo[i]._cont == floatCont)
-				return &(_flaotingWindowInfo[i]._pos);
+      {
+        rc.left = _flaotingWindowInfo[i]._pos.left;
+        rc.top = _flaotingWindowInfo[i]._pos.top;
+        rc.right = _flaotingWindowInfo[i]._pos.right;
+        rc.bottom = _flaotingWindowInfo[i]._pos.bottom;
+				return true;
 		}
-		return NULL;
+		}
+		return false;
 	}
 };
 
@@ -751,7 +769,7 @@ struct NppGUI
 
 struct ScintillaViewParams
 {
-	ScintillaViewParams() : _lineNumberMarginShow(true), _bookMarkMarginShow(true),\
+	ScintillaViewParams() : _lineNumberMarginShow(true), _bookMarkMarginShow(true),_borderWidth(2),\
 		                    _folderStyle(FOLDER_STYLE_BOX), _foldMarginShow(true), _indentGuideLineShow(true),\
 	                        _currentLineHilitingShow(true), _wrapSymbolShow(false),  _doWrap(false), _edgeNbColumn(80),\
 							_zoom(0), _zoom2(0), _whiteSpaceShow(false), _eolShow(false), _lineWrapMethod(LINEWRAP_ALIGNED){};
@@ -771,7 +789,7 @@ struct ScintillaViewParams
 	int _zoom2;
 	bool _whiteSpaceShow;
 	bool _eolShow;
-        
+    int _borderWidth;
 };
 
 const int NB_LIST = 20;
@@ -962,7 +980,8 @@ struct FindHistory {
 					_isMatchWord(false), _isMatchCase(false),_isWrap(true),_isDirectionDown(true),\
 					_isFifRecuisive(true), _isFifInHiddenFolder(false), _isDlgAlwaysVisible(false),\
 					_isFilterFollowDoc(false), _isFolderFollowDoc(false),\
-					_searchMode(normal), _transparencyMode(onLossingFocus), _transparency(150)
+					_searchMode(normal), _transparencyMode(onLossingFocus), _transparency(150),
+					_dotMatchesNewline(false)
 					
 	{};
 	int _nbMaxFindHistoryPath;
@@ -979,6 +998,7 @@ struct FindHistory {
 	bool _isMatchCase;
 	bool _isWrap;
 	bool _isDirectionDown;
+	bool _dotMatchesNewline;
 
 	bool _isFifRecuisive;
 	bool _isFifInHiddenFolder;
@@ -1048,7 +1068,7 @@ public :
 	};
 
 	void addDefaultThemeFromXml(generic_string xmlFullPath) {
-		_themeList.push_back(pair<generic_string, generic_string>(TEXT("Default (styles.xml)"), xmlFullPath));
+		_themeList.push_back(pair<generic_string, generic_string>(TEXT("Default (stylers.xml)"), xmlFullPath));
 	};
 
 	generic_string getThemeFromXmlFileName(const TCHAR *fn) const;
@@ -1192,6 +1212,8 @@ public:
 	bool writeRecentFileHistorySettings(int nbMaxFile = -1) const;
 	bool writeHistory(const TCHAR *fullpath);
 
+	bool writeProjectPanelsSettings() const;
+
 	TiXmlNode * getChildElementByAttribut(TiXmlNode *pere, const TCHAR *childName,\
 										  const TCHAR *attributName, const TCHAR *attributVal) const;
 
@@ -1308,9 +1330,15 @@ public:
 		return (_transparentFuncAddr != NULL);
 	};
 
+	// 0 <= percent < 256
+	// if (percent == 255) then opacq
 	void SetTransparent(HWND hwnd, int percent) {
 		if (!_transparentFuncAddr) return;
 		::SetWindowLongPtr(hwnd, GWL_EXSTYLE, ::GetWindowLongPtrW(hwnd, GWL_EXSTYLE) | 0x00080000);
+		if (percent > 255)
+			percent = 255;
+		if (percent < 0)
+			percent = 0;
 		_transparentFuncAddr(hwnd, 0, percent, 0x00000002); 
 	};
 
@@ -1355,6 +1383,16 @@ public:
     generic_string getContextMenuPath() const {return _contextMenuPath;};
 	const TCHAR * getAppDataNppDir() const {return _appdataNppDir.c_str();};
 	const TCHAR * getWorkingDir() const {return _currentDirectory.c_str();};
+	const TCHAR * getworkSpaceFilePath(int i) const {
+		if (i < 0 || i > 2) return NULL;
+		return _workSpaceFilePathes[i].c_str();
+	};
+
+	void setWorkSpaceFilePath(int i, const TCHAR *wsFile) {
+		if (i < 0 || i > 2 || !wsFile) return;
+		_workSpaceFilePathes[i] = wsFile;
+	};
+
 	void setWorkingDir(const TCHAR * newPath);
 
 	bool loadSession(Session & session, const TCHAR *sessionFileName);
@@ -1410,6 +1448,10 @@ public:
 	};
 	void setNativeLangSpeaker(NativeLangSpeaker *nls) {
 		_pNativeLangSpeaker = nls;
+	};
+
+	bool isLocal() const {
+		return _isLocal;
 	};
 
 private:
@@ -1468,6 +1510,7 @@ private:
 
 	WNDPROC _transparentFuncAddr;
 	WNDPROC _enableThemeDialogTextureFuncAddr;
+	bool _isLocal;
 
 
 	vector<CommandShortcut> _shortcuts;			//main menu shortuts. Static size
@@ -1497,6 +1540,7 @@ private:
 	generic_string _stylerPath;
 	generic_string _appdataNppDir; // sentinel of the absence of "doLocalConf.xml" : (_appdataNppDir == TEXT(""))?"doLocalConf.xml present":"doLocalConf.xml absent"
 	generic_string _currentDirectory;
+	generic_string _workSpaceFilePathes[3];
 
 	Accelerator *_pAccelerator;
 	ScintillaAccelerator * _pScintAccelerator;
@@ -1547,6 +1591,7 @@ private:
     void feedScintillaParam(TiXmlNode *node);
 	void feedDockingManager(TiXmlNode *node);
 	void feedFindHistoryParameters(TiXmlNode *node);
+	void feedProjectPanelsParameters(TiXmlNode *node);
     
 	bool feedStylerArray(TiXmlNode *node);
     void getAllWordStyles(TCHAR *lexerName, TiXmlNode *lexerNode);

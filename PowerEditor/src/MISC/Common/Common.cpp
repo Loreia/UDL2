@@ -1,19 +1,30 @@
-//this file is part of notepad++
-//Copyright (C)2003 Don HO ( donho@altern.org )
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
 //
-//This program is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License
-//as published by the Free Software Foundation; either
-//version 2 of the License, or (at your option) any later version.
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
 //
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
 //
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
 
 #include "precompiledHeaders.h"
 #include "../Utf8.h"
@@ -45,7 +56,7 @@ void writeLog(const TCHAR *logFileName, const char *log2write)
 // http://msdn.microsoft.com/library/default.asp?url=/library/en-us/shellcc/platform/shell/reference/callbackfunctions/browsecallbackproc.asp
 static int __stdcall BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM, LPARAM pData)
 {
-	if (uMsg == BFFM_INITIALIZED)
+	if (uMsg == BFFM_INITIALIZED && pData != 0)
 		::SendMessage(hwnd, BFFM_SETSELECTION, TRUE, pData);
 	return 0;
 };
@@ -98,6 +109,45 @@ void folderBrowser(HWND parent, int outputCtrlID, const TCHAR *defaultStr)
 		pShellMalloc->Release();
 	}
 }
+
+
+generic_string getFolderName(HWND parent, const TCHAR *defaultDir)
+{
+	generic_string folderName(TEXT(""));
+	LPMALLOC pShellMalloc = 0;
+	if (::SHGetMalloc(&pShellMalloc) == NO_ERROR)
+	{
+		BROWSEINFO info;
+		memset(&info, 0, sizeof(info));
+		info.hwndOwner = parent;
+		info.pidlRoot = NULL;
+		TCHAR szDisplayName[MAX_PATH];
+		info.pszDisplayName = szDisplayName;
+		info.lpszTitle = TEXT("Select a folder");
+		info.ulFlags = 0;
+		info.lpfn = BrowseCallbackProc;
+		info.lParam = reinterpret_cast<LPARAM>(defaultDir);
+
+		// Execute the browsing dialog.
+		LPITEMIDLIST pidl = ::SHBrowseForFolder(&info);
+
+		// pidl will be null if they cancel the browse dialog.
+		// pidl will be not null when they select a folder.
+		if (pidl) 
+		{
+			// Try to convert the pidl to a display generic_string.
+			// Return is true if success.
+			TCHAR szDir[MAX_PATH];
+			if (::SHGetPathFromIDList(pidl, szDir))
+				// Set edit control to the directory path.
+				folderName = szDir;
+			pShellMalloc->Free(pidl);
+		}
+		pShellMalloc->Release();
+	}
+	return folderName;
+}
+
 
 void ClientRectToScreenRect(HWND hWnd, RECT* rect)
 {
@@ -383,76 +433,103 @@ std::string wstring2string(const std::wstring & rwString, UINT codepage)
 		return "";
 }
 
-static TCHAR* convertFileName(TCHAR *buffer, const TCHAR *filename)
+// Escapes ampersands in file name to use it in menu
+template <typename T>
+generic_string convertFileName(T beg, T end)
 {
-	TCHAR *b = buffer;
-	const TCHAR *p = filename;
-	while (*p)
+	generic_string strTmp;
+
+	for (T it = beg; it != end; ++it)
 	{
-		if (*p == '&') *b++ = '&';
-		*b++ = *p++;
+		if (*it == '&') strTmp.push_back('&');
+		strTmp.push_back(*it);
 	}
-	*b = 0;	
-	return buffer;
+
+	return strTmp;
+}
+
+generic_string intToString(int val)
+{
+	std::vector<TCHAR> vt;
+	bool isNegative = val < 0;
+	// can't use abs here because std::numeric_limits<int>::min() has no positive representation
+	//val = std::abs(val);
+
+	vt.push_back('0' + (TCHAR)(std::abs(val % 10)));
+	val /= 10;
+	while (val != 0) {
+		vt.push_back('0' + (TCHAR)(std::abs(val % 10)));
+		val /= 10;
+	}
+
+	if (isNegative)
+		vt.push_back('-');
+
+	return generic_string(vt.rbegin(), vt.rend());
+}
+
+generic_string uintToString(unsigned int val)
+{
+	std::vector<TCHAR> vt;
+
+	vt.push_back('0' + (TCHAR)(val % 10));
+	val /= 10;
+	while (val != 0) {
+		vt.push_back('0' + (TCHAR)(val % 10));
+		val /= 10;
+	}
+
+	return generic_string(vt.rbegin(), vt.rend());
 }
 
 // Build Recent File menu entries from given 
-TCHAR *BuildMenuFileName(TCHAR *buffer, int len, int pos, const TCHAR *filename)
+generic_string BuildMenuFileName(int filenameLen, unsigned int pos, const generic_string &filename)
 {
-	buffer[0] = 0;
+	generic_string strTemp;
 
-	TCHAR *itr = buffer;
-	TCHAR *end = buffer + MAX_PATH - 1;
 	if (pos < 9)
 	{
-		*itr++ = '&';
-		*itr++ = '1' + (TCHAR)pos;
+		strTemp.push_back('&');
+		strTemp.push_back('1' + (TCHAR)pos);
 	}
 	else if (pos == 9)
 	{
-		*itr++ = '1';
-		*itr++ = '&';
-		*itr++ = '0';
+		strTemp.append(TEXT("1&0"));
 	}
 	else
 	{
-		wsprintf(itr, TEXT("%d"), pos+1);
-		itr = itr + lstrlen(itr);
+		strTemp.append(uintToString(pos + 1));
 	}
-	*itr++ = ':';
-	*itr++ = ' ';
+	strTemp.append(TEXT(": "));
 	
-	if (len > 0)
+	if (filenameLen > 0)
 	{
-		TCHAR cnvName[MAX_PATH*2];
-		convertFileName(cnvName, filename);
-		::PathCompactPathEx(itr, filename, len - (itr-buffer), 0);
+		std::vector<TCHAR> vt(filenameLen + 1);
+		PathCompactPathExW(&vt[0], filename.c_str(), filenameLen + 1, 0);
+		strTemp.append(convertFileName(vt.begin(), vt.begin() + lstrlen(&vt[0])));
 	}
 	else
 	{
-		TCHAR cnvName[MAX_PATH];
-		const TCHAR *s1;
+		// (filenameLen < 0)
+		generic_string::const_iterator it = filename.begin();
 
-		if (len == 0)
-			s1 = PathFindFileName(filename);
-		else // (len < 0)
-			s1 = filename;
+		if (filenameLen == 0)
+			it += PathFindFileName(filename.c_str()) - filename.c_str();
 
-		int len = lstrlen(s1);
-		if (len < (end-itr))
+		// MAX_PATH is still here to keep old trimming behaviour.
+		if (filename.end() - it < MAX_PATH)
 		{
-			lstrcpy(cnvName, s1);
+			strTemp.append(convertFileName(it, filename.end()));
 		}
 		else
 		{
-			int n = (len-3-(itr-buffer))/2;
-			generic_strncpy(cnvName, s1, n);
-			lstrcpy(cnvName+n, TEXT("..."));
-			lstrcat(cnvName, s1 + lstrlen(s1) - n);
+			strTemp.append(convertFileName(it, it + MAX_PATH / 2 - 3));
+			strTemp.append(TEXT("..."));
+			strTemp.append(convertFileName(filename.end() - MAX_PATH / 2, filename.end()));
 		}
-		convertFileName(itr, cnvName);
 	}
-	return buffer;
+
+	return strTemp;
 }
 
 generic_string PathRemoveFileSpec(generic_string & path)

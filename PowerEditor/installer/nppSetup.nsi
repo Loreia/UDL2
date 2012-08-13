@@ -1,27 +1,37 @@
-;this file is part of installer for Notepad++
-;Copyright (C)2006 Don HO <don.h@free.fr>
+; this file is part of installer for Notepad++
+; Copyright (C)2006 Don HO <don.h@free.fr>
 ;
-;This program is free software; you can redistribute it and/or
-;modify it under the terms of the GNU General Public License
-;as published by the Free Software Foundation; either
-;version 2 of the License, or (at your option) any later version.
+; This program is free software; you can redistribute it and/or
+; modify it under the terms of the GNU General Public License
+; as published by the Free Software Foundation; either
+; version 2 of the License, or (at your option) any later version.
 ;
-;This program is distributed in the hope that it will be useful,
-;but WITHOUT ANY WARRANTY; without even the implied warranty of
-;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;GNU General Public License for more details.
+; Note that the GPL places important restrictions on "derived works", yet
+; it does not provide a detailed definition of that term.  To avoid      
+; misunderstandings, we consider an application to constitute a          
+; "derivative work" for the purpose of this license if it does any of the
+; following:                                                             
+; 1. Integrates source code from Notepad++.
+; 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+;    installer, such as those produced by InstallShield.
+; 3. Links to a library or executes a program that does any of the above.
 ;
-;You should have received a copy of the GNU General Public License
-;along with this program; if not, write to the Free Software
-;Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+; This program is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+; GNU General Public License for more details.
+; 
+; You should have received a copy of the GNU General Public License
+; along with this program; if not, write to the Free Software
+; Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ; Define the application name
 !define APPNAME "Notepad++"
 
-!define APPVERSION "5.9.3"
+!define APPVERSION "6.1.5"
 !define APPNAMEANDVERSION "${APPNAME} v${APPVERSION}"
-!define VERSION_MAJOR 5
-!define VERSION_MINOR 93
+!define VERSION_MAJOR 6
+!define VERSION_MINOR 15
 
 !define APPWEBSITE "http://notepad-plus-plus.org/"
 
@@ -230,6 +240,7 @@ Var Dialog
 Var NoUserDataCheckboxHandle
 Var OldIconCheckboxHandle
 Var ShortcutCheckboxHandle
+Var PluginLoadFromUserDataCheckboxHandle
 
 Function ExtraOptions
 	nsDialogs::Create 1018
@@ -239,15 +250,19 @@ Function ExtraOptions
 		Abort
 	${EndIf}
 
-	${NSD_CreateCheckbox} 0 20 100% 30u "Don't use %APPDATA%$\nEnable this option to make Notepad++ load/write the configuration files from/to its install directory. Check it if you use Notepad++ in an USB device."
+	${NSD_CreateCheckbox} 0 0 100% 30u "Don't use %APPDATA%$\nEnable this option to make Notepad++ load/write the configuration files from/to its install directory. Check it if you use Notepad++ in an USB device."
 	Pop $NoUserDataCheckboxHandle
 	${NSD_OnClick} $NoUserDataCheckboxHandle OnChange_NoUserDataCheckBox
 	
-	${NSD_CreateCheckbox} 0 80 100% 30u "Create Shortcut on Desktop"
+	${NSD_CreateCheckbox} 0 50 100% 30u "Allow plugins to be loaded from %APPDATA%\\notepad++\\plugins$\nIt could cause a security issue. Turn it on if you know what you are doing."
+	Pop $PluginLoadFromUserDataCheckboxHandle
+	${NSD_OnClick} $PluginLoadFromUserDataCheckboxHandle OnChange_PluginLoadFromUserDataCheckBox
+	
+	${NSD_CreateCheckbox} 0 110 100% 30u "Create Shortcut on Desktop"
 	Pop $ShortcutCheckboxHandle
 	${NSD_OnClick} $ShortcutCheckboxHandle ShortcutOnChange_OldIconCheckBox
 
-	${NSD_CreateCheckbox} 0 140 100% 30u "Use the old, obsolete and monstrous icon$\nI won't blame you if you want to get the old icon back :)"
+	${NSD_CreateCheckbox} 0 170 100% 30u "Use the old, obsolete and monstrous icon$\nI won't blame you if you want to get the old icon back :)"
 	Pop $OldIconCheckboxHandle
 	${NSD_OnClick} $OldIconCheckboxHandle OnChange_OldIconCheckBox
 	
@@ -255,12 +270,17 @@ Function ExtraOptions
 FunctionEnd
 
 Var noUserDataChecked
+Var allowPluginLoadFromUserDataChecked
 Var isOldIconChecked
 Var createShortcutChecked
 
 ; The definition of "OnChange" event for checkbox
 Function OnChange_NoUserDataCheckBox
 	${NSD_GetState} $NoUserDataCheckboxHandle $noUserDataChecked
+FunctionEnd
+
+Function OnChange_PluginLoadFromUserDataCheckBox
+	${NSD_GetState} $PluginLoadFromUserDataCheckboxHandle $allowPluginLoadFromUserDataChecked
 FunctionEnd
 
 Function OnChange_OldIconCheckBox
@@ -375,7 +395,14 @@ Section -"Notepad++" mainSection
 		StrCpy $UPDATE_PATH "$APPDATA\Notepad++"
 		CreateDirectory $UPDATE_PATH\plugins\config
 	${EndIf}
-
+	
+	${If} $allowPluginLoadFromUserDataChecked == ${BST_CHECKED}
+		File "..\bin\allowAppDataPlugins.xml"
+	${ELSE}
+		IfFileExists $INSTDIR\allowAppDataPlugins.xml 0 +2
+		Delete $INSTDIR\allowAppDataPlugins.xml
+	${EndIf}
+	
 	SetOutPath "$TEMP\"
 	File "langsModel.xml"
 	File "configModel.xml"
@@ -397,11 +424,11 @@ Section -"Notepad++" mainSection
 	; This line is added due to the bug of xmlUpdater, to be removed in the future
 	nsExec::ExecToStack '"$TEMP\xmlUpdater.exe" "$TEMP\stylesLexerModel.xml" "$TEMP\stylers.model.xml" "$UPDATE_PATH\stylers.xml"'
 	
-	Delete "$UPDATE_PATH\contextMenu.backup.xml"
-	Rename "$UPDATE_PATH\contextMenu.xml" "$INSTDIR\contextMenu.backup.xml"
+	SetOverwrite off
 	SetOutPath "$UPDATE_PATH\"
 	File "..\bin\contextMenu.xml"
 	
+	SetOverwrite on
 	SetOutPath "$INSTDIR\"
 	File "..\bin\langs.model.xml"
 	File "..\bin\config.model.xml"
@@ -540,6 +567,10 @@ Section -"Notepad++" mainSection
 		Exec 'regsvr32 /u /s "$INSTDIR\NppShell_03.dll"'
 		Delete "$INSTDIR\NppShell_03.dll"
 		
+	IfFileExists "$INSTDIR\NppShell_04.dll" 0 +3
+		Exec 'regsvr32 /u /s "$INSTDIR\NppShell_04.dll"'
+		Delete "$INSTDIR\NppShell_04.dll"
+		
 	; detect the right of 
 	UserInfo::GetAccountType
 	Pop $1
@@ -569,12 +600,12 @@ Section "Context Menu Entry" explorerContextMenu
 	SetOverwrite try
 	SetOutPath "$INSTDIR\"
 	${If} ${RunningX64}
-		File /oname=$INSTDIR\NppShell_04.dll "..\bin\NppShell64_04.dll"
+		File /oname=$INSTDIR\NppShell_05.dll "..\bin\NppShell64_05.dll"
 	${Else}
-		File "..\bin\NppShell_04.dll"
+		File "..\bin\NppShell_05.dll"
 	${EndIf}
 	
-	Exec 'regsvr32 /s "$INSTDIR\NppShell_04.dll"'
+	Exec 'regsvr32 /s "$INSTDIR\NppShell_05.dll"'
 SectionEnd
 
 SectionGroup "Auto-completion Files" autoCompletionComponent
@@ -836,6 +867,9 @@ SectionGroup "Localization" localization
 	Section /o "Hebrew" hebrew
 		CopyFiles "$TEMP\nppLocalization\hebrew.xml" "$INSTDIR\localization\hebrew.xml"
 	SectionEnd
+	Section /o "Hindi" hindi
+		CopyFiles "$TEMP\nppLocalization\hindi.xml" "$INSTDIR\localization\hindi.xml"
+	SectionEnd
 	Section /o "Hungarian" hungarian
 		CopyFiles "$TEMP\nppLocalization\hungarian.xml" "$INSTDIR\localization\hungarian.xml"
 	SectionEnd
@@ -860,8 +894,11 @@ SectionGroup "Localization" localization
 	Section /o "Kyrgyz" kyrgyz
 		CopyFiles "$TEMP\nppLocalization\kyrgyz.xml" "$INSTDIR\localization\kyrgyz.xml"
 	SectionEnd
-	Section /o "Latvian" Latvian
-		CopyFiles "$TEMP\nppLocalization\Latvian.xml" "$INSTDIR\localization\Latvian.xml"
+	Section /o "Latvian" latvian
+		CopyFiles "$TEMP\nppLocalization\latvian.xml" "$INSTDIR\localization\latvian.xml"
+	SectionEnd
+	Section /o "Ligurian" ligurian
+		CopyFiles "$TEMP\nppLocalization\ligurian.xml" "$INSTDIR\localization\ligurian.xml"
 	SectionEnd
 	Section /o "Lithuanian" lithuanian
 		CopyFiles "$TEMP\nppLocalization\lithuanian.xml" "$INSTDIR\localization\lithuanian.xml"
@@ -899,6 +936,9 @@ SectionGroup "Localization" localization
 	Section /o "Samogitian" samogitian
 		CopyFiles "$TEMP\nppLocalization\samogitian.xml" "$INSTDIR\localization\samogitian.xml"
 	SectionEnd
+	Section /o "Sardinian" sardinian
+		CopyFiles "$TEMP\nppLocalization\sardinian.xml" "$INSTDIR\localization\sardinian.xml"
+	SectionEnd
 	Section /o "Serbian" serbian
 		CopyFiles "$TEMP\nppLocalization\serbian.xml" "$INSTDIR\localization\serbian.xml"
 	SectionEnd
@@ -929,6 +969,9 @@ SectionGroup "Localization" localization
 	Section /o "Tamil" tamil
 		CopyFiles "$TEMP\nppLocalization\tamil.xml" "$INSTDIR\localization\tamil.xml"
 	SectionEnd
+	Section /o "Telugu" telugu
+		CopyFiles "$TEMP\nppLocalization\telugu.xml" "$INSTDIR\localization\telugu.xml"
+	SectionEnd
 	Section /o "Thai" thai
 		CopyFiles "$TEMP\nppLocalization\thai.xml" "$INSTDIR\localization\thai.xml"
 	SectionEnd
@@ -936,7 +979,6 @@ SectionGroup "Localization" localization
 		CopyFiles "$TEMP\nppLocalization\turkish.xml" "$INSTDIR\localization\turkish.xml"
 	SectionEnd
 	Section /o "Ukrainian" ukrainian
-	
 		CopyFiles "$TEMP\nppLocalization\ukrainian.xml" "$INSTDIR\localization\ukrainian.xml"
 	SectionEnd
 	Section /o "Uzbek" uzbek
@@ -945,6 +987,10 @@ SectionGroup "Localization" localization
 	Section /o "Uzbek (Cyrillic)" uzbekCyrillic
 		CopyFiles "$TEMP\nppLocalization\uzbekCyrillic.xml" "$INSTDIR\localization\uzbekCyrillic.xml"
 	SectionEnd
+	Section /o "Uyghur" uyghur
+		CopyFiles "$TEMP\nppLocalization\uyghur.xml" "$INSTDIR\localization\uyghur.xml"
+	SectionEnd
+
 SectionGroupEnd
 
 SectionGroup "Themes" Themes
@@ -1018,6 +1064,36 @@ SectionGroup "Themes" Themes
 		SetOutPath "$INSTDIR\themes"
 		File ".\themes\Zenburn.xml"
 	SectionEnd
+
+	Section "Solarized" Solarized
+		SetOutPath "$INSTDIR\themes"
+		File ".\themes\Solarized.xml"
+	SectionEnd
+
+	Section "Solarized Light" Solarized-light
+		SetOutPath "$INSTDIR\themes"
+		File ".\themes\Solarized-light.xml"
+	SectionEnd
+	
+	Section "Hot Fudge Sundae" HotFudgeSundae
+		SetOutPath "$INSTDIR\themes"
+		File ".\themes\HotFudgeSundae.xml"
+	SectionEnd
+	
+	Section "khaki" khaki
+		SetOutPath "$INSTDIR\themes"
+		File ".\themes\khaki.xml"
+	SectionEnd
+
+	Section "Mossy Lawn" MossyLawn
+		SetOutPath "$INSTDIR\themes"
+		File ".\themes\MossyLawn.xml"
+	SectionEnd
+	
+	Section "Navajo" Navajo
+		SetOutPath "$INSTDIR\themes"
+		File ".\themes\Navajo.xml"
+	SectionEnd	
 	
 SectionGroupEnd
 
@@ -1349,7 +1425,32 @@ SectionGroup un.Themes
 	
 	Section un.Zenburn
 		Delete "$INSTDIR\themes\Zenburn.xml"
-	SectionEnd	
+	SectionEnd
+
+	Section un.Solarized
+		Delete "$INSTDIR\themes\Solarized.xml"
+	SectionEnd
+
+	Section un.Solarized-light
+		Delete "$INSTDIR\themes\Solarized-light.xml"
+	SectionEnd
+	
+	Section un.HotFudgeSundae
+		Delete "$INSTDIR\themes\HotFudgeSundae.xml"
+	SectionEnd
+
+	Section un.khaki
+		Delete "$INSTDIR\themes\khaki.xml"
+	SectionEnd
+	
+	Section un.MossyLawn
+		Delete "$INSTDIR\themes\MossyLawn.xml"
+	SectionEnd
+
+	Section un.Navajo
+		Delete "$INSTDIR\themes\Navajo.xml"
+	SectionEnd
+	
 SectionGroupEnd
 
 SectionGroup un.localization
@@ -1441,6 +1542,9 @@ SectionGroup un.localization
 	Section un.hebrew
 		Delete "$INSTDIR\localization\hebrew.xml"
 	SectionEnd
+		Section un.hindi
+		Delete "$INSTDIR\localization\hindi.xml"
+	SectionEnd
 	Section un.hungarian
 		Delete "$INSTDIR\localization\hungarian.xml"
 	SectionEnd
@@ -1465,8 +1569,11 @@ SectionGroup un.localization
 	Section un.kyrgyz
 		Delete "$INSTDIR\localization\kyrgyz.xml"
 	SectionEnd
-	Section un.Latvian
-		Delete "$INSTDIR\localization\Latvian.xml"
+	Section un.latvian
+		Delete "$INSTDIR\localization\latvian.xml"
+	SectionEnd
+	Section un.ligurian
+		Delete "$INSTDIR\localization\ligurian.xml"
 	SectionEnd
 	Section un.lithuanian
 		Delete "$INSTDIR\localization\lithuanian.xml"
@@ -1504,6 +1611,9 @@ SectionGroup un.localization
 	Section un.samogitian
 		Delete "$INSTDIR\localization\samogitian.xml"
 	SectionEnd
+	Section un.sardinian
+		Delete "$INSTDIR\localization\sardinian.xml"
+	SectionEnd
 	Section un.serbian
 		Delete "$INSTDIR\localization\serbian.xml"
 	SectionEnd
@@ -1534,6 +1644,9 @@ SectionGroup un.localization
 	Section un.tamil
 		Delete "$INSTDIR\localization\tamil.xml"
 	SectionEnd
+	Section un.telugu
+		Delete "$INSTDIR\localization\telugu.xml"
+	SectionEnd
 	Section un.thai
 		Delete "$INSTDIR\localization\thai.xml"
 	SectionEnd
@@ -1548,6 +1661,9 @@ SectionGroup un.localization
 	SectionEnd
 	Section un.uzbekCyrillic
 		Delete "$INSTDIR\localization\uzbekCyrillic.xml"
+	SectionEnd
+	Section un.uyghur
+		Delete "$INSTDIR\localization\uyghur.xml"
 	SectionEnd
 SectionGroupEnd
 
@@ -1577,6 +1693,62 @@ Section un.explorerContextMenu
 	Delete "$INSTDIR\NppShell_02.dll"
 	Delete "$INSTDIR\NppShell_03.dll"
 	Delete "$INSTDIR\NppShell_04.dll"
+SectionEnd
+
+Section un.UnregisterFileExt
+	; Remove references to "Notepad++_file"
+	IntOp $1 0 + 0	; subkey index
+	StrCpy $2 ""	; subkey name
+Enum_HKCR_Loop:
+	EnumRegKey $2 HKCR "" $1
+	StrCmp $2 "" Enum_HKCR_Done
+	ReadRegStr $0 HKCR $2 ""	; Read the default value
+	${If} $0 == "Notepad++_file"
+		ReadRegStr $3 HKCR $2 "Notepad++_backup"
+		; Recover (some of) the lost original file types
+		${If} $3 == "Notepad++_file"
+			${If} $2 == ".ini"
+				StrCpy $3 "inifile"
+			${ElseIf} $2 == ".inf"
+				StrCpy $3 "inffile"
+			${ElseIf} $2 == ".nfo"
+				StrCpy $3 "MSInfoFile"
+			${ElseIf} $2 == ".txt"
+				StrCpy $3 "txtfile"
+			${ElseIf} $2 == ".log"
+				StrCpy $3 "txtfile"
+			${ElseIf} $2 == ".xml"
+				StrCpy $3 "xmlfile"
+			${EndIf}
+		${EndIf}
+		${If} $3 == "Notepad++_file"
+			; File type recovering has failed. Just discard the current file extension
+			DeleteRegKey HKCR $2
+		${Else}
+			; Restore the original file type
+			WriteRegStr HKCR $2 "" $3
+			DeleteRegValue HKCR $2 "Notepad++_backup"
+			IntOp $1 $1 + 1
+		${EndIf}
+	${Else}
+		IntOp $1 $1 + 1
+	${EndIf}
+	Goto Enum_HKCR_Loop
+Enum_HKCR_Done:
+
+	; Remove references to "Notepad++_file" from "Open with..."
+	IntOp $1 0 + 0	; subkey index
+	StrCpy $2 ""	; subkey name
+Enum_FileExts_Loop:
+	EnumRegKey $2 HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FileExts" $1
+	StrCmp $2 "" Enum_FileExts_Done
+	DeleteRegValue HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FileExts\$2\OpenWithProgids" "Notepad++_file"
+	IntOp $1 $1 + 1
+	Goto Enum_FileExts_Loop
+Enum_FileExts_Done:
+
+	; Remove "Notepad++_file" file type
+	DeleteRegKey HKCR "Notepad++_file"
 SectionEnd
 
 Section un.UserManual

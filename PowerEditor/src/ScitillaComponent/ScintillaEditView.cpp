@@ -1,19 +1,29 @@
-//this file is part of notepad++
-//Copyright (C)2003 Don HO ( donho@altern.org )
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
 //
-//This program is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License
-//as published by the Free Software Foundation; either
-//version 2 of the License, or (at your option) any later version.
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
 //
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
 //
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
 #include "precompiledHeaders.h"
@@ -250,7 +260,7 @@ void ScintillaEditView::init(HINSTANCE hInst, HWND hPere)
 	_codepage = ::GetACP();
 
 	//Use either Unicode or ANSI setwindowlong, depending on environment
-	if (::IsWindowUnicode(_hSelf)) 
+	if (::IsWindowUnicode(_hSelf))
 	{
 		::SetWindowLongPtrW(_hSelf, GWL_USERDATA, reinterpret_cast<LONG>(this));
 		_callWindowProc = CallWindowProcW;
@@ -1554,19 +1564,7 @@ void ScintillaEditView::activateBuffer(BufferID buffer)
 	saveCurrentPos();
 
 	// get foldStateInfo of current doc
-	std::vector<HeaderLineState> lineStateVector;
-
-	int maxLine = execute(SCI_GETLINECOUNT);
-
-	for (int line = 0; line < maxLine; line++) 
-	{
-		int level = execute(SCI_GETFOLDLEVEL, line);
-		if (level & SC_FOLDLEVELHEADERFLAG) 
-		{
-			bool expanded = (execute(SCI_GETFOLDEXPANDED, line) != 0);
-			lineStateVector.push_back(HeaderLineState(line, expanded));
-		}
-	}
+	std::vector<HeaderLineState> lineStateVector = getCurrentFoldStates();
 	
 	// put the state into the future ex buffer
 	_currentBuffer->setHeaderLineState(lineStateVector, this);
@@ -1588,16 +1586,8 @@ void ScintillaEditView::activateBuffer(BufferID buffer)
 	}
 
 	// restore the collapsed info
-	std::vector<HeaderLineState> & lineStateVectorNew = newBuf->getHeaderLineState(this);
-	int nbLineState = lineStateVectorNew.size();
-	for (int i = 0 ; i < nbLineState ; i++)
-	{
-		HeaderLineState & hls = lineStateVectorNew.at(i);
-		bool expanded = (execute(SCI_GETFOLDEXPANDED, hls._headerLineNumber) != 0);
-		// set line to state folded
-		if (hls._isExpanded != expanded)
-			execute(SCI_TOGGLEFOLD, hls._headerLineNumber);
-	}
+	const std::vector<HeaderLineState> & lineStateVectorNew = newBuf->getHeaderLineState(this);
+	syncFoldStateWith(lineStateVectorNew);
 
 	restoreCurrentPos();
 
@@ -1611,6 +1601,36 @@ void ScintillaEditView::activateBuffer(BufferID buffer)
 
 	runMarkers(true, 0, true, false);
     return;	//all done
+}
+
+std::vector<HeaderLineState> ScintillaEditView::getCurrentFoldStates()
+{
+	std::vector<HeaderLineState> lineStateVector;
+	int maxLine = execute(SCI_GETLINECOUNT);
+
+	for (int line = 0; line < maxLine; line++) 
+	{
+		int level = execute(SCI_GETFOLDLEVEL, line);
+		if (level & SC_FOLDLEVELHEADERFLAG) 
+		{
+			bool expanded = (execute(SCI_GETFOLDEXPANDED, line) != 0);
+			lineStateVector.push_back(HeaderLineState(line, expanded));
+		}
+	}
+	return lineStateVector;
+}
+
+void ScintillaEditView::syncFoldStateWith(const std::vector<HeaderLineState> & lineStateVectorNew)
+{
+	int nbLineState = lineStateVectorNew.size();
+	for (int i = 0 ; i < nbLineState ; i++)
+	{
+		const HeaderLineState & hls = lineStateVectorNew.at(i);
+		bool expanded = isFolded(hls._headerLineNumber);
+		// set line to state folded
+		if (hls._isExpanded != expanded)
+			execute(SCI_TOGGLEFOLD, hls._headerLineNumber);
+	}
 }
 
 void ScintillaEditView::bufferUpdated(Buffer * buffer, int mask)
@@ -1682,8 +1702,10 @@ void ScintillaEditView::collapse(int level2Collapse, bool mode)
 		{
 			level -= SC_FOLDLEVELBASE;
 			if (level2Collapse == (level & SC_FOLDLEVELNUMBERMASK))
-				if ((execute(SCI_GETFOLDEXPANDED, line) != 0) != mode)
-					execute(SCI_TOGGLEFOLD, line);
+				if (isFolded(line) != mode)
+				{
+					fold(line, mode);
+				}
 		}
 	}
 
@@ -1691,6 +1713,12 @@ void ScintillaEditView::collapse(int level2Collapse, bool mode)
 }
 
 void ScintillaEditView::foldCurrentPos(bool mode)
+{
+	int currentLine = this->getCurrentLineNumber();
+	fold(currentLine, mode);
+}
+
+void ScintillaEditView::fold(int line, bool mode)
 {
 	// The following code is needed :
 	execute(SCI_COLOURISE, 0, -1);
@@ -1700,22 +1728,31 @@ void ScintillaEditView::foldCurrentPos(bool mode)
 	//    If the "fold" property is set to "1" and your lexer or container supports folding, fold levels are also set.
 	//    This message causes a redraw.
 
-	int currentLine = this->getCurrentLineNumber();
-
 	int headerLine;
-	int level = execute(SCI_GETFOLDLEVEL, currentLine);
+	int level = execute(SCI_GETFOLDLEVEL, line);
 		
 	if (level & SC_FOLDLEVELHEADERFLAG)
-		headerLine = currentLine;
+		headerLine = line;
 	else
 	{
-		headerLine = execute(SCI_GETFOLDPARENT, currentLine);
+		headerLine = execute(SCI_GETFOLDPARENT, line);
 		if (headerLine == -1)
 			return;
 	}
-	if ((execute(SCI_GETFOLDEXPANDED, headerLine) != 0) != mode)
+
+	if (isFolded(headerLine) != mode)
+	{
 		execute(SCI_TOGGLEFOLD, headerLine);
 
+		SCNotification scnN;
+		scnN.nmhdr.code = SCN_FOLDINGSTATECHANGED;
+		scnN.nmhdr.hwndFrom = _hSelf;
+		scnN.nmhdr.idFrom = 0;
+		scnN.line = headerLine;
+		scnN.foldLevelNow = isFolded(headerLine)?1:0; //folded:1, unfolded:0
+
+		::SendMessage(_hParent, WM_NOTIFY, 0, (LPARAM)&scnN);
+	}
 }
 
 void ScintillaEditView::foldAll(bool mode)
@@ -2051,7 +2088,8 @@ void ScintillaEditView::marginClick(int position, int modifiers)
         else 
         {
 			// Toggle this line
-			execute(SCI_TOGGLEFOLD, lineClick, 0);
+			bool mode = isFolded(lineClick);
+			fold(lineClick, !mode);
 			runMarkers(true, lineClick, true, false);
 		}
 	}
@@ -2474,7 +2512,9 @@ void ScintillaEditView::convertSelectedTextTo(bool Case)
 		}
 		::WideCharToMultiByte(codepage, 0, selectedStrW, strWSize, selectedStr, strSize, NULL, NULL);
 
-		execute(SCI_REPLACESEL, strSize, (LPARAM)selectedStr);
+		execute(SCI_SETTARGETSTART, selectionStart);
+		execute(SCI_SETTARGETEND, selectionEnd);
+		execute(SCI_REPLACETARGET, strSize - 1, (LPARAM)selectedStr);
 		execute(SCI_SETSEL, selectionStart, selectionEnd);
 		delete [] selectedStr;
 		delete [] selectedStrW;

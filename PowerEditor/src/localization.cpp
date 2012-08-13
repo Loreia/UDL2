@@ -1,19 +1,30 @@
-//this file is part of notepad++
-//Copyright (C)2010 Don HO <donho@altern.org>
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
 //
-//This program is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License
-//as published by the Free Software Foundation; either
-//version 2 of the License, or (at your option) any later version.
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
 //
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
 //
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
 
 #include "precompiledHeaders.h"
 #include "Notepad_plus.h"
@@ -271,19 +282,20 @@ void NativeLangSpeaker::changeLangTabContextMenu(HMENU hCM)
 	const int POS_SAVEAS = 3;
 	const int POS_RENAME = 4;
 	const int POS_REMOVE = 5;
-	const int POS_PRINT = 6;
-	//------7
-	const int POS_READONLY = 8;
-	const int POS_CLEARREADONLY = 9;
-	//------10
-	const int POS_CLIPFULLPATH = 11;
-	const int POS_CLIPFILENAME = 12;
-	const int POS_CLIPCURRENTDIR = 13;
-	//------14
-	const int POS_GO2VIEW = 15;
-	const int POS_CLONE2VIEW = 16;
-	const int POS_GO2NEWINST = 17;
-	const int POS_OPENINNEWINST = 18;
+	const int POS_RELOAOD = 6;
+	const int POS_PRINT = 7;
+	//------8
+	const int POS_READONLY = 9;
+	const int POS_CLEARREADONLY = 10;
+	//------11
+	const int POS_CLIPFULLPATH = 12;
+	const int POS_CLIPFILENAME = 13;
+	const int POS_CLIPCURRENTDIR = 14;
+	//------15
+	const int POS_GO2VIEW = 16;
+	const int POS_CLONE2VIEW = 17;
+	const int POS_GO2NEWINST = 18;
+	const int POS_OPENINNEWINST = 19;
 
 	const char *pClose = NULL;
 	const char *pCloseBut = NULL;
@@ -301,6 +313,8 @@ void NativeLangSpeaker::changeLangTabContextMenu(HMENU hCM)
 	const char *pCilpCurrentDir = NULL;
 	const char *pRename = NULL;
 	const char *pRemove = NULL;
+	const char *pReload = NULL;
+
 	if (_nativeLangA)
 	{
 		TiXmlNodeA *tabBarMenu = _nativeLangA->FirstChild("Menu");
@@ -350,6 +364,8 @@ void NativeLangSpeaker::changeLangTabContextMenu(HMENU hCM)
 							pGoToNewInst = element->Attribute("name"); break;
 						case 15 :
 							pOpenInNewInst = element->Attribute("name"); break;
+						case 16 :
+							pReload = element->Attribute("name"); break;
 					}
 				}
 			}	
@@ -455,6 +471,12 @@ void NativeLangSpeaker::changeLangTabContextMenu(HMENU hCM)
 		int cmdID = ::GetMenuItemID(hCM, POS_REMOVE);
 		::ModifyMenu(hCM, POS_REMOVE, MF_BYPOSITION, cmdID, removeG);
 	}
+	if (pReload && pReload[0])
+	{
+		const wchar_t *reloadG = wmc->char2wchar(pReload, _nativeLangEncoding);
+		int cmdID = ::GetMenuItemID(hCM, POS_RELOAOD);
+		::ModifyMenu(hCM, POS_REMOVE, MF_BYPOSITION, cmdID, reloadG);
+	}
 #else
 	if (pGoToView && pGoToView[0])
 	{
@@ -535,6 +557,11 @@ void NativeLangSpeaker::changeLangTabContextMenu(HMENU hCM)
 	{
 		int cmdID = ::GetMenuItemID(hCM, POS_REMOVE);
 		::ModifyMenu(hCM, POS_REMOVE, MF_BYPOSITION, cmdID, pRemove);
+	}
+	if (pReload && pReload[0])
+	{
+		int cmdID = ::GetMenuItemID(hCM, POS_RELOAD);
+		::ModifyMenu(hCM, POS_REMOVE, MF_BYPOSITION, cmdID, pReload);
 	}
 #endif
 }
@@ -1247,12 +1274,113 @@ bool NativeLangSpeaker::getMsgBoxLang(const char *msgBoxTagName, generic_string 
 	return false;
 }
 
-int NativeLangSpeaker::messageBox(const char *msgBoxTagName, HWND hWnd, TCHAR *defaultMessage, TCHAR *defaultTitle, int msgBoxType)
+generic_string NativeLangSpeaker::getProjectPanelLangMenuStr(const char * nodeName, int cmdID, const TCHAR *defaultStr) const
+{
+	if (!_nativeLangA) return defaultStr;
+
+	TiXmlNodeA *targetNode = _nativeLangA->FirstChild("ProjectManager");
+	if (!targetNode) return defaultStr;
+
+	targetNode = targetNode->FirstChild("Menus");
+	if (!targetNode) return defaultStr;
+
+	targetNode = targetNode->FirstChild(nodeName);
+	if (!targetNode) return defaultStr;
+
+	const char *name = NULL;
+	for (TiXmlNodeA *childNode = targetNode->FirstChildElement("Item");
+		childNode ;
+		childNode = childNode->NextSibling("Item") )
+	{
+		TiXmlElementA *element = childNode->ToElement();
+		int id;
+		const char *idStr = element->Attribute("id", &id);
+
+		if (idStr && id == cmdID)
+		{
+			name = element->Attribute("name");
+			break;
+		}
+	}
+
+	if (name && name[0])
+	{
+#ifdef UNICODE
+		WcharMbcsConvertor *wmc = WcharMbcsConvertor::getInstance();
+		return wmc->char2wchar(name, _nativeLangEncoding);
+#else
+		return name;
+#endif
+	}
+	return defaultStr;
+}
+
+generic_string NativeLangSpeaker::getProjectPanelLangStr(const char *nodeName, const TCHAR *defaultStr) const
+{
+	if (!_nativeLangA) return defaultStr;
+
+	TiXmlNodeA *targetNode = _nativeLangA->FirstChild("ProjectManager");
+	if (!targetNode) return defaultStr;
+	targetNode = targetNode->FirstChild(nodeName);
+	if (!targetNode) return defaultStr;
+
+	// Set Title
+	const char *name = (targetNode->ToElement())->Attribute("name");
+	if (name && name[0])
+	{
+#ifdef UNICODE
+		WcharMbcsConvertor *wmc = WcharMbcsConvertor::getInstance();
+		return wmc->char2wchar(name, _nativeLangEncoding);
+#else
+		return name;
+#endif
+	}
+	return defaultStr;
+}
+
+int NativeLangSpeaker::messageBox(const char *msgBoxTagName, HWND hWnd, TCHAR *defaultMessage, TCHAR *defaultTitle, int msgBoxType, int intInfo, TCHAR *strInfo)
 {
 	generic_string msg, title;
-	if (getMsgBoxLang(msgBoxTagName, title, msg))
+	size_t index;
+	TCHAR int2Write[256];
+	TCHAR intPlaceHolderSymbol[] = TEXT("$INT_REPLACE$");
+	TCHAR strPlaceHolderSymbol[] = TEXT("$STR_REPLACE$");
+
+	size_t intPlaceHolderLen = lstrlen(intPlaceHolderSymbol);
+	size_t strPlaceHolderLen = lstrlen(strPlaceHolderSymbol);
+
+	generic_sprintf(int2Write, TEXT("%d"), intInfo);
+
+	if (!getMsgBoxLang(msgBoxTagName, title, msg))
 	{
-		return ::MessageBox(hWnd, msg.c_str(), title.c_str(), msgBoxType);
+		title = defaultTitle;
+		msg = defaultMessage;
 	}
+	index = title.find(intPlaceHolderSymbol);
+	if (index != string::npos)
+		title.replace(index, intPlaceHolderLen, int2Write);
+
+	index = msg.find(intPlaceHolderSymbol);
+	if (index != string::npos)
+		msg.replace(index, intPlaceHolderLen, int2Write);
+
+	if (strInfo)
+	{
+		index = title.find(strPlaceHolderSymbol);
+		if (index != string::npos)
+			title.replace(index, strPlaceHolderLen, strInfo);
+
+		index = msg.find(strPlaceHolderSymbol);
+		if (index != string::npos)
+			msg.replace(index, strPlaceHolderLen, strInfo);
+	}
+	return ::MessageBox(hWnd, msg.c_str(), title.c_str(), msgBoxType);
+
+	/*
+	defaultTitle.replace(index, len, int2Write);
+	defaultTitle.replace(index, len, str2Write);
+	defaultMessage.replace(index, len, int2Write);
+	defaultMessage.replace(index, len, str2Write);
 	return ::MessageBox(hWnd, defaultMessage, defaultTitle, msgBoxType);
+	*/
 }

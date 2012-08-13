@@ -1,19 +1,30 @@
-//this file is part of notepad++
-//Copyright (C)2003 Don HO <donho@altern.org>
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
 //
-//This program is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License
-//as published by the Free Software Foundation; either
-//version 2 of the License, or (at your option) any later version.
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
 //
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
 //
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
 
 #ifndef FIND_REPLACE_DLG_H
 #define FIND_REPLACE_DLG_H
@@ -29,6 +40,8 @@
 #ifndef DOCKINGDLGINTERFACE_H
 #include "DockingDlgInterface.h"
 #endif //DOCKINGDLGINTERFACE_H
+
+#include "BoostRegexSearch.h"
 
 #define FIND_RECURSIVE 1
 #define FIND_INHIDDENDIR 2
@@ -78,10 +91,12 @@ struct FindOption
 	generic_string _directory;
 	bool _isRecursive;
 	bool _isInHiddenDir;
+	bool _dotMatchesNewline;
 	FindOption() : _isWholeWord(true), _isMatchCase(true), _searchType(FindNormal),\
 		_isWrapAround(true), _whichDirection(DIR_DOWN), _incrementalType(NotIncremental), 
 		_doPurge(false), _doMarkLine(false),
-		_isInSelection(false),  _isRecursive(true), _isInHiddenDir(false), 
+		_isInSelection(false),  _isRecursive(true), _isInHiddenDir(false),
+		_dotMatchesNewline(false),
 		_filters(TEXT("")), _directory(TEXT("")) {};
 };
 
@@ -93,7 +108,8 @@ public:
 	static int buildSearchFlags(const FindOption * option) {
 		return	(option->_isWholeWord ? SCFIND_WHOLEWORD : 0) |
 				(option->_isMatchCase ? SCFIND_MATCHCASE : 0) |
-				(option->_searchType == FindRegex ? SCFIND_REGEXP|SCFIND_POSIX : 0);
+				(option->_searchType == FindRegex ? SCFIND_REGEXP|SCFIND_POSIX : 0) |
+				((option->_searchType == FindRegex && option->_dotMatchesNewline) ? SCFIND_REGEXP_DOTMATCHESNL : 0);
 	};
 	static void displaySectionCentered(int posStart, int posEnd, ScintillaEditView * pEditView, bool isDownwards = true);
 

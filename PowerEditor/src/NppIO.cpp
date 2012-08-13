@@ -1,19 +1,30 @@
-//this file is part of notepad++
-//Copyright (C)2003 Don HO ( donho@altern.org )
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
 //
-//This program is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License
-//as published by the Free Software Foundation; either
-//version 2 of the License, or (at your option) any later version.
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
 //
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
 //
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
 
 #include "precompiledHeaders.h"
 #include "Notepad_plus_Window.h"
@@ -179,9 +190,26 @@ BufferID Notepad_plus::doOpen(const TCHAR *fileName, bool isReadOnly, int encodi
 				fileNameStr += TEXT("\\");
 
 			getMatchedFileNames(fileNameStr.c_str(), patterns, fileNames, true, false);
-			for (size_t i = 0 ; i < fileNames.size() ; i++)
+			size_t nbFiles2Open = fileNames.size();
+
+			bool ok2Open = true;
+			if (nbFiles2Open > 200)
 			{
-				doOpen(fileNames[i].c_str());
+				int answer = _nativeLangSpeaker.messageBox("NbFileToOpenImportantWarning",
+												_pPublicInterface->getHSelf(),
+												TEXT("$INT_REPLACE$ files are about to be opened.\rAre you sure to open them?"),
+												TEXT("Amount of files to open is too large"),
+												MB_YESNO|MB_APPLMODAL,
+												nbFiles2Open);
+				ok2Open = answer == IDYES;
+			}
+
+			if (ok2Open)
+			{
+				for (size_t i = 0 ; i < nbFiles2Open ; i++)
+				{
+					doOpen(fileNames[i].c_str());
+				}
 			}
 		}
 		else
@@ -272,7 +300,7 @@ bool Notepad_plus::doSave(BufferID id, const TCHAR * filename, bool isCopy)
 	if (!res)
 		_nativeLangSpeaker.messageBox("FileLockedWarning",
 		_pPublicInterface->getHSelf(),
-		TEXT("Please check whether if this file is opened in another program"),
+		TEXT("Please check if this file is opened in another program."),
 		TEXT("Save failed"), 
 		MB_OK);
 	return res;
@@ -295,7 +323,8 @@ void Notepad_plus::doClose(BufferID id, int whichOne) {
 		// So we turn Wow64 off
 		bool isWow64Off = false;
 		NppParameters *pNppParam = NppParameters::getInstance();
-		if (!PathFileExists(buf->getFullPathName()))
+		const TCHAR *fn = buf->getFullPathName();
+		if (!PathFileExists(fn))
 		{
 			pNppParam->safeWow64EnableWow64FsRedirection(FALSE);
 			isWow64Off = true;
@@ -775,6 +804,7 @@ bool Notepad_plus::fileSaveAll() {
 			fileSave(idToSave);
 		}
 	}
+	checkDocState();
 	return true;
 }
 
@@ -972,7 +1002,7 @@ bool Notepad_plus::loadSession(Session & session)
 			const TCHAR *pLn = session._mainViewFiles[i]._langName.c_str();
 			int id = getLangFromMenuName(pLn);
 			LangType typeToSet = L_TEXT;
-			if (id != 0 && lstrcmp(pLn, TEXT("User Defined")) != 0)
+			if (id != 0 && id != IDM_LANG_USER)
 				typeToSet = menuID2LangType(id);
 			if (typeToSet == L_EXTERNAL )
 				typeToSet = (LangType)(id - IDM_LANG_EXTERNAL + L_EXTERNAL);

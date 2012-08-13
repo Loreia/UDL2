@@ -1,19 +1,30 @@
-//this file is part of notepad++
-//Copyright (C)2003 Don HO ( donho@altern.org )
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
 //
-//This program is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License
-//as published by the Free Software Foundation; either
-//version 2 of the License, or (at your option) any later version.
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
 //
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
 //
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
 
 #include "precompiledHeaders.h"
 #include "DocTabView.h"
@@ -128,7 +139,10 @@ void DocTabView::bufferUpdated(Buffer * buffer, int mask) {
 
 	::SendMessage(_hSelf, TCM_SETITEM, index, reinterpret_cast<LPARAM>(&tie));
 
-	::SendMessage(_hParent, WM_SIZE, 0, 0);
+	// send WM_SIZE only when change tab
+	// It is needed while a tab is closed (so tab changed) in multi-line tab mode
+	if (mask & BufferChangeRecentTag)
+		::SendMessage(_hParent, WM_SIZE, 0, 0);
 }
 
 void DocTabView::setBuffer(int index, BufferID id) {
@@ -147,16 +161,20 @@ void DocTabView::setBuffer(int index, BufferID id) {
 
 void DocTabView::reSizeTo(RECT & rc) 
 {
+	int borderWidth = ((NppParameters::getInstance())->getSVP())._borderWidth;
 	if (_hideTabBarStatus)
 	{
 		RECT rcTmp = rc;
-		
 		TabBar::reSizeTo(rcTmp);
 		_pView->reSizeTo(rc);
 	}
 	else
 	{
 		TabBar::reSizeTo(rc);
+		rc.left	 += borderWidth;
+		rc.right -= borderWidth * 2;	
+		rc.top   += borderWidth;
+		rc.bottom -= (borderWidth * 2);	
 		_pView->reSizeTo(rc);
 	}
 }

@@ -1,19 +1,30 @@
-//this file is part of notepad++
-//Copyright (C)2003 Don HO ( donho@altern.org )
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
 //
-//This program is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License
-//as published by the Free Software Foundation; either
-//version 2 of the License, or (at your option) any later version.
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
 //
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
 //
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
 
 #include "precompiledHeaders.h"
 #include "Parameters.h"
@@ -542,6 +553,11 @@ winVer getWindowsVersion()
    {
 		case VER_PLATFORM_WIN32_NT:
 		{
+			if ( osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 2 )
+			{
+				return WV_WIN8;
+			}
+
 			if ( osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 1 )
 			{
 				return WV_WIN7;
@@ -773,11 +789,11 @@ bool NppParameters::load()
 	PathAppend(localConfPath, localConfFile);
 
 	// Test if localConf.xml exist
-	bool isLocal = (PathFileExists(localConfPath.c_str()) == TRUE);
+	_isLocal = (PathFileExists(localConfPath.c_str()) == TRUE);
 
     // Under vista and windows 7, the usage of doLocalConf.xml is not allowed
     // if Notepad++ is installed in "program files" directory, because of UAC
-    if (isLocal)
+    if (_isLocal)
     {
         // We check if OS is Vista or above
         if (_winVersion >= WV_VISTA)
@@ -791,11 +807,11 @@ bool NppParameters::load()
             ::PathRemoveFileSpec(nppDirLocation);
             	
             if  (lstrcmp(progPath, nppDirLocation) == 0)
-                isLocal = false;
+                _isLocal = false;
         }
     }
 
-	if (isLocal)
+	if (_isLocal)
 	{
 		_userPath = _nppPath;
 	}
@@ -1216,23 +1232,25 @@ bool NppParameters::getUserParametersFromXmlTree()
 	TiXmlNode *root = _pXmlUserDoc->FirstChild(TEXT("NotepadPlus"));
 	if (!root) return false;
 
-	// GUI
+	// Get GUI parameters
 	feedGUIParameters(root);
 
-	//History
+	// Get History parameters
 	feedFileListParameters(root);
 
-	// Raser tout
+	// Erase the History root
 	TiXmlNode *node = root->FirstChildElement(TEXT("History"));
 	root->RemoveChild(node);
 
-	// Repartir de zero
+	// Add a new empty History root
 	TiXmlElement HistoryNode(TEXT("History"));
-
 	root->InsertEndChild(HistoryNode);
 
-	//Find history
+	//Get Find history parameters
 	feedFindHistoryParameters(root);
+
+	//Get Project Panel parameters
+	feedProjectPanelsParameters(root);
 
 	return true;
 }
@@ -1693,6 +1711,7 @@ bool NppParameters::getSessionFromXmlTree(TiXmlDocument *pSessionDoc, Session *p
 	
 	return true;
 }
+
 void NppParameters::feedFileListParameters(TiXmlNode *node)
 {
 	TiXmlNode *historyRoot = node->FirstChildElement(TEXT("History"));
@@ -1724,6 +1743,28 @@ void NppParameters::feedFileListParameters(TiXmlNode *node)
 		{
 			_LRFileList[_nbRecentFile] = new generic_string(filePath);
 			_nbRecentFile++;
+		}
+	}
+}
+
+void NppParameters::feedProjectPanelsParameters(TiXmlNode *node)
+{
+	TiXmlNode *projPanelRoot = node->FirstChildElement(TEXT("ProjectPanels"));
+	if (!projPanelRoot) return;
+	
+	for (TiXmlNode *childNode = projPanelRoot->FirstChildElement(TEXT("ProjectPanel"));
+		childNode;
+		childNode = childNode->NextSibling(TEXT("ProjectPanel")) )
+	{
+		int index = 0;
+		const TCHAR *idStr = (childNode->ToElement())->Attribute(TEXT("id"), &index);
+		if (idStr && (index >= 0 && index <= 2))
+		{
+			const TCHAR *filePath = (childNode->ToElement())->Attribute(TEXT("workSpaceFile"));
+			if (filePath)
+			{
+				_workSpaceFilePathes[index] = filePath;
+			}
 		}
 	}
 }
@@ -1841,6 +1882,10 @@ void NppParameters::feedFindHistoryParameters(TiXmlNode *node)
 	(findHistoryRoot->ToElement())->Attribute(TEXT("transparency"), &_findHistory._transparency);
 	if (_findHistory._transparency <= 0 || _findHistory._transparency > 200)
 		_findHistory._transparency = 150;
+
+	boolStr = (findHistoryRoot->ToElement())->Attribute(TEXT("dotMatchesNewline"));
+	if (boolStr)
+		_findHistory._dotMatchesNewline = !lstrcmp(TEXT("yes"), boolStr);
 }
 
 void NppParameters::feedShortcut(TiXmlNode *node)
@@ -2876,6 +2921,38 @@ bool NppParameters::writeRecentFileHistorySettings(int nbMaxFile) const
 	(historyNode->ToElement())->SetAttribute(TEXT("nbMaxFile"), nbMaxFile!=-1?nbMaxFile:_nbMaxRecentFile);
 	(historyNode->ToElement())->SetAttribute(TEXT("inSubMenu"), _putRecentFileInSubMenu?TEXT("yes"):TEXT("no"));
 	(historyNode->ToElement())->SetAttribute(TEXT("customLength"), _recentFileCustomLength);
+	return true;
+}
+
+bool NppParameters::writeProjectPanelsSettings() const
+{
+	if (!_pXmlUserDoc) return false;
+	
+	TiXmlNode *nppRoot = _pXmlUserDoc->FirstChild(TEXT("NotepadPlus"));
+	if (!nppRoot) return false;
+	
+	TiXmlNode *projPanelRootNode = nppRoot->FirstChildElement(TEXT("ProjectPanels"));
+	if (projPanelRootNode)
+	{
+		// Erase the Project Panel root
+		nppRoot->RemoveChild(projPanelRootNode);
+	}
+
+	// Create the Project Panel root
+	projPanelRootNode = new TiXmlElement(TEXT("ProjectPanels"));
+
+	// Add 3 Project Panel parameters
+	for (int i = 0 ; i < 3 ; i++)
+	{
+		TiXmlElement projPanelNode(TEXT("ProjectPanel"));
+		(projPanelNode.ToElement())->SetAttribute(TEXT("id"), i);
+		(projPanelNode.ToElement())->SetAttribute(TEXT("workSpaceFile"), _workSpaceFilePathes[i]);
+
+		(projPanelRootNode->ToElement())->InsertEndChild(projPanelNode);
+	}
+
+	// (Re)Insert the Project Panel root
+	(nppRoot->ToElement())->InsertEndChild(*projPanelRootNode);
 	return true;
 }
 
@@ -3950,6 +4027,13 @@ void NppParameters::feedScintillaParam(TiXmlNode *node)
 		else if (!lstrcmp(nm, TEXT("hide")))
 			_svp._eolShow = false;
 	}
+	
+	nm = element->Attribute(TEXT("borderWidth"), &val);
+	if (nm)
+	{
+		if (val > 0 || val <= 30)
+			_svp._borderWidth = val;
+	}
 }
 
 
@@ -4081,7 +4165,7 @@ bool NppParameters::writeScintillaParams(const ScintillaViewParams & svp)
 	(scintNode->ToElement())->SetAttribute(TEXT("zoom2"), svp._zoom2);
 	(scintNode->ToElement())->SetAttribute(TEXT("whiteSpaceShow"), svp._whiteSpaceShow?TEXT("show"):TEXT("hide"));
 	(scintNode->ToElement())->SetAttribute(TEXT("eolShow"), svp._eolShow?TEXT("show"):TEXT("hide"));
-
+	(scintNode->ToElement())->SetAttribute(TEXT("borderWidth"), svp._borderWidth);
 	return true;
 }
 
@@ -4707,6 +4791,7 @@ bool NppParameters::writeFindHistory()
 	(findHistoryRoot->ToElement())->SetAttribute(TEXT("searchMode"), _findHistory._searchMode);
 	(findHistoryRoot->ToElement())->SetAttribute(TEXT("transparencyMode"), _findHistory._transparencyMode);
 	(findHistoryRoot->ToElement())->SetAttribute(TEXT("transparency"), _findHistory._transparency);
+	(findHistoryRoot->ToElement())->SetAttribute(TEXT("dotMatchesNewline"),		_findHistory._dotMatchesNewline?TEXT("yes"):TEXT("no"));
 
 	TiXmlElement hist_element(TEXT(""));
 

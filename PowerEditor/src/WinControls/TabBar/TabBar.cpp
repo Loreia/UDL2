@@ -1,19 +1,30 @@
-//this file is part of notepad++
-//Copyright (C)2003 Don HO ( donho@altern.org )
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
 //
-//This program is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License
-//as published by the Free Software Foundation; either
-//version 2 of the License, or (at your option) any later version.
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
 //
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
 //
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
 
 #include "precompiledHeaders.h"
 #include "TabBar.h"
@@ -188,7 +199,6 @@ void TabBar::reSizeTo(RECT & rc2Ajust)
 	display(rc2Ajust.right > 10);
 	RECT rc = rc2Ajust;
 	Window::reSizeTo(rc);
-	//TabCtrl_AdjustRect(_hSelf, FALSE, &rc2Ajust);
 		
 	// Do our own calculations because TabCtrl_AdjustRect doesn't work
 	// on vertical or multi-lined tab controls	
@@ -204,20 +214,16 @@ void TabBar::reSizeTo(RECT & rc2Ajust)
 		TabsLength  = RowCount * (RowRect.right - RowRect.left);
 		TabsLength += GetSystemMetrics(SM_CXEDGE);
 		
-		rc2Ajust.left	+= TabsLength + 5;
-		rc2Ajust.right	-= TabsLength + 10;	
-		rc2Ajust.top    += 5;
-		rc2Ajust.bottom -= 10;		
+		rc2Ajust.left	+= TabsLength;
+		rc2Ajust.right	-= TabsLength;	
 	}
 	else
 	{
 		TabsLength  = RowCount * (RowRect.bottom - RowRect.top);
 		TabsLength += GetSystemMetrics(SM_CYEDGE);
 
-		rc2Ajust.top	+= TabsLength + 5;
-		rc2Ajust.bottom -= TabsLength + 10;
-		rc2Ajust.left	+= 5;
-		rc2Ajust.right	-= 10;
+		rc2Ajust.top	+= TabsLength;
+		rc2Ajust.bottom -= TabsLength;
 	}
 }
 
@@ -447,7 +453,7 @@ LRESULT TabBarPlus::runProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPara
 			::CallWindowProc(_tabBarDefaultProc, hwnd, WM_LBUTTONDOWN, wParam, lParam);
 			return TRUE;
 		}
-
+//#define NPPM_INTERNAL_ISDRAGGING 40926
 		case WM_MOUSEMOVE :
 		{
 			if (_isDragging)
@@ -460,7 +466,13 @@ LRESULT TabBarPlus::runProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPara
 				// Get cursor position of "Screen"
 				// For using the function "WindowFromPoint" afterward!!!
 				::GetCursorPos(&_draggingPoint);
+/*
+				HWND h = ::WindowFromPoint(_draggingPoint);
+				::SetFocus(h);
+*/
+
 				draggingCursor(_draggingPoint);
+				//::SendMessage(h, NPPM_INTERNAL_ISDRAGGING, 0, 0);
 			    return TRUE;
 			}
 			
@@ -796,19 +808,18 @@ void TabBarPlus::drawItem(DRAWITEMSTRUCT *pDrawItemStruct)
 		{
 			rect.bottom -= 2;
 			rect.left   += ::GetSystemMetrics(SM_CXEDGE) + 4;
-			rect.top    += (_drawTabCloseButton)?spaceUnit:0;			
+			rect.top    += (_drawTabCloseButton)?spaceUnit:0;
+
+			Flags |= DT_BOTTOM;
 		}
 		else
 		{
 			rect.top -= ::GetSystemMetrics(SM_CYEDGE);
 			rect.top += 3;
 			rect.left += _drawTabCloseButton?spaceUnit:0;
-		}
 
-		if (!_isVertical)
 			Flags |= DT_VCENTER;
-		else
-			Flags |= DT_BOTTOM;
+		}
 	} 
 	else 
 	{
@@ -824,10 +835,7 @@ void TabBarPlus::drawItem(DRAWITEMSTRUCT *pDrawItemStruct)
 			rect.left   += (_drawTabCloseButton)?spaceUnit:0;
 		}
 			
-		if (!_isVertical)
-			Flags |= DT_BOTTOM;
-		else
-			Flags |= DT_BOTTOM;
+		Flags |= DT_BOTTOM;
 	}
 	::DrawText(hDC, label, lstrlen(label), &rect, Flags);
 	::RestoreDC(hDC, nSavedDC);

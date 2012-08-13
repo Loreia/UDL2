@@ -28,6 +28,7 @@
                     <Item posX = "1" posY = "14" name = "Auto completar"/>
                     <Item posX = "1" posY = "15" name = "Conversão final de linha"/>
 					<Item posX = "1" posY = "16" name = "Operações com espaços"/>
+					<Item posX = "1" posY = "17" name = "Colar especial"/>
                     <Item posX = "2" posY = "16" name = "Marcar todos"/>
                     <Item posX = "2" posY = "17" name = "Desmarcar todos"/>
                     <Item posX = "2" posY = "18" name = "Saltar acima"/>
@@ -38,7 +39,8 @@
                     <Item posX = "3" posY = "6" name = "Mover/Clonar documento atual"/>
                     <Item posX = "3" posY = "16" name = "Recolher os níveis"/>
                     <Item posX = "3" posY = "17" name = "Expandir os níveis"/>
-                    <Item posX = "4" posY = "5"  name="Conjunto de caracteres"/>
+					<Item posX = "3" posY = "21" name = "Projeto"/>
+                    <Item posX = "4" posY = "5"  name = "Conjunto de caracteres"/>
                     <Item posX = "4" posY = "5"  posZ = "0"  name = "Árabe"/>
                     <Item posX = "4" posY = "5"  posZ = "1"  name = "Báltico"/>
                     <Item posX = "4" posY = "5"  posZ = "2"  name = "Celta"/>
@@ -117,6 +119,15 @@
                     <Item id = "42033" name = "Desmarcar somente leitura"/>
 					<Item id = "42035" name = "Inserir comentário no bloco"/>
 					<Item id = "42036" name = "Remover comentário do bloco"/>
+                    
+					<Item id = "42037" name = "Modo coluna..."/>					
+					<Item id = "42038" name = "Colar como HTML"/>					
+					<Item id = "42039" name = "Colar como RTF"/>					
+					<Item id = "42048" name = "Copiar conteúdo binário"/>					
+					<Item id = "42049" name = "Recortar conteúdo binário"/>
+					<Item id = "42050" name = "Colar conteúdo binário"/>
+					<Item id = "42051" name = "Painel de caracteres"/>
+					<Item id = "42052" name = "Histórico da área de transferência"/>
 
                     <Item id = "43001" name = "Localizar..."/>
                     <Item id = "43002" name = "Localizar próximo"/>
@@ -167,6 +178,8 @@
                     <Item id = "43048" name = "Selecionar e localizar próximo"/>
                     <Item id = "43049" name = "Selecionar e localizar anterior"/>
                     <Item id = "43050" name = "Inverter marcadores"/>
+                    <Item id = "43052" name = "Localizar caracteres numa faixa..."/>
+                    
 					<Item id = "44009" name = "Exibir somente o código"/>
                     <Item id = "44010" name = "Recolher todos níveis"/>
                     <Item id = "44011" name = "Definições do usuário..."/>
@@ -183,12 +196,14 @@
                     <Item id = "44032" name = "Modo Tela Inteira"/>
                     <Item id = "44033" name = "Retornar ao zoom padrão"/>
                     <Item id = "44034" name = "Manter sobre as outras janelas"/>
-					<Item id = "44049" name = "Resumo..."/>
+					<Item id = "44049" name = "Informações sobre o arquivo..."/>
                     <Item id = "44035" name = "Sincronizar rolagem vertical"/>
                     <Item id = "44036" name = "Sincronizar rolagem horizontal"/>
                     <Item id = "44041" name = "Mostrar símbolo de quebra de linha"/>
 					<Item id = "44072" name = "Focar visão principal"/>
-
+					<Item id="44081" name="Painel de Projeto 1"/>
+					<Item id="44082" name="Painel de Projeto 2"/>
+					<Item id="44083" name="Painel de Projeto 3"/>
                     <Item id = "45001" name = "Converter para formato Windows"/>
                     <Item id = "45002" name = "Converter para formato UNIX"/>
                     <Item id = "45003" name = "Converter para formato MAC"/>
@@ -611,5 +626,52 @@
 				<Item id = "2" name = "Cancelar"/>
             </ColumnEditor>
 		</Dialog>
+		<MessageBox>
+			<ContextMenuXmlEditWarning title = "Edititando contextMenu" message = "Editar o arquivo contextMenu.xml permite que você modifique as mensagens do menu de contexto.\rÉ necessário reiniciar o Notepad++ para que as modificações tenham efeito."/>
+			<NppHelpAbsentWarning title = "Arquivo não existe" message = "\rnão existe. Por favor baixe o arquivo no site do Notepad++."/>
+			<SaveCurrentModifWarning title = "Salvar modificações atuais" message = "Você deve salvar a modificação atual.\rAs modificações salvas não poderão ser desfeitas.\r\rDeseja continuar?"/>
+			<LoseUndoAbilityWarning title = "Impossível desfazer" message = "Você deve salvar a modificação atual.\rAs modificações salvas não poderão ser desfeitas.\r\rDeseja continuar?"/>
+			<CannotMoveDoc title = "Mover para nova instância do Notepad++" message = "Documento alterado, salve-o e tente novamente."/>
+			<DocReloadWarning title = "Recarregar" message = "Você tem certeza que quer recarregar o arquivo atual e perder as modificações feitas no Notepad++?"/>
+			<FileLockedWarning title = "Falha ao salvar" message = "Por favor verifique se este arquivo está aberto em outro programa"/>
+			<FileAlreadyOpenedInNpp title = "" message = "O arquivo já está aberto no Notepad++."/>
+			<DeleteFileFailed title = "Excluir Arquivo" message = "Falha ao excluir arquivo"/>
+		</MessageBox>
+		<ProjectManager>
+			<PanelTitle name = "Projeto"/>
+			<WorkspaceRootName name = "Área de trabalho"/>
+			<Menus>
+				<Entries>
+					<Item id="0" name="Área de trabalho"/>
+					<Item id="1" name="Editar"/>
+				</Entries>
+				<WorkspaceMenu>
+					<Item id="3122" name="Nova área de trabalho"/>
+					<Item id="3123" name="Abrir área de trabalho"/>
+					<Item id="3124" name="Recarregar área de trabalho"/>
+					<Item id="3125" name="Salvar"/>
+					<Item id="3126" name="Salvar como..."/>
+					<Item id="3127" name="Salvar uma cópia como..."/>
+					<Item id="3121" name="Adicionar novo projeto"/>
+				</WorkspaceMenu>
+				<ProjectMenu>
+					<Item id="3111" name="Renomear"/>
+					<Item id="3112" name="Adicionar pastas"/>
+					<Item id="3113" name="Adicionar arquivos..."/>
+					<Item id="3114" name="Remover"/>
+				</ProjectMenu>
+				<FolderMenu>
+					<Item id="3111" name="Renomear"/>
+					<Item id="3112" name="Adicionar pastas"/>
+					<Item id="3113" name="Adicionar arquivos..."/>
+					<Item id="3114" name="Remover"/>
+				</FolderMenu>
+				<FileMenu>
+					<Item id="3111" name="Renomear"/>
+					<Item id="3115" name="Remover"/>
+					<Item id="3116" name="Alterar caminho do arquivo"/>
+				</FileMenu>
+			</Menus>
+		</ProjectManager>		
     </Native-Langue>
 </NotepadPlus>

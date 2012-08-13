@@ -1,19 +1,30 @@
-//this file is part of notepad++
-//Copyright (C)2003 Don HO <donho@altern.org>
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
 //
-//This program is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License
-//as published by the Free Software Foundation; either
-//version 2 of the License, or (at your option) any later version.
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
 //
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
 //
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
 
 #ifndef FINDREPLACE_DLG_H
 #define FINDREPLACE_DLG_H
@@ -25,10 +36,6 @@
 #define IDF_WHOLEWORD	1
 #define	IDMATCHCASE						1604
 #define IDF_MATCHCASE	2
-
-#define IDC_MODE_STATIC					1624
-#define IDNORMAL						1625
-#define IDEXTENDED						1626
 
 #define IDREGEXP						1605
 
@@ -56,6 +63,10 @@
 
 #define	IDC_PERCENTAGE_SLIDER			1622
 #define	IDC_TRANSPARENT_GRPBOX 			1623
+
+#define IDC_MODE_STATIC					1624
+#define IDNORMAL						1625
+#define IDEXTENDED						1626
 
 #define	IDC_FIND_IN_STATIC				1628
 //#define	IDC_CURRENT_FILE_RADIO		1629
@@ -96,15 +107,19 @@
 #define	IDC_INCFINDPREVOK				1683
 #define	IDC_INCFINDNXTOK				1684
 #define	IDC_INCFINDMATCHCASE			1685
-#define	IDC_INCFINDHILITEALL			1686
-#define IDC_INCFINDSTATUS				1689
-
 #define	IDC_TRANSPARENT_CHECK				1686
 #define	IDC_TRANSPARENT_LOSSFOCUS_RADIO		1687
 #define	IDC_TRANSPARENT_ALWAYS_RADIO		1688
+#define IDC_INCFINDSTATUS				1689
+#define	IDC_INCFINDHILITEALL			1690
+
+#define	IDB_INCREMENTAL_BG				1691
+
 
 #define IDC_FRCOMMAND_INIT				1700
 #define IDC_FRCOMMAND_EXEC				1701
-#define IDC_FRCOMMAND_BOOLEANS	1702
+#define IDC_FRCOMMAND_BOOLEANS			1702
 
+#define IDREDOTMATCHNL					1703
+#define IDF_REDOTMATCHNL	1024
 #endif //FINDREPLACE_DLG_H

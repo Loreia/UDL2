@@ -39,6 +39,7 @@
                     <Item posX="3" posY="6"  name="Move/Clone Current Document"/>
                     <Item posX="3" posY="16" name="Collapse Level"/>
                     <Item posX="3" posY="17" name="Uncollapse Level"/>
+                    <Item posX="3" posY="21" name="Project"/>
                     <Item posX="4" posY="5"  name="Character Set"/>
                     <Item posX="4" posY="5"  posZ="0"  name="Arabic"/>
                     <Item posX="4" posY="5"  posZ="1"  name="Baltic"/>
@@ -189,7 +190,9 @@
                     <Item id="44036" name="Synchronise Horizontal Scrolling"/>
                     <Item id="44041" name="Show Wrap Symbol"/>
                     <Item id="44072" name="Focus on Another View"/>
-                    
+                   <Item id="44081" name="Project Panel 1"/>
+						<Item id="44082" name="Project Panel 2"/>
+						<Item id="44083" name="Project Panel 3"/>
                     <Item id="45001" name="Convert to Windows Format"/>
                     <Item id="45002" name="Convert to UNIX Format"/>
                     <Item id="45003" name="Convert to MAC Format"/>
@@ -257,6 +260,7 @@
                     <Item order="13" name="Clear Read-Only Flag"/>
                     <Item order="14" name="Move to New Instance"/>
                     <Item order="15" name="Open in New Instance"/>
+                    <Item order="16" name="Reload"/>
             </TabBar>
         </Menu>
         
@@ -358,8 +362,8 @@
                 <Item id="20009" name="Ext.:"/>
                 <Item id="20012" name="Ignore case"/>
                 <Item id="20011" name="Transparency"/>
-				<Item id="20016" name="Import..."/>
-				<Item id="20015" name="Export..."/>
+				<Item id="20015" name="Import..."/>
+				<Item id="20016" name="Export..."/>
                 <Item id="0"     name="Colour Style"/>
                 <Item id="1"     name="Foreground colour"/>
                 <Item id="2"     name="Background colour"/>
@@ -597,5 +601,65 @@
                 <Item id="2" name="Cancel"/>
             </ColumnEditor>
 		</Dialog>
+		<MessageBox>
+			<ContextMenuXmlEditWarning title="Editing contextMenu" message="Editing contextMenu.xml allows you to modify your Notepad++ popup context menu.\rYou have to restart your Notepad++ to take effect after modifying contextMenu.xml."/>
+			<NppHelpAbsentWarning title="File does not exist" message="\rdoesn't exist. Please download it on Notepad++ site."/>
+			<SaveCurrentModifWarning title="Save Current Modification" message="You should save the current modification.\rAll the saved modifications can not be undone.\r\rContinue?"/>
+			<LoseUndoAbilityWarning title="Lose Undo Ability Waning" message="You should save the current modification.\rAll the saved modifications can not be undone.\r\rContinue?"/>
+			<CannotMoveDoc title="Move to new Notepad++ Instance" message="Document is modified, save it then try again."/>
+			<DocReloadWarning title="Reload" message="Are you sure you want to reload the current file and lose the changes made in Notepad++?"/>
+			<FileLockedWarning title="Save failed" message="Please check whether if this file is opened in another program"/>
+			<FileAlreadyOpenedInNpp title="" message="The file is already opened in the Notepad++."/>
+			<DeleteFileFailed title="Delete File" message="Delete File failed"/>
+			
+			<!-- $INT_REPLACE$ is a place holder, don't translate it -->
+			<NbFileToOpenImportantWarning title="Amount of files to open is too large" message="$INT_REPLACE$ files are about to be opened.\rAre you sure to open them?"/>
+		</MessageBox>
+		<ProjectManager>
+			<PanelTitle name="Project"/>
+			<WorkspaceRootName name="Workspace"/>
+			<NewProjectName name="Project Name"/>
+			<NewFolderName name="Folder Name"/>
+			<Menus>
+				<Entries>
+					<Item id="0" name="Workspace"/>
+					<Item id="1" name="Edit"/>
+				</Entries>
+				<WorkspaceMenu>
+					<Item id="3122" name="New Workspace"/>
+					<Item id="3123" name="Open Workspace"/>
+					<Item id="3124" name="Reload Workspace"/>
+					<Item id="3125" name="Save"/>
+					<Item id="3126" name="Save As..."/>
+					<Item id="3127" name="Save a Copy As..."/>
+					<Item id="3121" name="Add New Project"/>
+				</WorkspaceMenu>
+				<ProjectMenu>
+					<Item id="3111" name="Rename"/>
+					<Item id="3112" name="Add Folder"/>
+					<Item id="3113" name="Add Files..."/>
+					<Item id="3117" name="Add Files from Directory..."/>
+					<Item id="3114" name="Remove"/>
+					<Item id="3118" name="Move Up"/>
+					<Item id="3119" name="Move Down"/>
+				</ProjectMenu>
+				<FolderMenu>
+					<Item id="3111" name="Rename"/>
+					<Item id="3112" name="Add Folder"/>
+					<Item id="3113" name="Add Files..."/>
+					<Item id="3117" name="Add Files from Directory..."/>
+					<Item id="3114" name="Remove"/>
+					<Item id="3118" name="Move Up"/>
+					<Item id="3119" name="Move Down"/>
+				</FolderMenu>
+				<FileMenu>
+					<Item id="3111" name="Rename"/>
+					<Item id="3115" name="Remove"/>
+					<Item id="3116" name="Modify File Path"/>
+					<Item id="3118" name="Move Up"/>
+					<Item id="3119" name="Move Down"/>
+				</FileMenu>
+			</Menus>
+		</ProjectManager>
     </Native-Langue>
 </NotepadPlus>

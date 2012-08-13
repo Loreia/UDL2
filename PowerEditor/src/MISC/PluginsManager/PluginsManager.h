@@ -1,19 +1,30 @@
-//this file is part of notepad++
-//Copyright (C)2003 Don HO ( donho@altern.org )
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
 //
-//This program is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License
-//as published by the Free Software Foundation; either
-//version 2 of the License, or (at your option) any later version.
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
 //
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
 //
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
 
 #ifndef PLUGINSMANAGER_H
 #define PLUGINSMANAGER_H
@@ -120,6 +131,7 @@ private:
 
 	vector<PluginInfo *> _pluginInfos;
 	vector<PluginCommand> _pluginsCommands;
+	vector<generic_string> _loadedDlls;
 	bool _isDisabled;
 	IDAllocator _dynamicIDAlloc;
 	IDAllocator _markerAlloc;
@@ -128,6 +140,16 @@ private:
 		msg += TEXT(" just crash in\r");
 		msg += funcSignature;
 		::MessageBox(NULL, msg.c_str(), TEXT(" just crash in\r"), MB_OK|MB_ICONSTOP);
+	};
+	bool isInLoadedDlls(const TCHAR *fn) const {
+		for (size_t i = 0; i < _loadedDlls.size(); i++)
+			if (generic_stricmp(fn, _loadedDlls[i].c_str()) == 0)
+				return true;
+		return false;
+	};
+
+	void addInLoadedDlls(const TCHAR *fn) {
+		_loadedDlls.push_back(fn);
 	};
 };
 

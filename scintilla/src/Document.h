@@ -8,6 +8,8 @@
 #ifndef DOCUMENT_H
 #define DOCUMENT_H
 
+#include <vector>
+
 #ifdef SCI_NAMESPACE
 namespace Scintilla {
 #endif

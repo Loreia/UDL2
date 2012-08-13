@@ -6,6 +6,16 @@
 //as published by the Free Software Foundation; either
 //version 2 of the License, or (at your option) any later version.
 //
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
+//
 //This program is distributed in the hope that it will be useful,
 //but WITHOUT ANY WARRANTY; without even the implied warranty of
 //MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -817,7 +827,7 @@ void DockingCont::drawTabItem(DRAWITEMSTRUCT *pDrawItemStruct)
 	if (!tcItem.lParam)
 		return;
 
-	TCHAR*	text	= ((tTbData*)tcItem.lParam)->pszName;
+	const TCHAR *text	= ((tTbData*)tcItem.lParam)->pszName;
 	int		length	= lstrlen(((tTbData*)tcItem.lParam)->pszName);
 
 
@@ -1100,6 +1110,14 @@ void DockingCont::onSize()
 			::SetWindowPos(((tTbData*)tcItem.lParam)->hClient, NULL,
 							0, 0, rcTemp.right, rcTemp.bottom, 
 							SWP_NOZORDER);
+			//::SendMessage(((tTbData*)tcItem.lParam)->hClient, WM_SIZE, 0, MAKELONG(rcTemp.right, rcTemp.bottom));
+			// Notify switch in
+			NMHDR nmhdr;
+			nmhdr.code		= DMN_FLOATDROPPED;
+			nmhdr.hwndFrom	= _hSelf;
+			nmhdr.idFrom	= 0;
+			::SendMessage(((tTbData*)tcItem.lParam)->hClient, WM_NOTIFY, nmhdr.idFrom, (LPARAM)&nmhdr);
+			
 		}
 	}
 }
@@ -1275,7 +1293,7 @@ void DockingCont::SelectTab(int iTab)
 {
 	if (iTab != -1)
 	{
-		TCHAR	*pszMaxTxt	= NULL;
+		const TCHAR	*pszMaxTxt	= NULL;
 		TCITEM	tcItem		= {0};
 		SIZE	size		= {0};
 		int		maxWidth	= 0;
@@ -1291,6 +1309,13 @@ void DockingCont::SelectTab(int iTab)
 		::ShowWindow(((tTbData*)tcItem.lParam)->hClient, SW_SHOW);
 		::SetFocus(((tTbData*)tcItem.lParam)->hClient);
 
+		// Notify switch in
+		NMHDR nmhdr;
+		nmhdr.code		= DMN_SWITCHIN;
+		nmhdr.hwndFrom	= _hSelf;
+		nmhdr.idFrom	= 0;
+		::SendMessage(((tTbData*)tcItem.lParam)->hClient, WM_NOTIFY, nmhdr.idFrom, (LPARAM)&nmhdr);
+
 		if ((unsigned int)iTab != _prevItem)
 		{
 			// hide previous dialog
@@ -1299,6 +1324,13 @@ void DockingCont::SelectTab(int iTab)
 			if (!tcItem.lParam)
 				return;
 			::ShowWindow(((tTbData*)tcItem.lParam)->hClient, SW_HIDE);
+		
+			// Notify switch off
+			NMHDR nmhdr;
+			nmhdr.code		= DMN_SWITCHOFF;
+			nmhdr.hwndFrom	= _hSelf;
+			nmhdr.idFrom	= 0;
+			::SendMessage(((tTbData*)tcItem.lParam)->hClient, WM_NOTIFY, nmhdr.idFrom, (LPARAM)&nmhdr);
 		}
 
 		// resize tab item
@@ -1309,7 +1341,7 @@ void DockingCont::SelectTab(int iTab)
 
 		for (int iItem = 0; iItem < iItemCnt; iItem++)
 		{
-			TCHAR *pszTabTxt = NULL;
+			const TCHAR *pszTabTxt = NULL;
 
 			::SendMessage(_hContTab, TCM_GETITEM, iItem, (LPARAM)&tcItem);
 			if (!tcItem.lParam)
@@ -1406,7 +1438,12 @@ void DockingCont::focusClient()
 		// set focus
 		if (!tcItem.lParam)
 			return;
-		::SetFocus(((tTbData*)tcItem.lParam)->hClient);
+
+		tTbData *tbData = (tTbData *)tcItem.lParam;
+		if (tbData->pszAddInfo && lstrcmp(tbData->pszAddInfo, DM_NOFOCUSWHILECLICKINGCAPTION) == 0)
+			return;
+		
+		::SetFocus(tbData->hClient);
 	}
 }
 

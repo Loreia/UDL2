@@ -1,44 +1,52 @@
-/*
-this file is part of notepad++
-Copyright (C)2011 Don HO <donho@altern.org>
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
+//
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either
-version 2 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a Copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*/
 
 #include "precompiledHeaders.h"
 #include "clipboardHistoryPanel.h"
 #include "ScintillaEditView.h"
 #include "clipboardFormats.h"
 
-/*
-void ClipboardHistoryPanel::switchEncoding()
-{
-	//int codepage = (*_ppEditView)->getCurrentBuffer()->getEncoding();
-}
-*/
+#ifdef UNICODE
+#define CLIPBOARD_TEXTFORMAT CF_UNICODETEXT
+#else
+#define CLIPBOARD_TEXTFORMAT CF_TEXT
+#endif
 
 ClipboardData ClipboardHistoryPanel::getClipboadData()
 {
 	ClipboardData clipboardData;
-	if (!IsClipboardFormatAvailable(CF_UNICODETEXT))
+	if (!IsClipboardFormatAvailable(CLIPBOARD_TEXTFORMAT))
 		return clipboardData;
 
 	if (!OpenClipboard(NULL))
-		return clipboardData; 
+		return clipboardData;
 	 
-	HGLOBAL hglb = GetClipboardData(CF_UNICODETEXT); 
+	HGLOBAL hglb = GetClipboardData(CLIPBOARD_TEXTFORMAT); 
 	if (hglb != NULL) 
 	{ 
 		char *lpchar = (char *)GlobalLock(hglb);
@@ -213,6 +221,7 @@ BOOL CALLBACK ClipboardHistoryPanel::run_dlgProc(UINT message, WPARAM wParam, LP
 						int i = ::SendDlgItemMessage(_hSelf, IDC_LIST_CLIPBOARD, LB_GETCURSEL, 0, 0);
 						if (i != LB_ERR)
 						{
+#ifdef UNICODE
 							int codepage = (*_ppEditView)->getCurrentBuffer()->getEncoding();
 							if (codepage == -1)
 							{
@@ -233,6 +242,14 @@ BOOL CALLBACK ClipboardHistoryPanel::run_dlgProc(UINT message, WPARAM wParam, LP
 							(*_ppEditView)->execute(SCI_ADDTEXT, strlen(c), (LPARAM)c);
 							(*_ppEditView)->getFocus();
 							delete [] c;
+							
+#else
+							ByteArray ba(_clipboardDataVector[i]);
+							char *str = (char *)ba.getPointer();
+							(*_ppEditView)->execute(SCI_REPLACESEL, 0, (LPARAM)"");
+							(*_ppEditView)->execute(SCI_ADDTEXT, strlen(str), (LPARAM)str);
+							(*_ppEditView)->getFocus();
+#endif
 						}
 					}
 					return TRUE;

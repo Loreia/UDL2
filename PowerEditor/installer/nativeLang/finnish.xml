@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="Windows-1252" ?>
 <!--
-Suomenkielinen lokalisointi Notepad++ 5.9 / Finnish localization
-Viimeisin muokkaaja: Teijo, 31.3.2011
-Lähetä käännösvirhehavaintosi ja korjausehdotuksesi osoitteeseen teijo(at)nettilinja.fi
+Suomenkielinen lokalisointi Notepad++ 6.0.0 / Finnish localization
+Viimeisin muokkaaja: Teijo, 11-04-2012 19:15
+Lähetä käännösvirhehavaintosi ja korjausehdotuksesi osoitteeseen teijo(at)nic.fi
 Asennusohjeet => https://sourceforge.net/forum/message.php?msg_id=5691520
 -->
 <NotepadPlus>
@@ -26,15 +26,17 @@ Asennusohjeet => https://sourceforge.net/forum/message.php?msg_id=5691520
 
 <!-- Sub Menu Entries -->
 				<SubEntries>
+                    <Item posX="0" posY="19" name="Viimeisimmät tiedostot"/>
+					
                     <Item posX="1" posY="9" name="Kopioi leikepöydälle"/>
                     <Item posX="1" posY="10" name="Sisennys"/>
                     <Item posX="1" posY="11" name="Kirjainkoon muunnos"/>
                     <Item posX="1" posY="12" name="Rivitoiminnot"/>
                     <Item posX="1" posY="13" name="Kommentit"/>
                     <Item posX="1" posY="14" name="Automaattiset täydennykset"/> 
-					 <Item posX="1" posY="15" name="Rivin loppumerkit (EOL)"/>
+			<Item posX="1" posY="15" name="Rivin loppumerkit (EOL)"/>
                     <Item posX="1" posY="16" name="Välilyöntien käsittely"/>					
-					<Item posX="1" posY="17" name="Liitä erikoistekstiä"/>
+			<Item posX="1" posY="17" name="Liitä erikoistekstiä"/>
 					
                     <Item posX="2" posY="16" name="Samanlaisten korostaminen"/>
                     <Item posX="2" posY="17" name="Korostusten poistaminen"/>
@@ -47,6 +49,7 @@ Asennusohjeet => https://sourceforge.net/forum/message.php?msg_id=5691520
                     <Item posX="3" posY="6" name="Näkymät ja istunnot"/>
                     <Item posX="3" posY="16" name="Sulje lohkot tasolle"/>
                     <Item posX="3" posY="17" name="Avaa lohkot tasolle"/>
+			<Item posX="3" posY="21" name="Projekti" />		
 
                     <Item posX="4" posY="5" name="Merkistökoodaus"/>
                     <Item posX="4" posY="5"  posZ="0"  name="Arabialainen"/>
@@ -67,10 +70,18 @@ Asennusohjeet => https://sourceforge.net/forum/message.php?msg_id=5691520
                     <Item posX="4" posY="5"  posZ="15" name="Vietnamilainen"/>
 
                     <Item posX="6" posY="4" name="Tuonti" />
+
 				</SubEntries>
 
 <!-- all menu item -->
 <Commands>
+<!-- <Item id="1001" name ="&amp;Jetzt drucken! ***"/> -->
+
+<Item id="10001" name="Yksi näkymä"/>
+<Item id="10002" name="Kahdenna näkymä"/>
+<Item id="10003" name="Luo uusi istunto"/>
+<Item id="10004" name="Avaa uudessa istunnossa"/>
+
 <Item id="41001" name="&amp;Uusi"/>
 <Item id="41002" name="&amp;Avaa"/>
 <Item id="41003" name="&amp;Sulje"/>
@@ -138,6 +149,8 @@ Asennusohjeet => https://sourceforge.net/forum/message.php?msg_id=5691520
 <Item id="42048" name="Kopioi binäärisisältö"/>
 <Item id="42049" name="Leikkaa binäärisisältö"/>
 <Item id="42050" name="Liitä binäärisisältö"/>
+<Item id="42051" name="Merkkipaneeli"/> 
+<Item id="42052" name="Leikepöytähistoria"/> 
 <Item id="43001" name="&amp;Etsi..."/>
 <Item id="43002" name="Etsi &amp;seuraava"/>
 <Item id="43003" name="Korvaa..."/>
@@ -184,9 +197,11 @@ Asennusohjeet => https://sourceforge.net/forum/message.php?msg_id=5691520
 <Item id="43045" name="Aktivoi hakutulosikkuna"/>
 <Item id="43046" name="Seuraava hakutulos"/>
 <Item id="43047" name="Edellinen hakutulos"/>
-<Item id ="43048" name="Korosta ja etsi seuraava"/> 
-<Item id ="43049" name="Korosta ja etsi edellinen"/>
-<Item id ="43050" name="Kaikkien kirjanmerkkien käänteistäminen"/>
+<Item id="43048" name="Korosta ja etsi seuraava"/> 
+<Item id="43049" name="Korosta ja etsi edellinen"/>
+<Item id="43050" name="Kaikkien kirjanmerkkien käänteistäminen"/>
+<Item id="43051" name="Poista muut kuin kirjanmerkeillä merkityt rivit"/> 
+<Item id="43052" name="Etsi &amp;merkkejä…"/>
 
 <Item id="44009" name="Ruudunkaappaustila"/>
 <Item id="44010" name="Sulje kaikki lohkot"/>
@@ -210,6 +225,10 @@ Asennusohjeet => https://sourceforge.net/forum/message.php?msg_id=5691520
 <Item id="44042" name="Piilota rivit"/>
 <Item id="44049" name="Tiedoston tilastotiedot"/>
 <Item id="44072" name="Aktivoi viereinen näkymä"/>
+<Item id="44080" name="Asiakirjakartta"/>
+<Item id="44081" name="Projekti-ikkuna 1"/>
+<Item id="44082" name="Projekti-ikkuna 2"/>
+<Item id="44083" name="Projekti-ikkuna 3"/>
 
 <Item id="45001" name="Muunna Windows-muotoon"/>
 <Item id="45002" name="Muunna UNIX-muotoon"/>
@@ -224,11 +243,6 @@ Asennusohjeet => https://sourceforge.net/forum/message.php?msg_id=5691520
 <Item id="45011" name="Muunna koodaukseen UTF-8"/>
 <Item id="45012" name="Muunna koodaukseen UCS-2 Big Endian"/>
 <Item id="45013" name="Muunna koodaukseen UCS-2 Little Endian"/>
-
-<Item id="10001" name="Yksi näkymä"/>
-<Item id="10002" name="Kahdenna näkymä"/>
-<Item id="10003" name="Luo uusi istunto"/>
-<Item id="10004" name="Avaa uudessa istunnossa"/>
 
 <Item id="46001" name="Mukauta tyyliä..."/>
 <Item id="46015" name="MS DOS"/>
@@ -249,9 +263,9 @@ Asennusohjeet => https://sourceforge.net/forum/message.php?msg_id=5691520
 <Item id="48006" name="Tuo &amp;teemoja..."/>
 <Item id="48009" name="Pikanäppäimet"/>
 <Item id="48011" name="&amp;Asetukset..."/>
-<Item id="48016" name="Muokkaa pikanäppäimiä/Poista makro..."/>
-<Item id="48017" name="Muokkaa pikanäppäimiä/Poista komento..."/>
-<Item id="48018" name="Muokkaa ponnahdusvalikkoa"/>
+<Item id="48016" name="Muokkaa pikanäppäimiä / Poista makro..."/>
+<Item id="48017" name="Muokkaa pikanäppäimiä / Poista komento..."/>
+<Item id="48018" name="Ponnahdusvalikon mukautus"/>
 
 <Item id="49000" name="&amp;Ulkoinen komento..."/>
 <Item id="50000" name="&amp;Funktion täydennys"/>
@@ -272,7 +286,7 @@ Asennusohjeet => https://sourceforge.net/forum/message.php?msg_id=5691520
 <Item order="7" name="Kopioi tiedostopolku ja -nimi"/>
 <Item order="8" name="Kopioi tiedostonimi"/>
 <Item order="9" name="Kopioi tiedostopolku"/>
-<Item order="10" name="Uudelleennimeä"/>
+<Item order="10" name="Nimeä uudelleen"/> 
 <Item order="11" name="Poista"/>
 <Item order="12" name="Lukutila"/>
 <Item order="13" name="Muokkaustila"/>
@@ -323,6 +337,7 @@ Asennusohjeet => https://sourceforge.net/forum/message.php?msg_id=5691520
 <Item id="1686" name="Läpinäkyvyys"/>
 <Item id="1687" name="Passiivisena"/>
 <Item id="1688" name="Aina"/>
+<!-- <Item id="1703" name="&amp;. significa 'a capo'"/> -->
 </Find>
 
 <GoToLine title="Siirtyminen kohtaan">
@@ -373,6 +388,17 @@ Asennusohjeet => https://sourceforge.net/forum/message.php?msg_id=5691520
 	<Item id="2232" name="Käytä valittua alleviivaustapaa"/>
 </SubDialog>
 </StyleConfig>
+<FindCharsInRange title="Etsi merkkejä">
+<Item id="2910" name="&amp;Etsi"/>
+<Item id="2" name="&amp;Sulje"/>
+<Item id="2901" name="E&amp;i-ASCII -merkit (128-255)"/>
+<Item id="2902" name="AS&amp;CII-merkit (0 - 127)"/>
+<Item id="2903" name="&amp;Muu merkkialue:"/>
+<Item id="2906" name="&amp;Ylös"/>
+<Item id="2907" name="&amp;Alas"/>
+<Item id="2908" name="Suunta"/>
+<Item id="2909" name="Etsi y&amp;mpäri"/>
+</FindCharsInRange>
 
 <UserDefine title="Omat kieliopit">
 <Item id="20001" name="Telakoi"/>
@@ -450,13 +476,14 @@ Asennusohjeet => https://sourceforge.net/forum/message.php?msg_id=5691520
 	<Item id="6111" name="Näytä tilarivi"/>
 	<Item id="6112" name="Näytä sulkemispainike"/>
 	<Item id="6113" name="Suljettavissa kaksoisnapsautuksella"/>
-
 	<Item id="6118" name="Piilotettu"/>
 	<Item id="6119" name="Rivitä tarvittaessa"/>
 	<Item id="6120" name="Pystysuuntaiset"/>
 	<Item id="6121" name="Valikkorivi"/>
 	<Item id="6122" name="Piilotettu (Näytä/piilota: F10 tai Alt)"/>
 	<Item id="6123" name="Käyttöliittymän kieli"/>
+    <Item id="6125" name="Dokumenttiluettelo"/>
+    <Item id="6126" name="Näytä"/>
 </Global>
 
 <Scintillas title="Muokkaus">
@@ -482,11 +509,11 @@ Asennusohjeet => https://sourceforge.net/forum/message.php?msg_id=5691520
 <Item id="6224" name="Monimuokkaus"/>
 <Item id="6225" name="Käytössä (Ctrl+Napsautus/valinta)"/>
 <Item id="6226" name="Ei mitään"/>
-
 <Item id="6227" name="Rivitys"/>
 <Item id="6228" name="Oletus"/>
 <Item id="6229" name="Tasattu"/>
 <Item id="6230" name="Sisennetty"/>
+<Item id="6231" name="Reunaleveys"/> 
 
 <Item id="6301" name="Sarkain"/>
 <Item id="6302" name="Korvaa välilyönneillä"/>
@@ -510,7 +537,15 @@ Asennusohjeet => https://sourceforge.net/forum/message.php?msg_id=5691520
 	<Item id="6415" name="Viimeksi käytetty"/>
 	<Item id="6417" name=" "/>
 	<Item id="6419" name="Uusi tiedosto"/>
-	<Item id="6420" name="Käytä avoimiin ANSI-tiedostoihin"/> -->
+	<Item id="6420" name="Käytä avoimiin ANSI-tiedostoihin"/>
+    <Item id="6304" name="Viimeisimmät tiedostot"/>
+    <Item id="6305" name="Ei tarkisteta käynnistettäessä"/>
+	<Item id="6306" name="Tiedostojen enimmäismäärä:"/>
+	<Item id="-1" name="Esitystapa"/>
+	<Item id="6424" name="Alivalikossa"/>
+	<Item id="6425" name="Vain tiedostonimi"/>
+	<Item id="6426" name="Koko tiedostopolku"/>
+	<Item id="6427" name="Mukautettu enimmäispituus:"/>
 </NewDoc>
 
 <FileAssoc title="Tiedostopäätteet">
@@ -606,6 +641,7 @@ Asennusohjeet => https://sourceforge.net/forum/message.php?msg_id=5691520
 <Item id="6813" name=":stä merkistä"/>
 <Item id="6814" name="Kelpaavat arvot: 1 - 9"/>
 <Item id="6815" name="Näytä funktioiden parametrivihjeet"/>
+
 </Backup>
 
 </Preference>
@@ -641,7 +677,61 @@ Asennusohjeet => https://sourceforge.net/forum/message.php?msg_id=5691520
 	<Item id="1" name="OK"/>
 	<Item id="2" name="Peruuta"/>
 </ColumnEditor>
-
 </Dialog>
+		<MessageBox>
+			<ContextMenuXmlEditWarning title="Ponnahdusvalikon mukautus" message="Muokkaamalla tiedostoa 'contextMenu.xml' voit mukauttaa Notepad++ ponnahdusvalikkoa. Tiedoston muokkauksen jälkeen ohjelma on uudelleenkäynnistettävä tehtyjen muutosten käyttöönottamiseksi."/>
+			<NppHelpAbsentWarning title="Tiedostoa ei löydy" message="Ei löydy tiedostoa, lataa se Notepad++ sivustolta."/>
+			<SaveCurrentModifWarning title="Tallenna muutokset" message="Tehdyt muutokset pitää tallentaa. Tallennuksen jälkeen muutoksia ei voi peruuttaa. Jatketaanko?"/>
+			<LoseUndoAbilityWarning title="Varoitus muutosten peruuttaamattomuudesta" message="Tehdyt muutokset pitää tallentaa. Tallennuksen jälkeen muutoksia ei voi peruuttaa. Jatketaanko?"/>
+			<CannotMoveDoc title="Avaa uuteen Notepad++ -istuntoon" message="Tiedostoa on muokattu, tallenna se ja yritä sitten uudelleen."/>
+			<DocReloadWarning title="Uudelleenlataus" message="Avataanko tiedosto uudelleen hyläten edellisen avauksen jälkeiset muutokset?"/>
+			<FileLockedWarning title="Tallennus epäonnistui" message="Varmista, että muut sovellukset eivä käytä tätä tiedostoa"/>
+			<FileAlreadyOpenedInNpp title="" message="Tiedosto on jo avoimena sovelluksessa Notepad++."/>
+			<DeleteFileFailed title="Tiedoston poisto" message="Tiedoston poisto epäonnistui"/>
+		</MessageBox>
+		<ProjectManager>
+			<PanelTitle name="Projekti"/>
+			<WorkspaceRootName name="Työtila"/>
+			<Menus>
+				<Entries>
+					<Item id="0" name="Työtila"/>
+					<Item id="1" name="Muokkaa"/>
+				</Entries>
+				<WorkspaceMenu>
+					<Item id="3122" name="Uusi työtila"/>
+					<Item id="3123" name="Avaa työtila"/>
+					<Item id="3124" name="Lataa työtila uudestaan"/>
+					<Item id="3125" name="Tallenna"/>
+					<Item id="3126" name="Tallenna nimellä..."/>
+					<Item id="3127" name="Tallenna kopio..."/>
+					<Item id="3121" name="Lisää projekti"/>
+				</WorkspaceMenu>
+				<ProjectMenu>
+					<Item id="3111" name="Nimeä uudelleen"/>
+					<Item id="3112" name="Lisää kansio"/>
+					<Item id="3113" name="Lisää tiedostot..."/>
+					<Item id="3114" name="Poista"/>
+		 			<Item id="3117" name="Lisää tiedostot kansiosta... "/> 
+					<Item id="3118" name="Siirrä ylös"/>
+					<Item id="3119" name="Siirrä alas"/>
+				</ProjectMenu>
+				<FolderMenu>
+					<Item id="3111" name="Nimeä uudelleen"/>
+					<Item id="3112" name="Lisää kansio"/>
+					<Item id="3113" name="Lisää tiedostot..."/>
+					<Item id="3114" name="Poista"/>
+		 			<Item id="3117" name="Lisää tiedostot kansiosta... "/> 
+					<Item id="3118" name="Siirrä ylös"/>
+					<Item id="3119" name="Siirrä alas"/>
+				</FolderMenu>
+				<FileMenu>
+					<Item id="3111" name="Nimeä uudelleen"/>
+					<Item id="3115" name="Poista"/>
+					<Item id="3116" name="Muokkaa kansiopolkua"/>
+					<Item id="3118" name="Siirrä ylös"/>
+					<Item id="3119" name="Siirrä alas"/>
+				</FileMenu>
+			</Menus>
+		</ProjectManager>
 </Native-Langue>
 </NotepadPlus>

@@ -1,19 +1,30 @@
-//this file is part of notepad++
-//Copyright (C)2003 Don HO ( donho@altern.org )
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
 //
-//This program is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License
-//as published by the Free Software Foundation; either
-//version 2 of the License, or (at your option) any later version.
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
 //
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
 //
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
 
 #include "precompiledHeaders.h"
 #include "Notepad_plus.h"
@@ -33,6 +44,8 @@
 #include "ansiCharPanel.h"
 #include "clipboardHistoryPanel.h"
 #include "VerticalFileSwitcher.h"
+#include "ProjectPanel.h"
+#include "documentMap.h"
 
 enum tb_stat {tb_saved, tb_unsaved, tb_ro};
 #define DIR_LEFT true
@@ -108,7 +121,9 @@ ToolBarButtonUnit toolBarIcons[] = {
 Notepad_plus::Notepad_plus(): _mainWindowStatus(0), _pDocTab(NULL), _pEditView(NULL),
 	_pMainSplitter(NULL),
     _recordingMacro(false), _pTrayIco(NULL), _isUDDocked(false), _pFileSwitcherPanel(NULL),
-	_linkTriggered(true), _isDocModifing(false), _isHotspotDblClicked(false), _sysMenuEntering(false),
+	_pProjectPanel_1(NULL), _pProjectPanel_2(NULL), _pProjectPanel_3(NULL), _pDocMap(NULL),
+	_linkTriggered(true), _isDocModifing(false), _isHotspotDblClicked(false), _isFolding(false), 
+	_sysMenuEntering(false),
 	_autoCompleteMain(&_mainEditView), _autoCompleteSub(&_subEditView), _smartHighlighter(&_findReplaceDlg),
 	_isFileOpening(false), _rememberThisSession(true), _pAnsiCharPanel(NULL), _pClipboardHistoryPanel(NULL)
 {
@@ -156,7 +171,26 @@ Notepad_plus::~Notepad_plus()
 
 	if (_pFileSwitcherPanel)
 		delete _pFileSwitcherPanel;
+
+	if (_pProjectPanel_1)
+	{
+		delete _pProjectPanel_1;
+	}
+	if (_pProjectPanel_2)
+	{
+		delete _pProjectPanel_2;
+	}
+	if (_pProjectPanel_3)
+	{
+		delete _pProjectPanel_3;
+	}
+	if (_pDocMap)
+	{
+		delete _pDocMap;
+	}
 }
+
+
 
 
 LRESULT Notepad_plus::init(HWND hwnd)
@@ -326,10 +360,19 @@ LRESULT Notepad_plus::init(HWND hwnd)
 
 	_scintillaCtrls4Plugins.init(_pPublicInterface->getHinst(), hwnd);
 	_pluginsManager.init(nppData);
-	_pluginsManager.loadPlugins();
+
+	// Load plugins firstly from "%APPDATA%/Notepad++/plugins" 
+	// if Notepad++ is not in localConf mode. 
+	// All the dll loaded are marked.
+	bool isLoadFromAppDataAllow = ::SendMessage(_pPublicInterface->getHSelf(), NPPM_GETAPPDATAPLUGINSALLOWED, 0, 0) == TRUE;
 	const TCHAR *appDataNpp = pNppParam->getAppDataNppDir();
-	if (appDataNpp[0])
+	if (appDataNpp[0] && isLoadFromAppDataAllow)
 		_pluginsManager.loadPlugins(appDataNpp);
+
+	// Load plugins from its installation directory.
+	// All loaded dll will be ignored
+	_pluginsManager.loadPlugins();
+	
 
     _restoreButton.init(_pPublicInterface->getHinst(), hwnd);
 
@@ -681,6 +724,26 @@ bool Notepad_plus::saveGUIParams()
 	return (NppParameters::getInstance())->writeGUIParams();
 }
 
+bool Notepad_plus::saveProjectPanelsParams()
+{
+	if (_pProjectPanel_1)
+	{
+		_pProjectPanel_1->checkIfNeedSave(TEXT("Project Panel 1"));
+		(NppParameters::getInstance())->setWorkSpaceFilePath(0, _pProjectPanel_1->getWorkSpaceFilePath());
+	}
+	if (_pProjectPanel_2)
+	{
+		_pProjectPanel_2->checkIfNeedSave(TEXT("Project Panel 2"));
+		(NppParameters::getInstance())->setWorkSpaceFilePath(1, _pProjectPanel_2->getWorkSpaceFilePath());
+	}
+	if (_pProjectPanel_3)
+	{
+		_pProjectPanel_3->checkIfNeedSave(TEXT("Project Panel 3"));
+		(NppParameters::getInstance())->setWorkSpaceFilePath(2, _pProjectPanel_3->getWorkSpaceFilePath());
+	}
+	return (NppParameters::getInstance())->writeProjectPanelsSettings();
+}
+
 void Notepad_plus::saveDockingParams()
 {
 	NppGUI & nppGUI = (NppGUI &)(NppParameters::getInstance())->getNppGUI();
@@ -768,9 +831,11 @@ void Notepad_plus::saveDockingParams()
 
 			if (floatContArray[floatCont] == 0)
 			{
-				RECT *pRc = nppGUI._dockingData.getFloatingRCFrom(floatCont);
-				if (pRc)
-					vFloatingWindowInfo.push_back(FloatingWindowInfo(floatCont, pRc->left, pRc->top, pRc->right, pRc->bottom));
+				RECT rc;
+				if (nppGUI._dockingData.getFloatingRCFrom(floatCont, rc))
+				{
+					vFloatingWindowInfo.push_back(FloatingWindowInfo(floatCont, rc.left, rc.top, rc.right, rc.bottom));
+				}
 				floatContArray[floatCont] = 1;
 			}
 
@@ -797,7 +862,8 @@ int Notepad_plus::getHtmlXmlEncoding(const TCHAR *fileName) const
 	}
 	NppParameters *pNppParamInst = NppParameters::getInstance();
 	LangType langT = pNppParamInst->getLangFromExt(ext);
-	if (langT != L_XML && langT != L_HTML && langT == L_PHP)
+
+	if ((langT != L_XML) && (langT != L_HTML))
 		return -1;
 
 	// Get the begining of file data
@@ -913,7 +979,7 @@ bool Notepad_plus::replaceAllFiles() {
 			_invisibleEditView.execute(SCI_SETDOCPOINTER, 0, pBuf->getDocument());
 			int cp = _invisibleEditView.execute(SCI_GETCODEPAGE);
 			_invisibleEditView.execute(SCI_SETCODEPAGE, pBuf->getUnicodeMode() == uni8Bit ? cp : SC_CP_UTF8);
-			_invisibleEditView._currentBuffer = pBuf;
+			_invisibleEditView.setCurrentBuffer(pBuf);
 		    _invisibleEditView.execute(SCI_BEGINUNDOACTION);
 			nbTotal += _findReplaceDlg.processAll(ProcessReplaceAll, FindReplaceDlg::_env, isEntireDoc);
 			_invisibleEditView.execute(SCI_ENDUNDOACTION);
@@ -930,7 +996,7 @@ bool Notepad_plus::replaceAllFiles() {
 			_invisibleEditView.execute(SCI_SETDOCPOINTER, 0, pBuf->getDocument());
 			int cp = _invisibleEditView.execute(SCI_GETCODEPAGE);
 			_invisibleEditView.execute(SCI_SETCODEPAGE, pBuf->getUnicodeMode() == uni8Bit ? cp : SC_CP_UTF8);
-			_invisibleEditView._currentBuffer = pBuf;
+			_invisibleEditView.setCurrentBuffer(pBuf);
 		    _invisibleEditView.execute(SCI_BEGINUNDOACTION);
 			nbTotal += _findReplaceDlg.processAll(ProcessReplaceAll, FindReplaceDlg::_env, isEntireDoc);
 			_invisibleEditView.execute(SCI_ENDUNDOACTION);
@@ -938,7 +1004,7 @@ bool Notepad_plus::replaceAllFiles() {
 	}
 
 	_invisibleEditView.execute(SCI_SETDOCPOINTER, 0, oldDoc);
-	_invisibleEditView._currentBuffer = oldBuf;
+	_invisibleEditView.setCurrentBuffer(oldBuf);
 	_pEditView = pOldView;
 
 
@@ -1174,7 +1240,7 @@ void Notepad_plus::getMatchedFileNames(const TCHAR *dir, const vector<generic_st
 		{
 			if (!isInHiddenDir && (foundData.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN))
 			{
-				// branles rien
+				// do nothing
 			}
 			else if (isRecursive)
 			{
@@ -1203,7 +1269,7 @@ void Notepad_plus::getMatchedFileNames(const TCHAR *dir, const vector<generic_st
 		{
 			if (!isInHiddenDir && (foundData.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN))
 			{
-				// branles rien
+				// do nothing
 			}
 			else if (isRecursive)
 			{
@@ -1291,7 +1357,7 @@ bool Notepad_plus::replaceInFiles()
 			_invisibleEditView.execute(SCI_SETDOCPOINTER, 0, pBuf->getDocument());
 			int cp = _invisibleEditView.execute(SCI_GETCODEPAGE);
 			_invisibleEditView.execute(SCI_SETCODEPAGE, pBuf->getUnicodeMode() == uni8Bit ? cp : SC_CP_UTF8);
-			_invisibleEditView._currentBuffer = pBuf;
+			_invisibleEditView.setCurrentBuffer(pBuf);
 
 			int nbReplaced = _findReplaceDlg.processAll(ProcessReplaceAll, FindReplaceDlg::_env, true, fileNames.at(i).c_str());
 			nbTotal += nbReplaced;
@@ -1309,7 +1375,7 @@ bool Notepad_plus::replaceInFiles()
 		TerminateThread(CancelThreadHandle, 0);
 
 	_invisibleEditView.execute(SCI_SETDOCPOINTER, 0, oldDoc);
-	_invisibleEditView._currentBuffer = oldBuf;
+	_invisibleEditView.setCurrentBuffer(oldBuf);
 	_pEditView = pOldView;
 
 	TCHAR msg[128];
@@ -1549,21 +1615,15 @@ void Notepad_plus::enableCommand(int cmdID, bool doEnable, int which) const
 
 void Notepad_plus::checkClipboard()
 {
-	bool hasSelection = (_pEditView->execute(SCI_GETSELECTIONSTART) != _pEditView->execute(SCI_GETSELECTIONEND)) || (_pEditView->execute(SCI_GETSELECTIONS) > 0);
+	bool hasSelection = (_pEditView->execute(SCI_GETSELECTIONSTART) != _pEditView->execute(SCI_GETSELECTIONEND));
 	bool canPaste = (_pEditView->execute(SCI_CANPASTE) != 0);
 	enableCommand(IDM_EDIT_CUT, hasSelection, MENU | TOOLBAR);
 	enableCommand(IDM_EDIT_COPY, hasSelection, MENU | TOOLBAR);
 
 	enableCommand(IDM_EDIT_PASTE, canPaste, MENU | TOOLBAR);
-	//enableCommand(IDM_EDIT_PASTE, true, MENU | TOOLBAR);
-
 	enableCommand(IDM_EDIT_DELETE, hasSelection, MENU | TOOLBAR);
 	enableCommand(IDM_EDIT_UPPERCASE, hasSelection, MENU);
 	enableCommand(IDM_EDIT_LOWERCASE, hasSelection, MENU);
-	enableCommand(IDM_EDIT_BLOCK_COMMENT, hasSelection, MENU);
-	enableCommand(IDM_EDIT_BLOCK_COMMENT_SET, hasSelection, MENU);
-	enableCommand(IDM_EDIT_BLOCK_UNCOMMENT, hasSelection, MENU);
-	enableCommand(IDM_EDIT_STREAM_COMMENT, hasSelection, MENU);
 }
 
 void Notepad_plus::checkDocState()
@@ -2006,8 +2066,12 @@ void Notepad_plus::addHotSpot(bool docIsModifing)
 	}
 
 
-	int startPos = 0;
-	int endPos = _pEditView->execute(SCI_GETTEXTLENGTH);
+	int firstVisibleLine = _pEditView->execute(SCI_GETFIRSTVISIBLELINE);
+	int startPos = _pEditView->execute(SCI_POSITIONFROMLINE, _pEditView->execute(SCI_DOCLINEFROMVISIBLE, firstVisibleLine));
+	int linesOnScreen = _pEditView->execute(SCI_LINESONSCREEN);
+	int lineCount = _pEditView->execute(SCI_GETLINECOUNT);
+	int endPos = _pEditView->execute(SCI_POSITIONFROMLINE,_pEditView->execute(SCI_DOCLINEFROMVISIBLE, firstVisibleLine + min(linesOnScreen, lineCount)));
+
 
 	_pEditView->execute(SCI_SETSEARCHFLAGS, SCFIND_REGEXP|SCFIND_POSIX);
 
@@ -2236,6 +2300,12 @@ void Notepad_plus::setLanguage(LangType langType) {
 	if (reset) {
 		_mainEditView.getCurrentBuffer()->setLangType(langType);
 	} else {
+		/*
+		int mode = _pEditView->execute(SCI_GETMODEVENTMASK, 0, 0);
+		_pEditView->execute(SCI_SETMODEVENTMASK, 0, 0);
+		_pEditView->getCurrentBuffer()->setLangType(langType);
+		_pEditView->execute(SCI_SETMODEVENTMASK, mode, 0);
+		*/
 		_pEditView->getCurrentBuffer()->setLangType(langType);
 	}
 
@@ -2798,7 +2868,8 @@ void Notepad_plus::loadBufferIntoView(BufferID id, int whichOne, bool dontClose)
 	}
 }
 
-bool Notepad_plus::removeBufferFromView(BufferID id, int whichOne) {
+bool Notepad_plus::removeBufferFromView(BufferID id, int whichOne)
+{
 	DocTabView * tabToClose = (whichOne == MAIN_VIEW)?&_mainDocTab:&_subDocTab;
 	ScintillaEditView * viewToClose = (whichOne == MAIN_VIEW)?&_mainEditView:&_subEditView;
 
@@ -2819,24 +2890,33 @@ bool Notepad_plus::removeBufferFromView(BufferID id, int whichOne) {
 	}
 
 	int active = tabToClose->getCurrentTabIndex();
-	if (active == index) {	//need an alternative (close real doc, put empty one back
-		if (tabToClose->nbItem() == 1) {	//need alternative doc, add new one. Use special logic to prevent flicker of adding new tab then closing other
+	if (active == index) //need an alternative (close real doc, put empty one back)
+	{
+		if (tabToClose->nbItem() == 1) 	//need alternative doc, add new one. Use special logic to prevent flicker of adding new tab then closing other
+		{
 			BufferID newID = MainFileManager->newEmptyDocument();
 			MainFileManager->addBufferReference(newID, viewToClose);
 			tabToClose->setBuffer(0, newID);	//can safely use id 0, last (only) tab open
 			activateBuffer(newID, whichOne);	//activate. DocTab already activated but not a problem
-		} else {
+		}
+		else
+		{
 			int toActivate = 0;
 			//activate next doc, otherwise prev if not possible
-			if (active == tabToClose->nbItem() - 1) {	//prev
+			if (active == tabToClose->nbItem() - 1) //prev
+			{
 				toActivate = active - 1;
-			} else {
+			}
+			else
+			{
 				toActivate = active;	//activate the 'active' index. Since we remove the tab first, the indices shift (on the right side)
 			}
 			tabToClose->deletItemAt((size_t)index);	//delete first
 			activateBuffer(tabToClose->getBufferByIndex(toActivate), whichOne);	//then activate. The prevent jumpy tab behaviour
 		}
-	} else {
+	}
+	else 
+	{
 		tabToClose->deletItemAt((size_t)index);
 	}
 
@@ -2852,6 +2932,7 @@ int Notepad_plus::switchEditViewTo(int gid)
 	}
 	if (!viewVisible(gid))
 		return currentView();	//cannot activate invisible view
+
 	int oldView = currentView();
 	int newView = otherView();
 
@@ -2866,6 +2947,11 @@ int Notepad_plus::switchEditViewTo(int gid)
 
 	_pEditView->beSwitched();
     _pEditView->getFocus();	//set the focus
+
+	if (_pDocMap)
+	{
+		_pDocMap->initWrapMap();
+	}
 
 	notifyBufferActivated(_pEditView->getCurrentBufferID(), currentView());
 	return oldView;
@@ -2989,12 +3075,13 @@ void Notepad_plus::docGotoAnotherEditView(FileTransferMode mode)
 		_pEditView->saveCurrentPos();	//allow copying of position
 		buf->setPosition(buf->getPosition(_pEditView), _pNonEditView);
 		_pNonEditView->restoreCurrentPos();	//set position
-		activateBuffer(current, otherView());
+		activateBuffer(current, viewToGo);
 	}
 
 	//Open the view if it was hidden
 	int viewToOpen = (viewToGo == SUB_VIEW?WindowSubActive:WindowMainActive);
-	if (!(_mainWindowStatus & viewToOpen)) {
+	if (!(_mainWindowStatus & viewToOpen))
+	{
 		showView(viewToGo);
 	}
 
@@ -3003,20 +3090,19 @@ void Notepad_plus::docGotoAnotherEditView(FileTransferMode mode)
 	{
 		//just close the activate document, since thats the one we moved (no search)
 		doClose(_pEditView->getCurrentBufferID(), currentView());
+		/*
 		if (noOpenedDoc())
 			::SendMessage(_pPublicInterface->getHSelf(), WM_CLOSE, 0, 0);
+		*/
 	} // else it was cone, so leave it
 
 	//Activate the other view since thats where the document went
 	switchEditViewTo(viewToGo);
-
-	//_linkTriggered = true;
 }
 
 bool Notepad_plus::activateBuffer(BufferID id, int whichOne)
 {
 	//scnN.nmhdr.code = NPPN_DOCSWITCHINGOFF;		//superseeded by NPPN_BUFFERACTIVATED
-
 	Buffer * pBuf = MainFileManager->getBufferByID(id);
 	bool reload = pBuf->getNeedReload();
 	if (reload)
@@ -3043,6 +3129,7 @@ bool Notepad_plus::activateBuffer(BufferID id, int whichOne)
 	{
 		performPostReload(whichOne);
 	}
+
 	notifyBufferActivated(id, whichOne);
 
 	//scnN.nmhdr.code = NPPN_DOCSWITCHINGIN;		//superseeded by NPPN_BUFFERACTIVATED
@@ -3970,9 +4057,9 @@ bool Notepad_plus::getIntegralDockingData(tTbData & dockData, int & iCont, bool 
 			if (dockData.iPrevCont != -1)
 			{
 				int cont = (pddi._currContainer < DOCKCONT_MAX ? pddi._prevContainer : pddi._currContainer);
-				RECT *pRc = dockingData.getFloatingRCFrom(cont);
-				if (pRc)
-					dockData.rcFloat = *pRc;
+				RECT rc;
+				if (dockingData.getFloatingRCFrom(cont, rc))
+					dockData.rcFloat = rc;
 			}
 			return true;
 		}
@@ -4358,6 +4445,12 @@ void Notepad_plus::notifyBufferActivated(BufferID bufid, int view)
 	if (_pFileSwitcherPanel)
 	{
 		_pFileSwitcherPanel->activateItem((int)bufid, currentView());
+	}
+
+	if (_pDocMap)
+	{
+		_pDocMap->reloadMap();
+		_pDocMap->setSyntaxLiliting();
 	}
 
 	_linkTriggered = true;
@@ -4792,4 +4885,510 @@ void Notepad_plus::launchAnsiCharPanel()
 		::SendMessage(_pPublicInterface->getHSelf(), NPPM_DMMREGASDCKDLG, 0, (LPARAM)&data);
 	}
 	_pAnsiCharPanel->display();
+}
+
+void Notepad_plus::launchProjectPanel(int cmdID, ProjectPanel ** pProjPanel, int panelID)
+{
+	if (!(*pProjPanel))
+	{
+		NppParameters *pNppParam = NppParameters::getInstance();
+
+		(*pProjPanel) = new ProjectPanel;
+		(*pProjPanel)->init(_pPublicInterface->getHinst(), _pPublicInterface->getHSelf());
+		(*pProjPanel)->setWorkSpaceFilePath(pNppParam->getworkSpaceFilePath(panelID));
+
+		tTbData	data;
+		memset(&data, 0, sizeof(data));
+		(*pProjPanel)->create(&data);
+		data.pszName = TEXT("ST");
+
+		::SendMessage(_pPublicInterface->getHSelf(), NPPM_MODELESSDIALOG, MODELESSDIALOGREMOVE, (WPARAM)(*pProjPanel)->getHSelf());
+		// define the default docking behaviour
+		data.uMask = DWS_DF_CONT_LEFT | DWS_ICONTAB;
+		//data.hIconTab = (HICON)::LoadImage(_pPublicInterface->getHinst(), MAKEINTRESOURCE(IDI_FIND_RESULT_ICON), IMAGE_ICON, 0, 0, LR_LOADMAP3DCOLORS | LR_LOADTRANSPARENT);
+		data.pszModuleName = NPP_INTERNAL_FUCTION_STR;
+
+		// the dlgDlg should be the index of funcItem where the current function pointer is
+		// in this case is DOCKABLE_DEMO_INDEX
+		// In the case of Notepad++ internal function, it'll be the command ID which triggers this dialog
+		data.dlgID = cmdID;
+		
+		NativeLangSpeaker *pNativeSpeaker = (NppParameters::getInstance())->getNativeLangSpeaker();
+		generic_string title_temp = pNativeSpeaker->getProjectPanelLangStr("PanelTitle", PM_PROJECTPANELTITLE);
+
+		static TCHAR title[32];
+		if (title_temp.length() < 32)
+		{
+			lstrcpy(title, title_temp.c_str());
+			data.pszName = title;
+		}
+		::SendMessage(_pPublicInterface->getHSelf(), NPPM_DMMREGASDCKDLG, 0, (LPARAM)&data);
+	}
+	(*pProjPanel)->display();
+}
+
+void Notepad_plus::launchDocMap()
+{
+	if (!(NppParameters::getInstance())->isTransparentAvailable())
+	{
+		::MessageBox(NULL, TEXT("It seems you still use a prehistoric system, This feature works only on a modern system, sorry."), TEXT(""), MB_OK);
+		return;
+	}
+
+	if (!_pDocMap)
+	{
+		_pDocMap = new DocumentMap();
+		_pDocMap->init(_pPublicInterface->getHinst(), _pPublicInterface->getHSelf(), &_pEditView);
+		
+		tTbData	data = {0};
+		_pDocMap->create(&data);
+
+		::SendMessage(_pPublicInterface->getHSelf(), NPPM_MODELESSDIALOG, MODELESSDIALOGREMOVE, (WPARAM)_pDocMap->getHSelf());
+		// define the default docking behaviour
+		data.uMask = DWS_DF_CONT_RIGHT | DWS_ICONTAB;
+		//data.hIconTab = (HICON)::LoadImage(_pPublicInterface->getHinst(), MAKEINTRESOURCE(IDI_FIND_RESULT_ICON), IMAGE_ICON, 0, 0, LR_LOADMAP3DCOLORS | LR_LOADTRANSPARENT);
+		data.pszModuleName = NPP_INTERNAL_FUCTION_STR;
+
+		// the dlgDlg should be the index of funcItem where the current function pointer is
+		// in this case is DOCKABLE_DEMO_INDEX
+		// In the case of Notepad++ internal function, it'll be the command ID which triggers this dialog
+		data.dlgID = IDM_VIEW_DOC_MAP;
+
+		::SendMessage(_pPublicInterface->getHSelf(), NPPM_DMMREGASDCKDLG, 0, (LPARAM)&data);
+	}
+
+	_pDocMap->initWrapMap();
+	_pDocMap->wrapMap();
+	_pDocMap->display();
+
+	_pEditView->getFocus();
+}
+
+
+struct TextPlayerParams {
+	HWND _nppHandle;
+	ScintillaEditView *_pCurrentView;
+	const char *_text2display;
+	const char *_quoter;
+	bool _shouldBeTrolling;
+};
+
+struct TextTrollerParams {
+	ScintillaEditView *_pCurrentView;
+	const char *_text2display;
+	BufferID _targetBufID;
+	HANDLE _mutex;
+};
+
+struct Quote{
+	const char *_quoter;
+	const char *_quote;
+};
+
+const int nbQuote = 69;
+Quote quotes[nbQuote] = {
+{"Notepad++", "Notepad++ is written in C++ and uses pure Win32 API and STL which ensures a higher execution speed and smaller program size.\nBy optimizing as many routines as possible without losing user friendliness, Notepad++ is trying to reduce the world carbon dioxide emissions. When using less CPU power, the PC can throttle down and reduce power consumption, resulting in a greener environment."},
+{"Martin Golding", "Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live."},
+{"L. Peter Deutsch", "To iterate is human, to recurse divine."},
+{"Seymour Cray", "The trouble with programmers is that you can never tell what a programmer is doing until it's too late."},
+{"Brian Kernighan", "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it."},
+{"Alan Kay", "Most software today is very much like an Egyptian pyramid with millions of bricks piled on top of each other, with no structural integrity, but just done by brute force and thousands of slaves."},
+{"Bill Gates", "Measuring programming progress by lines of code is like measuring aircraft building progress by weight."},
+{"Christopher Thompson", "Sometimes it pays to stay in bed on Monday, rather than spending the rest of the week debugging Monday's code."},
+{"Vidiu Platon", "I don't care if it works on your machine! We are not shipping your machine!"},
+{"Edward V Berard", "Walking on water and developing software from a specification are easy if both are frozen."},
+{"pixadel", "Fine, Java MIGHT be a good example of what a programming language should be like. But Java applications are good examples of what applications SHOULDN'T be like."},
+{"Oktal", "I think Microsoft named .Net so it wouldn't show up in a Unix directory listing."},
+{"Bjarne Stroustrup", "In C++ it's harder to shoot yourself in the foot, but when you do, you blow off your whole leg."},
+{"Mosher's Law of Software Engineering", "Don't worry if it doesn't work right. If everything did, you'd be out of a job."},
+{"Bob Gray", "Writing in C or C++ is like running a chain saw with all the safety guards removed."},
+{"Roberto Waltman", "In the one and only true way. The object-oriented version of \"Spaghetti code\" is, of course, \"Lasagna code\". (Too many layers)"},
+{"Gavin Russell Baker", "C++ : Where friends have access to your private members."},
+{"Alanna", "Saying that Java is nice because it works on all OSes is like saying that anal sex is nice because it works on all genders."},
+{"Linus Torvalds", "Software is like sex: It's better when it's free."},
+{"Cult of vi", "Emacs is a great operating system, lacking only a decent editor."},
+{"Church of Emacs", "vi has two modes – \"beep repeatedly\" and \"break everything\"."},
+{"Steve Jobs", "The only problem with Microsoft is they just have no taste. They have absolutely no taste. And I don't mean that in a small way, I mean that in a big way, in the sense that they don't think of original ideas, and they don't bring much culture into their products."},
+{"brotips #1001", "Do everything for greatness, not money. Money follows greatness."},
+{"brotips #1212", "Cheating is like eating fast food: you do it, you enjoy it, and then you feel like shit."},
+{"Robin Williams", "God gave men both a penis and a brain, but unfortunately not enough blood supply to run both at the same time."},
+{"Darth Vader", "You don't get to 500 million star systems without making a few enemies."},
+{"Doug Linder", "A good programmer is someone who always looks both ways before crossing a one-way street."},
+{"Don Ho", "Je mange donc je chie."},
+{"Anonymous #1", "Does your ass ever get jealous of all the shit that comes out of your month?"},
+{"Anonymous #2", "Before sex, you help each other get naked, after sex you only dress yourself.\nMoral of the story: in life no one helps you once you're fucked."},
+{"Anonymous #3", "I'm not totally useless. I can be used as a bad example."},
+{"Anonymous #4", "Life is too short to remove USB safely."},
+{"Anonymous #5", "\"SEX\" is not the answer.\nSex is the question, \"YES\" is the answer."},
+{"Anonymous #6", "Going to Mc Donald's for a salad is like going to a whore for a hug."},
+{"Anonymous #7", "I need a six month holiday, TWICE A YEAR!"},
+{"Anonymous #8", "A world without woman would be a pain in the ass!!!"},
+{"Anonymous #9", "I just read a list of \"the 100 things to do before you die\". I'm pretty surprised \"yell for help\" wasn't one of them..."},
+{"Anonymous #10", "Roses are red,\nViolets are red,\nTulips are red,\nBushes are red,\nTrees are red,\nHOLY SHIT MY\nGARDEN'S ON FIRE!!"},
+{"Anonymous #11", "We stopped checking for monsters under our bed, when we realized they were inside us."},
+{"Anonymous #12", "I would rather check my facebook than face my checkbook."},
+{"Anonymous #13", "Whoever says Paper beats Rock is an idiot. Next time I see someone say that I will throw a rock at them while they hold up a sheet of paper."},
+{"Anonymous #14", "A better world is where chickens can cross the road without having their motives questioned."},
+{"Anonymous #15", "Life is like a penis, simple, soft, straight, relaxed and hanging freely.\nThen women make it hard."},
+{"Anonymous #16", "What you do after sex?\n  A. Smoke a cigarette\n  B. Kiss your partener\n  C. Clear browser history\n"},
+{"Anonymous #17", "All you need is love,\nall you want is sex,\nall you have is porn.\n"},
+{"Anonymous #18", "Never get into fights with ugly people, they have nothing to lose."},
+{"Anonymous #19", "F_CK: All I need is U."},
+{"Anonymous #20", "Never make eye contact when eating a banana."},
+{"Anonymous #21", "I love my sixpack so much, I protect it with a layer of fat."},
+{"Anonymous #22", "\"It's impossible.\" said pride.\n\"It's risky.\" said experience.\n\"It's pointless.\" said reason.\n\"Give it a try.\" whispered the heart.\n...\n\"What the hell was that?!?!?!?!?!.\" shouted the anus two minutes later."},
+{"Anonymous #23", "Everybody talks about leaving a better planet for the children.\nWhy nobody tries to leave better children to the planet?"},
+{"Anonymous #24", "I'm not saying I hate her.\nI just hope she gets fingered by wolverine"},
+{"Anonymous #25", "In a way, I feel sorry for the kids of this generation.\nThey'll have parents who know how to check browser history."},
+{"Anonymous #26", "I would nerver bungee jump...\nI came into this world because of a broken rubber, and I'm not going out cause of one..."},
+{"Anonymous #27", "I'm no gynecologist, but I know a cunt when I see one."},
+{"Anonymous #28", "Why 6 afraid of 7?\nBecause 7 8 9 (seven ate nine) while 6 and 9 were flirting."},
+{"Anonymous #29", "The reason women will never be the ones to propose is\nbecause as soon as she gets on her knees,\nhe will start unzipping."},
+{"Anonymous #30", "Why do Java deveolpers wear glasses?\nBecause they don't C#."},
+{"Anonymous #31", "Non alcoholic beer is like licking your sister.\nIt tastes right but it is wrong."},
+{"Anonymous #32", "Two bytes meet. The first byte asks, \"You look terrible. Are you OK?\"\nThe second byte replies, \"No, just feeling a bit off.\""},
+{"Anonymous #33", "Programmer - an organism that turns coffee into software."},
+{"Anonymous #34", "It's not a bug - it's an undocumented feature."},
+{"Anonymous #35", "Should array index start at 0 or 1?\nMy compromised solution is 0.5"},
+{"Anonymous #36", "Every single time when I'm about to hug someone extremely sexy, I hit the miror."},
+{"Anonymous #37", "My software never has bugs. It just develops random features."},
+{"Anonymous #38", "LISP = Lots of Irritating Silly Parentheses."},
+{"Anonymous #39", "Perl, the only language that looks the same before and after RSA encryption."},
+{"Hustle Man", "Politicians are like sperm.\nOne in a million turn out to be an actual human being."},
+{"Chewbacca", "Uuuuuuuuuur Ahhhhrrrrrr\nUhrrrr Ahhhhrrrrrr\nAaaarhg..."}
+//{"", ""},
+//{"", ""},
+//{"", ""},
+//{"", ""},
+//{"", ""},
+//{"", ""},
+};
+
+
+
+const int nbWtf = 6;
+char *wtf[nbWtf] = {
+"WTF?!",
+"lol",
+"FAP FAP FAP",
+"ROFL",
+"OMFG",
+"Husband is not an ATM machine!!!"
+};
+
+const int nbIntervalTime = 5;
+int intervalTimeArray[nbIntervalTime] = {30,30,30,30,200};
+const int nbPauseTime = 3;
+int pauseTimeArray[nbPauseTime] = {200,400,600};
+
+const int act_doNothing = 0;
+const int act_trolling = 1;
+const int nbAct = 30;
+int actionArray[nbAct] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0};
+const int maxRange = 200;
+
+int Notepad_plus::getRandomAction(int ranNum)
+{
+	return actionArray[ranNum % nbAct];
+}
+
+bool isInList(int elem, vector<int> elemList)
+{
+	for (size_t i = 0; i < elemList.size(); i++)
+	{
+		if (elem == elemList[i])
+			return true;
+	}
+	return false;
+}
+
+DWORD WINAPI Notepad_plus::threadTextPlayer(void *params)
+{
+	// random seed generation needs only one time. 
+	srand((unsigned int)time(NULL));
+
+	HWND hNpp = ((TextPlayerParams *)params)->_nppHandle;
+	ScintillaEditView *pCurrentView = ((TextPlayerParams *)params)->_pCurrentView;
+	const char *text2display = ((TextPlayerParams *)params)->_text2display;
+	bool shouldBeTrolling = ((TextPlayerParams *)params)->_shouldBeTrolling;
+
+	// Open a new document
+    ::SendMessage(hNpp, NPPM_MENUCOMMAND, 0, IDM_FILE_NEW);
+
+	static TextTrollerParams trollerParams;
+	trollerParams._pCurrentView = pCurrentView;
+	BufferID targetBufID = pCurrentView->getCurrentBufferID();
+	trollerParams._targetBufID = targetBufID;
+	HANDLE mutex = ::CreateMutex(NULL, false, TEXT("nppTextWriter"));
+	trollerParams._mutex = mutex;
+	
+    // Get the current scintilla
+    HWND curScintilla = pCurrentView->getHSelf();
+	const int nbMaxTrolling = 1;
+	int nbTrolling = 0;
+	vector<int> generatedRans;
+	char previousChar = '\0';
+	for (size_t i = 0 ; i < strlen(text2display) ; i++)
+    {
+		int ranNum = getRandomNumber(maxRange);
+
+		int action = act_doNothing;
+
+		if (shouldBeTrolling && (i > 20 && previousChar == ' ') && nbTrolling < nbMaxTrolling)
+		{
+			action = getRandomAction(ranNum);
+			//char toto[64];
+			//sprintf(toto, "i == %d    action : %d    current char == %c", i, action, text2display[i]);
+			//writeLog(TEXT("c:\\tmp\\log.txt"), toto);
+		}
+
+		if (action == act_trolling)
+		{
+			int wtfIndex = getRandomNumber() % nbWtf;
+			if (!isInList(wtfIndex, generatedRans))
+			{
+				//writeLog(TEXT("c:\\tmp\\log.txt"), "trolling begin");
+				generatedRans.push_back(wtfIndex);
+				nbTrolling++;
+				trollerParams._text2display = wtf[wtfIndex];
+
+				ReleaseMutex(mutex);
+
+				HANDLE hThread = ::CreateThread(NULL, 0, threadTextTroller, &trollerParams, 0, NULL);
+
+				::Sleep(1000);
+				WaitForSingleObject(mutex, INFINITE);
+				
+				::CloseHandle(hThread);
+				//writeLog(TEXT("c:\\tmp\\log.txt"), "trolling end");
+			}	
+		}
+
+		char charToShow[2] = {text2display[i], '\0'};
+
+		if (text2display[i] == ' ' || text2display[i] == '.')
+			Sleep(ranNum + pauseTimeArray[ranNum%nbPauseTime]);
+		else
+			Sleep(ranNum + intervalTimeArray[ranNum%nbIntervalTime]);
+
+		BufferID currentBufID = pCurrentView->getCurrentBufferID();
+		if (currentBufID != targetBufID)
+			return TRUE;
+
+        ::SendMessage(curScintilla, SCI_APPENDTEXT, 1, (LPARAM)charToShow);
+		::SendMessage(curScintilla, SCI_GOTOPOS, ::SendMessage(curScintilla, SCI_GETLENGTH, 0, 0), 0);
+		
+		previousChar = text2display[i];
+		//char ch[64];
+		//sprintf(ch, "writting char == %c", text2display[i]);
+		//writeLog(TEXT("c:\\tmp\\log.txt"), ch);
+    }
+	//writeLog(TEXT("c:\\tmp\\log.txt"), "\n\n\n\n");
+	const char * quoter = ((TextPlayerParams *)params)->_quoter;
+	string quoter_str = quoter;
+	int pos = quoter_str.find("Anonymous");
+	if (pos == string::npos)
+	{
+		::SendMessage(curScintilla, SCI_APPENDTEXT, 3, (LPARAM)"\n- ");
+		::SendMessage(curScintilla, SCI_GOTOPOS, ::SendMessage(curScintilla, SCI_GETLENGTH, 0, 0), 0);
+
+		// Display quoter
+		for (size_t i = 0 ; i < strlen(quoter) ; i++)
+		{
+			int ranNum = getRandomNumber(maxRange);
+			
+			char charToShow[2] = {quoter[i], '\0'};
+
+			Sleep(ranNum + intervalTimeArray[ranNum%nbIntervalTime]);
+
+			BufferID currentBufID = pCurrentView->getCurrentBufferID();
+			if (currentBufID != targetBufID)
+				return TRUE;
+
+			::SendMessage(curScintilla, SCI_APPENDTEXT, 1, (LPARAM)charToShow);
+			::SendMessage(curScintilla, SCI_GOTOPOS, ::SendMessage(curScintilla, SCI_GETLENGTH, 0, 0), 0);
+
+		}
+	}
+
+    return TRUE;
+}
+
+DWORD WINAPI Notepad_plus::threadTextTroller(void *params)
+{
+	WaitForSingleObject(((TextTrollerParams *)params)->_mutex, INFINITE);
+
+	// random seed generation needs only one time. 
+	srand((unsigned int)time(NULL));
+
+	ScintillaEditView *pCurrentView = ((TextTrollerParams *)params)->_pCurrentView;
+	const char *text2display = ((TextTrollerParams *)params)->_text2display;
+	HWND curScintilla = pCurrentView->getHSelf();
+	BufferID targetBufID = ((TextTrollerParams *)params)->_targetBufID;
+	//HANDLE mutex = ((TextTrollerParams *)params)->_mutex;
+
+	for (size_t i = 0 ; i < strlen(text2display) ; i++)
+    {
+		char charToShow[2] = {text2display[i], '\0'};
+        int ranNum = getRandomNumber(maxRange);
+		if (text2display[i] == ' ' || text2display[i] == '.')
+			Sleep(ranNum + pauseTimeArray[ranNum%nbPauseTime]);
+		else
+			Sleep(ranNum + intervalTimeArray[ranNum%nbIntervalTime]);
+
+		BufferID currentBufID = pCurrentView->getCurrentBufferID();
+		if (currentBufID != targetBufID)
+		{
+			ReleaseMutex(((TextTrollerParams *)params)->_mutex);
+			return TRUE;
+		}
+        ::SendMessage(curScintilla, SCI_APPENDTEXT, 1, (LPARAM)charToShow);
+		::SendMessage(curScintilla, SCI_GOTOPOS, ::SendMessage(curScintilla, SCI_GETLENGTH, 0, 0), 0);
+    }
+	//writeLog(TEXT("c:\\tmp\\log.txt"), text2display);
+	int n = getRandomNumber();
+	int delMethod = n%4;
+	if (delMethod == 0)
+	{
+		size_t len = strlen(text2display);
+		for (size_t j = 0; j < len; j++)
+		{
+			if (!deleteBack(pCurrentView, targetBufID))
+				break;
+		}	
+	}
+	else if (delMethod == 1)
+	{
+		size_t len = strlen(text2display);
+		::SendMessage(curScintilla, SCI_GOTOPOS, ::SendMessage(curScintilla, SCI_GETLENGTH, 0, 0) - len, 0);
+		for (size_t j = 0; j < len; j++)
+		{
+			if (!deleteForward(pCurrentView, targetBufID))
+				break;
+		}
+	}
+	else if (delMethod == 2)
+	{
+		for (size_t j = 0; j < strlen(text2display); j++)
+		{
+			if (!selectBack(pCurrentView, targetBufID))
+				break;
+		}
+		int ranNum = getRandomNumber(maxRange);
+		::Sleep(ranNum + pauseTimeArray[ranNum%nbPauseTime]);
+		::SendMessage(pCurrentView->getHSelf(), SCI_DELETEBACK, 0, 0);
+	}
+	else
+	{
+		int currentPos = ::SendMessage(pCurrentView->getHSelf(), SCI_GETSELECTIONSTART, 0, 0);
+		::SendMessage(pCurrentView->getHSelf(), SCI_SETSELECTION, currentPos, currentPos - strlen(text2display));
+		BufferID currentBufID = pCurrentView->getCurrentBufferID();
+		if (currentBufID != targetBufID)
+			return TRUE;
+		int ranNum = getRandomNumber(maxRange);
+		::Sleep(ranNum + pauseTimeArray[ranNum%nbPauseTime]);
+		::SendMessage(pCurrentView->getHSelf(), SCI_DELETEBACK, 0, 0);
+	}
+	
+	ReleaseMutex(((TextTrollerParams *)params)->_mutex);
+	return TRUE;
+}
+
+bool Notepad_plus::deleteBack(ScintillaEditView *pCurrentView, BufferID targetBufID)
+{
+	int ranNum = getRandomNumber(maxRange - 100);
+	BufferID currentBufID = pCurrentView->getCurrentBufferID();
+	Sleep(ranNum);
+	if (currentBufID != targetBufID)
+		return false;
+	::SendMessage(pCurrentView->getHSelf(), SCI_DELETEBACK, 0, 0);
+	return true;
+}
+
+bool Notepad_plus::deleteForward(ScintillaEditView *pCurrentView, BufferID targetBufID)
+{
+	int ranNum = getRandomNumber(maxRange - 100);
+	BufferID currentBufID = pCurrentView->getCurrentBufferID();
+	Sleep(ranNum);
+	if (currentBufID != targetBufID)
+		return false;
+	::SendMessage(pCurrentView->getHSelf(), SCI_GOTOPOS, ::SendMessage(pCurrentView->getHSelf(), SCI_GETCURRENTPOS, 0, 0) + 1, 0);
+	::SendMessage(pCurrentView->getHSelf(), SCI_DELETEBACK, 0, 0);
+	return true;
+}
+
+bool Notepad_plus::selectBack(ScintillaEditView *pCurrentView, BufferID targetBufID)
+{
+	int ranNum = getRandomNumber(maxRange - 100);
+	BufferID currentBufID = pCurrentView->getCurrentBufferID();
+	int currentPos = ::SendMessage(pCurrentView->getHSelf(), SCI_GETSELECTIONSTART, 0, 0);
+	int currentAnchor = ::SendMessage(pCurrentView->getHSelf(), SCI_GETSELECTIONEND, 0, 0);
+	Sleep(ranNum + intervalTimeArray[ranNum%nbIntervalTime]);
+	if (currentBufID != targetBufID)
+		return false;
+	
+	::SendMessage(pCurrentView->getHSelf(), SCI_SETSELECTION, currentAnchor, --currentPos);
+	return true;
+}
+
+int Notepad_plus::getQuoteIndexFrom(const char *quoter) const
+{
+	if (!quoter)
+		return -1;
+	if (stricmp(quoter, "Get them all!!!") == 0)
+	{
+		return -2;
+	}
+	
+	if (stricmp(quoter, "random") == 0)
+	{
+		srand((unsigned int)time(NULL));
+		return getRandomNumber(nbQuote);
+	}
+
+	for (int i = 0; i < nbQuote; i++)
+	{
+		if (stricmp(quotes[i]._quoter, quoter) == 0)
+			return i;
+	}
+	return -1;
+}
+
+void Notepad_plus::showAllQuotes() const
+{
+	/*
+	HANDLE mutex = ::CreateMutex(NULL, false, TEXT("nppTextWriter"));
+	for (int i = 0; i < nbQuote; i++)
+	{
+		static bool firstTime = true;
+		if (firstTime)
+		{
+			firstTime = false;
+		}
+		else
+		{
+			WaitForSingleObject(mutex, INFINITE);
+		
+		}
+		ReleaseMutex(mutex);
+		Sleep(1000);
+		showQuoteFromIndex(i);
+		WaitForSingleObject(mutex, INFINITE);
+	}
+	*/
+}
+
+void Notepad_plus::showQuoteFromIndex(int index) const
+{
+	if (index < 0 || index >= nbQuote) return;
+
+    //TextPlayerParams *params = new TextPlayerParams();
+	static TextPlayerParams params;
+	params._nppHandle = Notepad_plus::_pPublicInterface->getHSelf();
+	params._text2display = quotes[index]._quote;
+	params._quoter = quotes[index]._quoter;
+	params._pCurrentView = _pEditView;
+	params._shouldBeTrolling = index < 20;
+	HANDLE hThread = ::CreateThread(NULL, 0, threadTextPlayer, &params, 0, NULL);
+    ::CloseHandle(hThread);
 }

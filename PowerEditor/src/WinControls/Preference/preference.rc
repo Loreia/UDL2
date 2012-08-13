@@ -1,21 +1,30 @@
-/*
-this file is part of notepad++
-Copyright (C)2003 Don HO < donho@altern.org >
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
+//
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either
-version 2 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*/
 
 #include <windows.h>
 #include "preference_rc.h"
@@ -98,6 +107,10 @@ BEGIN
     CONTROL         "Default",IDC_RADIO_LWDEF,"Button",BS_AUTORADIOBUTTON | WS_GROUP,309,61,59,10
     CONTROL         "Aligned",IDC_RADIO_LWALIGN,"Button",BS_AUTORADIOBUTTON,309,75,60,10
     CONTROL         "Indent",IDC_RADIO_LWINDENT,"Button",BS_AUTORADIOBUTTON,309,89,62,10
+	
+	GROUPBOX        "Border Width",IDC_BORDERWIDTH_STATIC,140,126,148,30,BS_CENTER
+    CONTROL         "",IDC_BORDERWIDTH_SLIDER,"msctls_trackbar32",TBS_AUTOTICKS | TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,154,139,67,13
+    LTEXT           "0",IDC_BORDERWIDTHVAL_STATIC,223,139,12,8
 END
 
 IDD_PREFERENCE_SETTING_BOX DIALOGEX 0, 0, 455, 185

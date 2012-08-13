@@ -1,19 +1,30 @@
-//this file is part of notepad++
-//Copyright (C)2003 Don HO ( donho@altern.org )
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
 //
-//This program is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License
-//as published by the Free Software Foundation; either
-//version 2 of the License, or (at your option) any later version.
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
 //
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
 //
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
 
 #include "precompiledHeaders.h"
 #include "PluginsManager.h"
@@ -47,6 +58,10 @@ bool PluginsManager::unloadPlugin(int index, HWND nppHandle)
 
 int PluginsManager::loadPlugin(const TCHAR *pluginFilePath, vector<generic_string> & dll2Remove)
 {
+	const TCHAR *pluginFileName = ::PathFindFileName(pluginFilePath);
+	if (isInLoadedDlls(pluginFileName))
+		return 0;
+
 	PluginInfo *pi = new PluginInfo;
 	try {
 		pi->_moduleName = PathFindFileName(pluginFilePath);
@@ -181,7 +196,7 @@ int PluginsManager::loadPlugin(const TCHAR *pluginFilePath, vector<generic_strin
 			::SendMessage(_nppData._scintillaMainHandle, SCI_LOADLEXERLIBRARY, 0, (LPARAM)pDllName);
             
 		}
-        
+		addInLoadedDlls(pluginFileName);
 		_pluginInfos.push_back(pi);
         return (_pluginInfos.size() - 1);
 	} catch(std::exception e) {
@@ -197,7 +212,7 @@ int PluginsManager::loadPlugin(const TCHAR *pluginFilePath, vector<generic_strin
 		delete pi;
         return -1;
 	} catch(...) {
-		generic_string msg = TEXT("Fail loaded");
+		generic_string msg = TEXT("Failed to load");
 		msg += TEXT("\n\n");
 		msg += USERMSG;
 		if (::MessageBox(NULL, msg.c_str(), pluginFilePath, MB_YESNO) == IDYES)
@@ -217,8 +232,8 @@ bool PluginsManager::loadPlugins(const TCHAR *dir)
 
 	vector<generic_string> dllNames;
 	vector<generic_string> dll2Remove;
-    generic_string nppPath = (NppParameters::getInstance())->getNppPath();
-
+	NppParameters * nppParams = NppParameters::getInstance();
+    generic_string nppPath = nppParams->getNppPath();
 	generic_string pluginsFullPathFilter = (dir && dir[0])?dir:nppPath;
 
 	pluginsFullPathFilter += TEXT("\\plugins\\*.dll");
@@ -231,8 +246,6 @@ bool PluginsManager::loadPlugins(const TCHAR *dir)
 		plugins1stFullPath += TEXT("\\plugins\\");
 		plugins1stFullPath += foundData.cFileName;
 		dllNames.push_back(plugins1stFullPath);
-
-        NppParameters * nppParams = NppParameters::getInstance();
 
 		while (::FindNextFile(hFindFile, &foundData))
 		{

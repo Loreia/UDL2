@@ -1,19 +1,30 @@
-//this file is part of notepad++
-//Copyright (C)2003 Don HO ( donho@altern.org )
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
 //
-//This program is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License
-//as published by the Free Software Foundation; either
-//version 2 of the License, or (at your option) any later version.
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
 //
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
 //
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
 
 #include "precompiledHeaders.h"
 #include "preferenceDlg.h"
@@ -23,6 +34,10 @@
 const int BLINKRATE_FASTEST = 50;
 const int BLINKRATE_SLOWEST = 2500;
 const int BLINKRATE_INTERVAL = 50;
+
+const int BORDERWIDTH_SMALLEST = 0;
+const int BORDERWIDTH_LARGEST = 30;
+const int BORDERWIDTH_INTERVAL = 1;
 
 // This int encoding array is built from "EncodingUnit encodings[]" (see EncodingMapper.cpp)
 // And DefaultNewDocDlg will use "int encoding array" to get more info from "EncodingUnit encodings[]"
@@ -452,7 +467,7 @@ void MarginsDlg::initScintParam()
 }
 
 
-BOOL CALLBACK MarginsDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM)
+BOOL CALLBACK MarginsDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam)
 {
 	NppParameters *pNppParam = NppParameters::getInstance();
 	NppGUI & nppGUI = (NppGUI &)pNppParam->getNppGUI();
@@ -478,7 +493,14 @@ BOOL CALLBACK MarginsDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM)
 			::SendMessage(::GetDlgItem(_hSelf, IDC_CARETBLINKRATE_SLIDER),TBM_SETPAGESIZE, 0, BLINKRATE_INTERVAL);
 			int blinkRate = (nppGUI._caretBlinkRate==0)?BLINKRATE_SLOWEST:nppGUI._caretBlinkRate;
 			::SendMessage(::GetDlgItem(_hSelf, IDC_CARETBLINKRATE_SLIDER),TBM_SETPOS, TRUE, blinkRate);
-		
+
+			::SendMessage(::GetDlgItem(_hSelf, IDC_BORDERWIDTH_SLIDER),TBM_SETRANGEMIN, TRUE, BORDERWIDTH_SMALLEST);
+			::SendMessage(::GetDlgItem(_hSelf, IDC_BORDERWIDTH_SLIDER),TBM_SETRANGEMAX, TRUE, BORDERWIDTH_LARGEST);
+			::SendMessage(::GetDlgItem(_hSelf, IDC_BORDERWIDTH_SLIDER),TBM_SETPAGESIZE, 0, BLINKRATE_INTERVAL);
+			const ScintillaViewParams & svp = pNppParam->getSVP();
+			::SendMessage(::GetDlgItem(_hSelf, IDC_BORDERWIDTH_SLIDER),TBM_SETPOS, TRUE, svp._borderWidth);
+			::SetDlgItemInt(_hSelf, IDC_BORDERWIDTHVAL_STATIC, svp._borderWidth, FALSE);
+			
 			initScintParam();
 			
 			ETDTProc enableDlgTheme = (ETDTProc)pNppParam->getEnableThemeDlgTexture();
@@ -489,12 +511,25 @@ BOOL CALLBACK MarginsDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM)
 
 		case WM_HSCROLL:
 		{
-			int blinkRate = (int)::SendMessage(::GetDlgItem(_hSelf, IDC_CARETBLINKRATE_SLIDER),TBM_GETPOS, 0, 0);
-			if (blinkRate == BLINKRATE_SLOWEST)
-				blinkRate = 0;
-			nppGUI._caretBlinkRate = blinkRate;
+			HWND hCaretBlikRateSlider = ::GetDlgItem(_hSelf, IDC_CARETBLINKRATE_SLIDER);
+			HWND hBorderWidthSlider = ::GetDlgItem(_hSelf, IDC_BORDERWIDTH_SLIDER);
+			if ((HWND)lParam == hCaretBlikRateSlider)
+			{
+				int blinkRate = (int)::SendMessage(hCaretBlikRateSlider, TBM_GETPOS, 0, 0);
+				if (blinkRate == BLINKRATE_SLOWEST)
+					blinkRate = 0;
+				nppGUI._caretBlinkRate = blinkRate;
 
-			::SendMessage(::GetParent(_hParent), NPPM_INTERNAL_SETCARETBLINKRATE, 0, 0);
+				::SendMessage(::GetParent(_hParent), NPPM_INTERNAL_SETCARETBLINKRATE, 0, 0);
+			}
+			else if ((HWND)lParam == hBorderWidthSlider)
+			{
+				int borderWidth = (int)::SendMessage(hBorderWidthSlider, TBM_GETPOS, 0, 0);
+				ScintillaViewParams & svp = (ScintillaViewParams &)pNppParam->getSVP();
+				svp._borderWidth = borderWidth;
+				::SetDlgItemInt(_hSelf, IDC_BORDERWIDTHVAL_STATIC, borderWidth, FALSE);
+				::SendMessage(::GetParent(_hParent), WM_SIZE, 0, 0);
+			}
 			return 0;	//return zero when handled
 				
 		}
@@ -955,7 +990,7 @@ BOOL CALLBACK DefaultNewDocDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM)
 			int selIndex = -1;
 			generic_string str;
 			EncodingMapper *em = EncodingMapper::getInstance();
-			for (int i = 0 ; i <= sizeof(encodings)/sizeof(int) ; i++)
+			for (int i = 0 ; i < sizeof(encodings)/sizeof(int) ; i++)
 			{
 				int cmdID = em->getIndexFromEncoding(encodings[i]);
 				if (cmdID != -1)
@@ -1337,7 +1372,94 @@ BOOL CALLBACK LangMenuDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lPara
 		}
 		case WM_COMMAND : 
 		{
-			switch (LOWORD(wParam))
+			if (HIWORD(wParam) == LBN_SELCHANGE)
+            {
+				if (LOWORD(wParam) == IDC_LIST_TABSETTNG)
+				{
+					int index = ::SendDlgItemMessage(_hSelf, IDC_LIST_TABSETTNG, LB_GETCURSEL, 0, 0);
+					if (index == LB_ERR)
+						return FALSE;
+					::ShowWindow(::GetDlgItem(_hSelf, IDC_GR_TABVALUE_STATIC), index?SW_SHOW:SW_HIDE);
+					::ShowWindow(::GetDlgItem(_hSelf, IDC_CHECK_DEFAULTTABVALUE), index?SW_SHOW:SW_HIDE);
+
+					if (index)
+					{
+						Lang *lang = pNppParam->getLangFromIndex(index - 1);
+						if (!lang) return FALSE;
+							bool useDefaultTab = (lang->_tabSize == -1 || lang->_tabSize == 0);
+
+						::SendMessage(::GetDlgItem(_hSelf, IDC_CHECK_DEFAULTTABVALUE), BM_SETCHECK, useDefaultTab, 0);
+						::EnableWindow(::GetDlgItem(_hSelf, IDC_TABSIZE_STATIC), !useDefaultTab);
+
+						int size = useDefaultTab?nppGUI._tabSize:lang->_tabSize;
+						::SetDlgItemInt(_hSelf, IDC_TABSIZEVAL_STATIC, size, FALSE);
+						::SetDlgItemInt(_hSelf, IDC_TABSIZEVAL_DISABLE_STATIC, size, FALSE);
+
+						::EnableWindow(::GetDlgItem(_hSelf, IDC_TABSIZEVAL_STATIC), !useDefaultTab);
+						::ShowWindow(::GetDlgItem(_hSelf, IDC_TABSIZEVAL_DISABLE_STATIC), useDefaultTab);
+						::ShowWindow(::GetDlgItem(_hSelf, IDC_TABSIZEVAL_STATIC), !useDefaultTab);
+						::SendMessage(::GetDlgItem(_hSelf, IDC_CHECK_REPLACEBYSPACE), BM_SETCHECK, useDefaultTab?nppGUI._tabReplacedBySpace:lang->_isTabReplacedBySpace, 0);
+						::EnableWindow(::GetDlgItem(_hSelf, IDC_CHECK_REPLACEBYSPACE), !useDefaultTab);
+
+						if (!useDefaultTab)
+						{
+							::SetDlgItemInt(_hSelf, IDC_TABSIZEVAL_STATIC, lang->_tabSize, FALSE);
+							::SendMessage(::GetDlgItem(_hSelf, IDC_CHECK_REPLACEBYSPACE), BM_SETCHECK, lang->_isTabReplacedBySpace, 0);
+						}
+					}
+					else
+					{
+						::EnableWindow(::GetDlgItem(_hSelf, IDC_TABSIZE_STATIC), TRUE);
+						::EnableWindow(::GetDlgItem(_hSelf, IDC_TABSIZEVAL_STATIC), TRUE);
+						::ShowWindow(::GetDlgItem(_hSelf, IDC_TABSIZEVAL_STATIC), SW_SHOW);
+						::SetDlgItemInt(_hSelf, IDC_TABSIZEVAL_STATIC, nppGUI._tabSize, FALSE);
+						::ShowWindow(::GetDlgItem(_hSelf, IDC_TABSIZEVAL_DISABLE_STATIC), SW_HIDE);
+						::EnableWindow(::GetDlgItem(_hSelf, IDC_CHECK_REPLACEBYSPACE), TRUE);
+						::SendMessage(::GetDlgItem(_hSelf, IDC_CHECK_REPLACEBYSPACE), BM_SETCHECK, nppGUI._tabReplacedBySpace, 0);
+					}
+
+					return TRUE;
+				}
+				else if (LOWORD(wParam) == IDC_LIST_DISABLEDLANG || LOWORD(wParam) == IDC_LIST_ENABLEDLANG)
+				{
+					HWND hEnableList = ::GetDlgItem(_hSelf, IDC_LIST_ENABLEDLANG);
+					HWND hDisableList = ::GetDlgItem(_hSelf, IDC_LIST_DISABLEDLANG);
+					if (HIWORD(wParam) == LBN_DBLCLK)
+					{
+						if (HWND(lParam) == hEnableList)
+							::SendMessage(_hSelf, WM_COMMAND, IDC_BUTTON_REMOVE, 0);
+						else if (HWND(lParam) == hDisableList)
+							::SendMessage(_hSelf, WM_COMMAND, IDC_BUTTON_RESTORE, 0);
+						return TRUE;
+					}
+					int idButton2Enable;
+					int idButton2Disable;
+
+					if (LOWORD(wParam) == IDC_LIST_ENABLEDLANG)
+					{
+						idButton2Enable = IDC_BUTTON_REMOVE;
+						idButton2Disable = IDC_BUTTON_RESTORE;
+					}
+					else //IDC_LIST_DISABLEDLANG
+					{
+						idButton2Enable = IDC_BUTTON_RESTORE;
+						idButton2Disable = IDC_BUTTON_REMOVE;
+					}
+
+					int i = ::SendDlgItemMessage(_hSelf, LOWORD(wParam), LB_GETCURSEL, 0, 0);
+					if (i != LB_ERR)
+					{
+						::EnableWindow(::GetDlgItem(_hSelf, idButton2Enable), TRUE);
+						int idListbox2Disable = (LOWORD(wParam)== IDC_LIST_ENABLEDLANG)?IDC_LIST_DISABLEDLANG:IDC_LIST_ENABLEDLANG;
+						::SendDlgItemMessage(_hSelf, idListbox2Disable, LB_SETCURSEL, (WPARAM)-1, 0);
+						::EnableWindow(::GetDlgItem(_hSelf, idButton2Disable), FALSE);
+					}
+					return TRUE;
+
+				}
+            }
+
+			switch (wParam)
             {
                 case IDC_TABSIZEVAL_STATIC:
 				{
@@ -1396,56 +1518,6 @@ BOOL CALLBACK LangMenuDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lPara
 					return TRUE;
                 }
 
-                case IDC_LIST_TABSETTNG :
-                {
-                    if (HIWORD(wParam) == LBN_SELCHANGE)
-                    {
-                        int index = ::SendDlgItemMessage(_hSelf, IDC_LIST_TABSETTNG, LB_GETCURSEL, 0, 0);
-	                    if (index == LB_ERR)
-		                    return FALSE;
-                        ::ShowWindow(::GetDlgItem(_hSelf, IDC_GR_TABVALUE_STATIC), index?SW_SHOW:SW_HIDE);
-                        ::ShowWindow(::GetDlgItem(_hSelf, IDC_CHECK_DEFAULTTABVALUE), index?SW_SHOW:SW_HIDE);
-
-                        if (index)
-                        {
-                            Lang *lang = pNppParam->getLangFromIndex(index - 1);
-                            if (!lang) return FALSE;
-                                bool useDefaultTab = (lang->_tabSize == -1 || lang->_tabSize == 0);
-
-                           
-                            ::SendMessage(::GetDlgItem(_hSelf, IDC_CHECK_DEFAULTTABVALUE), BM_SETCHECK, useDefaultTab, 0);
-                            ::EnableWindow(::GetDlgItem(_hSelf, IDC_TABSIZE_STATIC), !useDefaultTab);
-
-							int size = useDefaultTab?nppGUI._tabSize:lang->_tabSize;
-							::SetDlgItemInt(_hSelf, IDC_TABSIZEVAL_STATIC, size, FALSE);
-							::SetDlgItemInt(_hSelf, IDC_TABSIZEVAL_DISABLE_STATIC, size, FALSE);
-
-                            ::EnableWindow(::GetDlgItem(_hSelf, IDC_TABSIZEVAL_STATIC), !useDefaultTab);
-                            ::ShowWindow(::GetDlgItem(_hSelf, IDC_TABSIZEVAL_DISABLE_STATIC), useDefaultTab);
-                            ::ShowWindow(::GetDlgItem(_hSelf, IDC_TABSIZEVAL_STATIC), !useDefaultTab);
-                            ::SendMessage(::GetDlgItem(_hSelf, IDC_CHECK_REPLACEBYSPACE), BM_SETCHECK, useDefaultTab?nppGUI._tabReplacedBySpace:lang->_isTabReplacedBySpace, 0);
-                            ::EnableWindow(::GetDlgItem(_hSelf, IDC_CHECK_REPLACEBYSPACE), !useDefaultTab);
-
-                            if (!useDefaultTab)
-                            {
-								::SetDlgItemInt(_hSelf, IDC_TABSIZEVAL_STATIC, lang->_tabSize, FALSE);
-                                ::SendMessage(::GetDlgItem(_hSelf, IDC_CHECK_REPLACEBYSPACE), BM_SETCHECK, lang->_isTabReplacedBySpace, 0);
-                            }
-                        }
-                        else
-                        {
-                            ::EnableWindow(::GetDlgItem(_hSelf, IDC_TABSIZE_STATIC), TRUE);
-                            ::EnableWindow(::GetDlgItem(_hSelf, IDC_TABSIZEVAL_STATIC), TRUE);
-                            ::ShowWindow(::GetDlgItem(_hSelf, IDC_TABSIZEVAL_STATIC), SW_SHOW);
-							::SetDlgItemInt(_hSelf, IDC_TABSIZEVAL_STATIC, nppGUI._tabSize, FALSE);
-                            ::ShowWindow(::GetDlgItem(_hSelf, IDC_TABSIZEVAL_DISABLE_STATIC), SW_HIDE);
-                            ::EnableWindow(::GetDlgItem(_hSelf, IDC_CHECK_REPLACEBYSPACE), TRUE);
-                            ::SendMessage(::GetDlgItem(_hSelf, IDC_CHECK_REPLACEBYSPACE), BM_SETCHECK, nppGUI._tabReplacedBySpace, 0);
-                        }
-                    }
-                    return TRUE;
-                }
-
                 case IDC_CHECK_DEFAULTTABVALUE:
                 {
                     bool useDefaultTab = BST_CHECKED == ::SendMessage(::GetDlgItem(_hSelf, IDC_CHECK_DEFAULTTABVALUE), BM_GETCHECK, 0, 0);
@@ -1477,44 +1549,6 @@ BOOL CALLBACK LangMenuDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lPara
                     return TRUE;
                 }
 
-				case IDC_LIST_DISABLEDLANG :
-                case IDC_LIST_ENABLEDLANG :
-			    {
-					HWND hEnableList = ::GetDlgItem(_hSelf, IDC_LIST_ENABLEDLANG);
-					HWND hDisableList = ::GetDlgItem(_hSelf, IDC_LIST_DISABLEDLANG);
-					if (HIWORD(wParam) == LBN_DBLCLK)
-					{
-						if (HWND(lParam) == hEnableList)
-							::SendMessage(_hSelf, WM_COMMAND, IDC_BUTTON_REMOVE, 0);
-						else if (HWND(lParam) == hDisableList)
-							::SendMessage(_hSelf, WM_COMMAND, IDC_BUTTON_RESTORE, 0);
-						return TRUE;
-					}
-					int idButton2Enable;
-					int idButton2Disable;
-
-					if (LOWORD(wParam) == IDC_LIST_ENABLEDLANG)
-					{
-						idButton2Enable = IDC_BUTTON_REMOVE;
-						idButton2Disable = IDC_BUTTON_RESTORE;
-					}
-					else //IDC_LIST_DISABLEDLANG
-					{
-						idButton2Enable = IDC_BUTTON_RESTORE;
-						idButton2Disable = IDC_BUTTON_REMOVE;
-					}
-
-					int i = ::SendDlgItemMessage(_hSelf, LOWORD(wParam), LB_GETCURSEL, 0, 0);
-					if (i != LB_ERR)
-					{
-						::EnableWindow(::GetDlgItem(_hSelf, idButton2Enable), TRUE);
-						int idListbox2Disable = (LOWORD(wParam)== IDC_LIST_ENABLEDLANG)?IDC_LIST_DISABLEDLANG:IDC_LIST_ENABLEDLANG;
-						::SendDlgItemMessage(_hSelf, idListbox2Disable, LB_SETCURSEL, (WPARAM)-1, 0);
-						::EnableWindow(::GetDlgItem(_hSelf, idButton2Disable), FALSE);
-					}
-					return TRUE;
-				}
-
 				case IDC_CHECK_LANGMENUCOMPACT : 
 				{
 					nppGUI._isLangMenuCompact = (BST_CHECKED == ::SendMessage(::GetDlgItem(_hSelf, IDC_CHECK_LANGMENUCOMPACT), BM_GETCHECK, 0, 0));
@@ -1524,7 +1558,7 @@ BOOL CALLBACK LangMenuDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lPara
 					return TRUE;
 				}
 
-				case IDC_BUTTON_RESTORE : 
+				case IDC_BUTTON_RESTORE :
 				case IDC_BUTTON_REMOVE :
 				{
 					int list2Remove, list2Add, idButton2Enable, idButton2Disable;
@@ -1845,7 +1879,7 @@ BOOL CALLBACK PrintSettingsDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM)
 
 						int *pVal = (LOWORD(wParam) == IDC_COMBO_HFONTSIZE)?&(nppGUI._printSettings._headerFontSize):&(nppGUI._printSettings._footerFontSize);
 
-						if ((!intStr) || (!intStr[0]))
+						if (!intStr[0])
 							*pVal = 0;
 						else
 							*pVal = generic_strtol(intStr, NULL, 10);

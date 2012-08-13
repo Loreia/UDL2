@@ -1,21 +1,30 @@
- /*
-this file is part of notepad++
-Copyright (C)2003 Don HO ( donho@altern.org )
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
+//
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either
-version 2 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.    See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*/
 
 #include <windows.h>
 #include "resource.h"
@@ -171,6 +180,16 @@ IDI_SYNCH_DISABLE_ICON          ICON      "icons\\syncH_dis.ico"
 IDI_MMPLAY_DIS_ICON             ICON      "icons\\playrecord_m_dis.ico"
 IDI_MMPLAY_OFF_ICON             ICON      "icons\\playrecord_m_off.ico"
 IDI_MMPLAY_ON_ICON              ICON      "icons\\playrecord_m_on.ico"
+
+
+IDI_PROJECT_WORKSPACE           BITMAP      "icons\\project_work_space.bmp"
+IDI_PROJECT_WORKSPACEDIRTY      BITMAP      "icons\\project_work_space_dirty.bmp"
+IDI_PROJECT_PROJECT             BITMAP      "icons\\project_root.bmp"
+IDI_PROJECT_FOLDEROPEN          BITMAP      "icons\\project_folder_open.bmp"
+IDI_PROJECT_FOLDERCLOSE         BITMAP      "icons\\project_folder_close.bmp"
+IDI_PROJECT_FILE                BITMAP      "icons\\project_file.bmp"
+IDI_PROJECT_FILEINVALID         BITMAP      "icons\\project_file_invalid.bmp"
+
 
 IDR_M30_MENU MENU
 BEGIN
@@ -416,9 +435,20 @@ BEGIN
             MENUITEM "7",    IDM_VIEW_UNFOLD_7
             MENUITEM "8",    IDM_VIEW_UNFOLD_8
         END
+
         MENUITEM SEPARATOR
 			MENUITEM "Summary...",	IDM_VIEW_SUMMARY
         MENUITEM SEPARATOR
+			POPUP "Project"
+            BEGIN
+                MENUITEM "Project Panel 1",          IDM_VIEW_PROJECT_PANEL_1
+				MENUITEM "Project Panel 2",          IDM_VIEW_PROJECT_PANEL_2
+				MENUITEM "Project Panel 3",          IDM_VIEW_PROJECT_PANEL_3
+            END
+#ifdef UNICODE
+		MENUITEM "Document Map",          IDM_VIEW_DOC_MAP
+#endif
+		MENUITEM SEPARATOR
         MENUITEM "Synchronize Vertical Scrolling",      IDM_VIEW_SYNSCROLLV
         MENUITEM "Synchronize Horizontal Scrolling",    IDM_VIEW_SYNSCROLLH
         MENUITEM SEPARATOR
@@ -784,8 +814,8 @@ FONT 8, TEXT("MS Shell Dlg"), 0, 0, 0x1
 BEGIN
     EDITTEXT        IDC_BUILD_DATETIME,150,2,150,10, ES_READONLY | NOT WS_BORDER
     CONTROL         "",IDI_CHAMELEON,"Static",SS_OWNERDRAW,20,5,64,64
-    LTEXT           NOTEPAD_PLUS_VERSION, IDC_STATIC,70,20,65,11
-    LTEXT           UNICODE_ANSI_MODE, IDC_STATIC,140,20,65,11
+    LTEXT           NOTEPAD_PLUS_VERSION, IDC_STATIC,70,20,70,11
+    LTEXT           UNICODE_ANSI_MODE, IDC_STATIC,145,20,65,11
     LTEXT           "Author :",IDC_STATIC,21,45,31,8
     LTEXT           "Notepad++ team",IDC_AUTHOR_NAME,78,45,70,8
     LTEXT           "Home Page :",IDC_STATIC,21,59,47,8

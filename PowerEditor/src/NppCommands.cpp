@@ -1,19 +1,30 @@
-//this file is part of notepad++
-//Copyright (C)2003 Don HO ( donho@altern.org )
+// This file is part of Notepad++ project
+// Copyright (C)2003 Don HO <don.h@free.fr>
 //
-//This program is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License
-//as published by the Free Software Foundation; either
-//version 2 of the License, or (at your option) any later version.
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either
+// version 2 of the License, or (at your option) any later version.
 //
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
+// Note that the GPL places important restrictions on "derived works", yet
+// it does not provide a detailed definition of that term.  To avoid      
+// misunderstandings, we consider an application to constitute a          
+// "derivative work" for the purpose of this license if it does any of the
+// following:                                                             
+// 1. Integrates source code from Notepad++.
+// 2. Integrates/includes/aggregates Notepad++ into a proprietary executable
+//    installer, such as those produced by InstallShield.
+// 3. Links to a library or executes a program that does any of the above.
 //
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
 
 #include "precompiledHeaders.h"
 #include "Notepad_plus_Window.h"
@@ -22,6 +33,7 @@
 #include "TaskListDlg.h"
 #include "clipboardFormats.h"
 #include "VerticalFileSwitcher.h"
+#include "documentMap.h"
 
 void Notepad_plus::macroPlayback(Macro macro)
 {
@@ -294,6 +306,28 @@ void Notepad_plus::command(int id)
 		case IDM_VIEW_FILESWITCHER_PANEL:
 		{
 			launchFileSwitcherPanel();
+		}
+		break;
+
+		case IDM_VIEW_PROJECT_PANEL_1:
+		{
+			launchProjectPanel(id, &_pProjectPanel_1, 0);
+		}
+		break;
+		case IDM_VIEW_PROJECT_PANEL_2:
+		{
+			launchProjectPanel(id, &_pProjectPanel_2, 1);
+		}
+		break;
+		case IDM_VIEW_PROJECT_PANEL_3:
+		{
+			launchProjectPanel(id, &_pProjectPanel_3, 2);
+		}
+		break;
+
+		case IDM_VIEW_DOC_MAP:
+		{
+			launchDocMap();
 		}
 		break;
 
@@ -910,7 +944,14 @@ void Notepad_plus::command(int id)
 		case IDM_VIEW_TOGGLE_FOLDALL:
 		case IDM_VIEW_TOGGLE_UNFOLDALL:
 		{
-			_pEditView->foldAll((id==IDM_VIEW_TOGGLE_FOLDALL)?fold_collapse:fold_uncollapse);
+			_isFolding = true; // So we can ignore events while folding is taking place
+			bool doCollapse = (id==IDM_VIEW_TOGGLE_FOLDALL)?fold_collapse:fold_uncollapse;
+ 			_pEditView->foldAll(doCollapse);
+			if (_pDocMap)
+			{
+				_pDocMap->foldAll(doCollapse);
+			}
+			_isFolding = false;
 		}
 		break;
 
@@ -922,7 +963,9 @@ void Notepad_plus::command(int id)
 		case IDM_VIEW_FOLD_6:
 		case IDM_VIEW_FOLD_7:
 		case IDM_VIEW_FOLD_8:
-			_pEditView->collapse(id - IDM_VIEW_FOLD - 1, fold_collapse);
+			_isFolding = true; // So we can ignore events while folding is taking place
+ 			_pEditView->collapse(id - IDM_VIEW_FOLD - 1, fold_collapse);
+			_isFolding = false;
 			break;
 
 		case IDM_VIEW_UNFOLD_1:
@@ -933,7 +976,9 @@ void Notepad_plus::command(int id)
 		case IDM_VIEW_UNFOLD_6:
 		case IDM_VIEW_UNFOLD_7:
 		case IDM_VIEW_UNFOLD_8:
-			_pEditView->collapse(id - IDM_VIEW_UNFOLD - 1, fold_uncollapse);
+			_isFolding = true; // So we can ignore events while folding is taking place
+ 			_pEditView->collapse(id - IDM_VIEW_UNFOLD - 1, fold_uncollapse);
+			_isFolding = false;
 			break;
 
 
@@ -1130,13 +1175,27 @@ void Notepad_plus::command(int id)
 		case IDM_VIEW_WRAP:
 		{
 			bool isWraped = !_pEditView->isWrap();
+			//--FLS: ViewMoveAtWrappingDisableFix: Disable wrapping messes up visible lines. Therefore save view position before in IDM_VIEW_WRAP and restore after SCN_PAINTED, as Scintilla-Doc. says
+			if (!isWraped)
+			{
+				_mainEditView.saveCurrentPos();
+				_mainEditView.setWrapRestoreNeeded(true);
+				_subEditView.saveCurrentPos();
+				_subEditView.setWrapRestoreNeeded(true);
+			}
 			_mainEditView.wrap(isWraped);
 			_subEditView.wrap(isWraped);
-            _toolBar.setCheck(IDM_VIEW_WRAP, isWraped);
+			_toolBar.setCheck(IDM_VIEW_WRAP, isWraped);
 			checkMenuItem(IDM_VIEW_WRAP, isWraped);
 
-            ScintillaViewParams & svp1 = (ScintillaViewParams &)(NppParameters::getInstance())->getSVP();
-            svp1._doWrap = isWraped;
+			ScintillaViewParams & svp1 = (ScintillaViewParams &)(NppParameters::getInstance())->getSVP();
+			svp1._doWrap = isWraped;
+
+			if (_pDocMap)
+			{
+				_pDocMap->initWrapMap();
+				_pDocMap->wrapMap();
+			}
 			break;
 		}
 		case IDM_VIEW_WRAP_SYMBOL:
@@ -1363,7 +1422,7 @@ void Notepad_plus::command(int id)
 			{
 				if (buf->isDirty())
 				{
-					int answer = _nativeLangSpeaker.messageBox("SaveCurrentModifWaring",
+					int answer = _nativeLangSpeaker.messageBox("SaveCurrentModifWarning",
 						NULL,
 						TEXT("You should save the current modification.\rAll the saved modifications can not be undone.\r\rContinue?"),
 						TEXT("Save Current Modification"),
@@ -1381,7 +1440,7 @@ void Notepad_plus::command(int id)
 				if (_pEditView->execute(SCI_CANUNDO) == TRUE)
 				{
 					generic_string msg, title;
-					int answer = _nativeLangSpeaker.messageBox("LoseUndoAbilityWaring",
+					int answer = _nativeLangSpeaker.messageBox("LoseUndoAbilityWarning",
 						NULL,
 						TEXT("You should save the current modification.\rAll the saved modifications can not be undone.\r\rContinue?"),
 						TEXT("Lose Undo Ability Waning"),
@@ -1478,7 +1537,7 @@ void Notepad_plus::command(int id)
             if (buf->isDirty())
             {
 				generic_string warning, title;
-				int answer = _nativeLangSpeaker.messageBox("SaveCurrentModifWaring",
+				int answer = _nativeLangSpeaker.messageBox("SaveCurrentModifWarning",
 					NULL,
 					TEXT("You should save the current modification.\rAll the saved modifications can not be undone.\r\rContinue?"),
 					TEXT("Save Current Modification"),
@@ -1496,7 +1555,7 @@ void Notepad_plus::command(int id)
             if (_pEditView->execute(SCI_CANUNDO) == TRUE)
             {
 				generic_string msg, title;
-				int answer = _nativeLangSpeaker.messageBox("LoseUndoAbilityWaring",
+				int answer = _nativeLangSpeaker.messageBox("LoseUndoAbilityWarning",
 					NULL,
 					TEXT("You should save the current modification.\rAll the saved modifications can not be undone.\r\rContinue?"),
 					TEXT("Lose Undo Ability Waning"),
@@ -1754,7 +1813,7 @@ void Notepad_plus::command(int id)
 
             if (oldEncoding != -1)
             {
-                //do waring
+                //do warning
             }
             buf->setEncoding(newEncoding);
 
@@ -1841,7 +1900,7 @@ void Notepad_plus::command(int id)
 			//if (contion)
 			{
 				generic_string warning, title;
-				_nativeLangSpeaker.messageBox("ContextMenuXmlEditWaring",
+				_nativeLangSpeaker.messageBox("ContextMenuXmlEditWarning",
 					_pPublicInterface->getHSelf(),
 					TEXT("Editing contextMenu.xml allows you to modify your Notepad++ popup context menu.\rYou have to restart your Notepad++ to take effect after modifying contextMenu.xml."),
 					TEXT("Editing contextMenu"),
@@ -1890,21 +1949,53 @@ void Notepad_plus::command(int id)
 
         case IDM_ABOUT:
 		{
-			bool isFirstTime = !_aboutDlg.isCreated();
-            _aboutDlg.doDialog();
-			if (isFirstTime && _nativeLangSpeaker.getNativeLangA())
+			bool doAboutDlg = false;
+			const int maxSelLen = 32;
+			int textLen = _pEditView->execute(SCI_GETSELTEXT, 0, 0) - 1;
+			if (!textLen)
+				doAboutDlg = true;
+			if (textLen > maxSelLen)
+				doAboutDlg = true;
+
+			if (!doAboutDlg)
 			{
-                if (_nativeLangSpeaker.getLangEncoding() == NPP_CP_BIG5)
+				char author[maxSelLen+1] = "";
+				_pEditView->getSelectedText(author, maxSelLen + 1);
+				int iQuote = getQuoteIndexFrom(author);
+				
+				if (iQuote == -1)
 				{
-					char *authorName = "«J¤µ§^";
-					HWND hItem = ::GetDlgItem(_aboutDlg.getHSelf(), IDC_AUTHOR_NAME);
+					doAboutDlg = true;
+				}
+				else if (iQuote == -2)
+				{
+					showAllQuotes();
+					return;
+				}
+				if (iQuote != -1)
+				{
+					showQuoteFromIndex(iQuote);
+					return;
+				}	
+			}
+			if (doAboutDlg)
+			{
+				bool isFirstTime = !_aboutDlg.isCreated();
+				_aboutDlg.doDialog();
+				if (isFirstTime && _nativeLangSpeaker.getNativeLangA())
+				{
+					if (_nativeLangSpeaker.getLangEncoding() == NPP_CP_BIG5)
+					{
+						char *authorName = "«J¤µ§^";
+						HWND hItem = ::GetDlgItem(_aboutDlg.getHSelf(), IDC_AUTHOR_NAME);
 #ifdef UNICODE
-					WcharMbcsConvertor *wmc = WcharMbcsConvertor::getInstance();
-					const wchar_t *authorNameW = wmc->char2wchar(authorName, NPP_CP_BIG5);
-					::SetWindowText(hItem, authorNameW);
+						WcharMbcsConvertor *wmc = WcharMbcsConvertor::getInstance();
+						const wchar_t *authorNameW = wmc->char2wchar(authorName, NPP_CP_BIG5);
+						::SetWindowText(hItem, authorNameW);
 #else
-					::SetWindowText(hItem, authorName);
+						::SetWindowText(hItem, authorName);
 #endif
+					}
 				}
 			}
 			break;
@@ -1922,7 +2013,7 @@ void Notepad_plus::command(int id)
 			{
 				generic_string msg = nppHelpPath;
 				generic_string warning, title;
-				if (!_nativeLangSpeaker.getMsgBoxLang("NppHelpAbsentWaring", title, warning))
+				if (!_nativeLangSpeaker.getMsgBoxLang("NppHelpAbsentWarning", title, warning))
 				{
 					title = TEXT("File does not exist");
 					warning = TEXT("\rdoesn't exist. Please download it on Notepad++ site.");
