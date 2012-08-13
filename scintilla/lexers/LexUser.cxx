@@ -673,7 +673,7 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
     // with all keywords within 'WordList' object
 
     // 'isInListBackward' can search for multi-part keywords too. Such keywords have variable length,
-    // in case 'isInListBackward' finds such keywords it will 'moveForward' parameter so algorythm could adjust position
+    // in case 'isInListBackward' finds such keywords it will set 'moveForward' parameter so algorythm could adjust position
 
     if (!list.words)
         return false;
@@ -740,7 +740,7 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
             }
             while (a && (a == b));
 
-            // if multi-part keyword is found, it must also be followed by whitespace of 'forward' keyword
+            // if multi-part keyword is found, it must also be followed by whitespace or 'forward' keyword
             // otherwise "else if" might wrongly match "else iff"
             bNext = sc.GetRelative(offset + indexb);
             if (isWhiteSpace2(b, nlCountTemp, wsChar, bNext))
@@ -748,14 +748,11 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
 
             if (!fwDelimiterFound && !specialMode && wsChar)
             {
-                // for (int i=0; i<FW_VECTORS_TOTAL; ++i)
-                // {
-                    if (/* !fwEndVectors[i]->empty() &&  */isInListForward2(fwEndVectors, sc, ignoreCase, indexb + offset/*  - 1 */))
-                    {
-                        fwDelimiterFound = true;
-                        break;
-                    }
-                // }
+                if (isInListForward2(fwEndVectors, sc, ignoreCase, indexb + offset))
+                {
+                    fwDelimiterFound = true;
+                    break;
+                }
             }
 
             // special case when multi-part keywords have 'prefix' option enabled
@@ -774,14 +771,11 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
                     // it is not necessary to check EOF position here, because sc.GetRelative returns ' ' beyond EOF
                     while (!isWhiteSpace2(sc.GetRelative(indexb + offset), nlCountTemp, wsChar, sc.GetRelative(offset + indexb)))
                     {
-                        // for (int i=0; i<FW_VECTORS_TOTAL; ++i)
-                        // {
-                            if (/* !fwEndVectors[i]->empty() &&  */isInListForward2(fwEndVectors, sc, ignoreCase, indexb + offset/*  - 1 */))
-                            {
-                                breakOut = true;
-                                break;
-                            }
-                        // }
+                        if (isInListForward2(fwEndVectors, sc, ignoreCase, indexb + offset))
+                        {
+                            breakOut = true;
+                            break;
+                        }
                         if (breakOut)
                             break;
                         ++indexb;
@@ -807,7 +801,7 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
             nlCountTemp = 0;
             ++i;
         }
-        // run one more time for capital letter version?
+        // run one more time for capital letter version
         if (doUpperLoop)
         {
             i = list.starts[toupper(firstChar)];
@@ -1452,10 +1446,10 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 {
                     if (test != NBR_DECIMAL && test != NBR_PREFIX_CHAR)
                         notNumber = true;
-                    
+
                     previousWasRange = false;
                 }
-                
+
                 if (test == NBR_WHITESPACE || test == NBR_FOLLOWED_BY_FORWARD_KEYWORD || test == NBR_NOT_A_NUMBER)
                 {
                     if (test == NBR_NOT_A_NUMBER || notNumber == true)
@@ -1504,7 +1498,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
 				{
 					sc.Forward();
 				}
-                
+
                 break;
             }
 
