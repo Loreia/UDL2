@@ -1,10 +1,10 @@
 <NotepadPlus>
     <Session activeView="0">
-        <mainView activeIndex="8">
-            <File firstVisibleLine="999" xOffset="0" scrollWidth="1557" startPos="29560" endPos="29560" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx" />
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="42824" startPos="0" endPos="0" selMode="0" lang="XML" encoding="1252" filename="C:\Users\eivarad\Desktop\unicode 6\langs.model.xml" />
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="1256" startPos="0" endPos="0" selMode="0" lang="XML" encoding="1252" filename="C:\Users\eivarad\Desktop\unicode 6\stylers.xml" />
-            <File firstVisibleLine="149" xOffset="0" scrollWidth="11662" startPos="17942" endPos="17942" selMode="0" lang="XML" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\userDefineLang.xml" />
+        <mainView activeIndex="9">
+            <File firstVisibleLine="823" xOffset="0" scrollWidth="1557" startPos="27612" endPos="27623" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx">
+                <Mark line="290" />
+            </File>
+            <File firstVisibleLine="121" xOffset="0" scrollWidth="11662" startPos="17942" endPos="17942" selMode="0" lang="XML" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\userDefineLang.xml" />
             <File firstVisibleLine="0" xOffset="0" scrollWidth="736" startPos="0" endPos="0" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\UserDefineResource.h" />
             <File firstVisibleLine="253" xOffset="0" scrollWidth="1056" startPos="20735" endPos="20735" selMode="0" lang="Resource file" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\UserDefineDialog.rc" />
             <File firstVisibleLine="67" xOffset="0" scrollWidth="2176" startPos="2469" endPos="1907" selMode="0" lang="ttcnv3" encoding="-1" filename="C:\Users\eivarad\Desktop\SIP_State_Machine_latest.ttcn">
@@ -27,7 +27,12 @@
                 <Mark line="46425" />
                 <Mark line="46459" />
             </File>
-            <File firstVisibleLine="241" xOffset="0" scrollWidth="744" startPos="6660" endPos="6660" selMode="0" lang="Makefile" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\win32\scintilla.mak" />
+            <File firstVisibleLine="241" xOffset="0" scrollWidth="744" startPos="7492" endPos="7492" selMode="0" lang="Makefile" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\win32\scintilla.mak" />
+            <File firstVisibleLine="57" xOffset="0" scrollWidth="527" startPos="0" endPos="0" selMode="0" lang="ttcnv3" encoding="-1" filename="C:\1\ftp\SIP_demo_for_ETK\bin\SIP_Constants_for_ETK.ttcn" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="560" startPos="494" endPos="494" selMode="0" lang="Batch" encoding="-1" filename="C:\Users\eivarad\Desktop\compile.scintilla.bat" />
+            <File firstVisibleLine="69" xOffset="0" scrollWidth="861" startPos="2822" endPos="2775" selMode="0" lang="Python" encoding="-1" filename="Y:\web2py\applications\sqr\controllers\sqr_enumerate_pairs.py" />
+            <File firstVisibleLine="346" xOffset="50" scrollWidth="1141" startPos="22476" endPos="22495" selMode="0" lang="Python" encoding="-1" filename="Y:\web2py\applications\sqr\controllers\sqr_dal.py" />
+            <File firstVisibleLine="12" xOffset="0" scrollWidth="1491" startPos="1175" endPos="1175" selMode="0" lang="Python" encoding="-1" filename="Y:\web2py\applications\sqr\controllers\sqr_updater.py" />
         </mainView>
         <subView activeIndex="0" />
     </Session>

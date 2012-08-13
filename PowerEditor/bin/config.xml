@@ -10,10 +10,10 @@
         <!-- 2 positions : "horizontal" or "vertical"-->
         <GUIConfig name="ScintillaViewsSplitter">vertical</GUIConfig>
         <!-- For the attribut of position, 2 status : docked or undocked ; 2 status : "show" or "hide" -->
-        <GUIConfig name="UserDefineDlg" position="docked">show</GUIConfig>
+        <GUIConfig name="UserDefineDlg" position="undocked">hide</GUIConfig>
         <GUIConfig name="TabSetting" size="4" replaceBySpace="yes" />
         <!--App position-->
-        <GUIConfig name="AppPosition" x="231" y="0" width="1135" height="738" isMaximized="yes" />
+        <GUIConfig name="AppPosition" x="231" y="0" width="1135" height="738" isMaximized="no" />
         <!-- For the primary scintilla view,
              2 status for Attribut lineNumberMargin, bookMarkMargin, indentGuideLine and currentLineHilitingShow: "show" or "hide"
              4 status for Attribut folderMarkStyle : "simple", "arrow", "circle" and "box"  -->
@@ -79,7 +79,7 @@
         <GUIConfig name="TagsMatchHighLight" TagAttrHighLight="yes" HighLightNonHtmlZone="no">yes</GUIConfig>
         <GUIConfig name="MenuBar">show</GUIConfig>
         <GUIConfig name="Caret" width="1" blinkRate="250" />
-        <GUIConfig name="ScintillaGlobalSettings" enableMultiSelection="no" />
+        <GUIConfig name="ScintillaGlobalSettings" enableMultiSelection="yes" />
         <GUIConfig name="openSaveDir" value="0" defaultDirPath="" />
         <GUIConfig name="titleBar" short="no" />
         <GUIConfig name="stylerTheme" path="c:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\stylers.xml" />
@@ -94,40 +94,37 @@
         </GUIConfig>
     </GUIConfigs>
     <!-- The History of opened files list -->
-    <FindHistory nbMaxFindHistoryPath="10" nbMaxFindHistoryFilter="10" nbMaxFindHistoryFind="10" nbMaxFindHistoryReplace="10" matchWord="yes" matchCase="yes" wrap="yes" directionDown="yes" fifRecuisive="yes" fifInHiddenFolder="no" dlgAlwaysVisible="no" fifFilterFollowsDoc="no" fifFolderFollowsDoc="no" searchMode="1" transparencyMode="1" transparency="150">
+    <FindHistory nbMaxFindHistoryPath="10" nbMaxFindHistoryFilter="10" nbMaxFindHistoryFind="10" nbMaxFindHistoryReplace="10" matchWord="yes" matchCase="no" wrap="yes" directionDown="yes" fifRecuisive="yes" fifInHiddenFolder="no" dlgAlwaysVisible="no" fifFilterFollowsDoc="no" fifFolderFollowsDoc="no" searchMode="0" transparencyMode="1" transparency="150">
         <Path name="C:\1\code\cpp\UDL24\v1 on github" />
         <Path name="C:\1\Projects\C++\NPP\33_final\npp.5.9.3.src\PowerEditor" />
-        <Find name="foldVector" />
-        <Find name=" " />
-        <Find name="fastAnswer" />
-        <Find name="vd_wait_Tprogressing" />
-        <Find name="as_wait_Tprogressing" />
-        <Find name="Timer_wait_Tringing" />
-        <Find name="f_SIP_486_final_resp_out" />
-        <Find name="f_SIP_486_final_resp_inc" />
-        <Find name="PROGRESSING" />
-        <Find name="TRYING" />
-        <Replace name="\n" />
-        <Replace name="StringToVector" />
-        <Replace name="folding" />
-        <Replace name="foldingtMapper" />
-        <Replace name="beginning" />
-        <Replace name="column" />
-        <Replace name="all" />
-        <Replace name="all3" />
-        <Replace name="all2" />
-        <Replace name="/rqs/" />
+        <Find name="GetEmucovStat" />
+        <Find name="," />
+        <Find name='&quot;' />
+        <Find name="blockData" />
+        <Find name="$" />
+        <Find name="s[0]" />
+        <Find name="btiAllZeros" />
+        <Find name="autoict" />
+        <Find name="InserSpiDict" />
+        <Find name="InserAnalyzeDict" />
+        <Replace name=' = &quot;&quot;' />
+        <Replace name="&apos;" />
+        <Replace name=";" />
+        <Replace name="autoDict" />
+        <Replace name="InsertSpiDict" />
+        <Replace name="InsertAnalyzeDict" />
+        <Replace name="InsertAutoDict" />
+        <Replace name=', &quot;&quot;))' />
+        <Replace name="Index" />
+        <Replace name="btiFixedOutput" />
     </FindHistory>
     <History nbMaxFile="10" inSubMenu="no" customLength="-1">
-        <File filename="C:\Users\eivarad\Desktop\test\sqr.py" />
-        <File filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\include\scilexer.h" />
-        <File filename="C:\Users\eivarad\Desktop\SIP_State_Machine.ttcn" />
-        <File filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexCPP.cxx" />
-        <File filename="c:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\contextMenu.xml" />
-        <File filename="C:\Users\eivarad\Desktop\unicode 6\langs.xml" />
-        <File filename="C:\Users\eivarad\Desktop\wscite\cpp.properties" />
-        <File filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\config.xml" />
-        <File filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\session.xml" />
         <File filename="C:\Users\eivarad\Desktop\ZC_1807.csv" />
+        <File filename="C:\1\ftp\SIP_demo_for_ETK\User_Definitions.ttcn" />
+        <File filename="C:\1\ftp\SIP_demo_for_ETK\SIP_demo_for_ETK.ttcn" />
+        <File filename="Y:\web2py\applications\sqr\controllers\a\0101\CAAZA1074381_R1A\4\_logger.log" />
+        <File filename="c:\Users\eivarad\Desktop\test\upltdu.program" />
+        <File filename="Y:\web2py\applications\sqr\controllers\sqr_common.py" />
+        <File filename="C:\Users\eivarad\AppData\Local\Temp\Rar$DR58.168\s7dru.bat" />
     </History>
 </NotepadPlus>
