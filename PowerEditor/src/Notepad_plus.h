@@ -513,7 +513,6 @@ private:
 	void checkMenuItem(int itemID, bool willBeChecked) const {
 		::CheckMenuItem(_mainMenuHandle, itemID, MF_BYCOMMAND | (willBeChecked?MF_CHECKED:MF_UNCHECKED));
 	};
-	void charAdded(TCHAR chAdded);
 	void MaintainIndentation(TCHAR ch);
 	
 	void addHotSpot(bool docIsModifing = false);

@@ -1720,7 +1720,7 @@ void NppParameters::feedFileListParameters(TiXmlNode *node)
 	// nbMaxFile value
 	int nbMaxFile;
 	const TCHAR *strVal = (historyRoot->ToElement())->Attribute(TEXT("nbMaxFile"), &nbMaxFile);
-	if (strVal && (nbMaxFile > 0) && (nbMaxFile <= 50))
+	if (strVal && (nbMaxFile >= 0) && (nbMaxFile <= 50))
 		_nbMaxRecentFile = nbMaxFile;
 
 	// customLen value
@@ -4031,7 +4031,7 @@ void NppParameters::feedScintillaParam(TiXmlNode *node)
 	nm = element->Attribute(TEXT("borderWidth"), &val);
 	if (nm)
 	{
-		if (val > 0 || val <= 30)
+		if (val >= 0 && val <= 30)
 			_svp._borderWidth = val;
 	}
 }
