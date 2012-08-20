@@ -1,36 +1,10 @@
 <NotepadPlus>
     <Session activeView="0">
-        <mainView activeIndex="10">
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="1557" startPos="838" endPos="838" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx">
+        <mainView activeIndex="1">
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="1" startPos="838" endPos="838" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx">
                 <Mark line="290" />
             </File>
-            <File firstVisibleLine="121" xOffset="0" scrollWidth="11662" startPos="17942" endPos="17942" selMode="0" lang="XML" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\userDefineLang.xml" />
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="736" startPos="0" endPos="0" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\UserDefineResource.h" />
-            <File firstVisibleLine="253" xOffset="0" scrollWidth="1056" startPos="20735" endPos="20735" selMode="0" lang="Resource file" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\UserDefineDialog.rc" />
-            <File firstVisibleLine="67" xOffset="0" scrollWidth="2176" startPos="2469" endPos="1907" selMode="0" lang="ttcnv3" encoding="-1" filename="C:\Users\eivarad\Desktop\SIP_State_Machine_latest.ttcn">
-                <Mark line="76" />
-                <Mark line="583" />
-                <Mark line="584" />
-                <Mark line="588" />
-                <Mark line="590" />
-            </File>
-            <File firstVisibleLine="23533" xOffset="0" scrollWidth="1994" startPos="1339447" endPos="1339447" selMode="0" lang="ttcnv3" encoding="-1" filename="C:\Users\eivarad\Desktop\SIP_TCs.ttcn">
-                <Mark line="3475" />
-                <Mark line="23458" />
-                <Mark line="23612" />
-                <Mark line="23855" />
-                <Mark line="24011" />
-                <Mark line="46281" />
-                <Mark line="46322" />
-                <Mark line="46357" />
-                <Mark line="46391" />
-                <Mark line="46425" />
-                <Mark line="46459" />
-            </File>
-            <File firstVisibleLine="241" xOffset="0" scrollWidth="744" startPos="7492" endPos="7492" selMode="0" lang="Makefile" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\win32\scintilla.mak" />
-            <File firstVisibleLine="57" xOffset="0" scrollWidth="527" startPos="0" endPos="0" selMode="0" lang="ttcnv3" encoding="-1" filename="C:\1\ftp\SIP_demo_for_ETK\bin\SIP_Constants_for_ETK.ttcn" />
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="560" startPos="494" endPos="494" selMode="0" lang="Batch" encoding="-1" filename="C:\Users\eivarad\Desktop\compile.scintilla.bat" />
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="518" startPos="0" endPos="0" selMode="0" lang="Batch" encoding="-1" filename="C:\1\code\cpp\ren2.bat" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="560" startPos="488" endPos="488" selMode="0" lang="Batch" encoding="-1" filename="C:\Users\eivarad\Desktop\compile.scintilla.bat" />
         </mainView>
         <subView activeIndex="0" />
     </Session>

@@ -68,7 +68,7 @@
 						3 : bottom
 						>= 4 : undocked -> FloatingWindow id
 			-->
-        <GUIConfig name="noUpdate" intervalDays="15" nextUpdateDate="20080426">no</GUIConfig>
+        <GUIConfig name="noUpdate" intervalDays="15" nextUpdateDate="20120904">no</GUIConfig>
         <GUIConfig name="MaitainIndent">yes</GUIConfig>
         <GUIConfig name="MRU">yes</GUIConfig>
         <GUIConfig name="URL">2</GUIConfig>
@@ -120,14 +120,16 @@
         <Replace name="btiFixedOutput" />
     </FindHistory>
     <History nbMaxFile="10" inSubMenu="no" customLength="-1">
-        <File filename="C:\Users\eivarad\Desktop\ZC_1807.csv" />
-        <File filename="C:\1\ftp\SIP_demo_for_ETK\User_Definitions.ttcn" />
-        <File filename="C:\1\ftp\SIP_demo_for_ETK\SIP_demo_for_ETK.ttcn" />
-        <File filename="Y:\web2py\applications\sqr\controllers\a\0101\CAAZA1074381_R1A\4\_logger.log" />
-        <File filename="c:\Users\eivarad\Desktop\test\upltdu.program" />
-        <File filename="Y:\web2py\applications\sqr\controllers\sqr_common.py" />
-        <File filename="C:\Users\eivarad\AppData\Local\Temp\Rar$DR58.168\s7dru.bat" />
         <File filename="C:\1\code\cpp\UDL25\UDL2\scintilla\lexers\LexUser.cxx" />
+        <File filename="C:\1\code\cpp\UDL25\github\PowerEditor\src\Notepad_plus.rc" />
+        <File filename="C:\1\code\cpp\ren2.bat" />
+        <File filename="C:\1\ftp\SIP_demo_for_ETK\bin\SIP_Constants_for_ETK.ttcn" />
+        <File filename="C:\Users\eivarad\Desktop\SIP_TCs.ttcn" />
+        <File filename="C:\Users\eivarad\Desktop\SIP_State_Machine_latest.ttcn" />
+        <File filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\UserDefineDialog.rc" />
+        <File filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\UserDefineResource.h" />
+        <File filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\userDefineLang.xml" />
+        <File filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\win32\scintilla.mak" />
     </History>
     <ProjectPanels>
         <ProjectPanel id="0" workSpaceFile="" />

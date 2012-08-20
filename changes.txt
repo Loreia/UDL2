@@ -4,16 +4,13 @@ Features:
 - none
 
 Bug fix:
-- fixed regression: Notepad++ would crash in function 'ReColoringCheck' (regression introduced in Beta 10)
-- fixed regression: Folding of comment lines wasn't working after removing 'foldVectorStatic' from the code (regression introduced in Beta 10)
+- none
 
 Things left to do:
-1. Continue with code optimizations.
-2. In the long run, C++ STD stuff (vectors and strings) should be replaced with similar C constructs (maybe a WordList2 class?) to squize more performance out of UDL.
+- Include in next NPP release (v.6.2)
 
 Note:
 - This version should be last beta, after releasing this version, code will be sent to Don for inclusion in main branch.
-- I will probably delete this project then (still undecided on that)
 
 BR
 Loreia
