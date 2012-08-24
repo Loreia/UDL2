@@ -10,7 +10,7 @@
         <!-- 2 positions : "horizontal" or "vertical"-->
         <GUIConfig name="ScintillaViewsSplitter">vertical</GUIConfig>
         <!-- For the attribut of position, 2 status : docked or undocked ; 2 status : "show" or "hide" -->
-        <GUIConfig name="UserDefineDlg" position="undocked">hide</GUIConfig>
+        <GUIConfig name="UserDefineDlg" position="docked">show</GUIConfig>
         <GUIConfig name="TabSetting" size="4" replaceBySpace="yes" />
         <!--App position-->
         <GUIConfig name="AppPosition" x="231" y="0" width="1135" height="738" isMaximized="yes" />
@@ -98,6 +98,7 @@
     <FindHistory nbMaxFindHistoryPath="10" nbMaxFindHistoryFilter="10" nbMaxFindHistoryFind="10" nbMaxFindHistoryReplace="10" matchWord="no" matchCase="no" wrap="yes" directionDown="yes" fifRecuisive="yes" fifInHiddenFolder="no" dlgAlwaysVisible="no" fifFilterFollowsDoc="no" fifFolderFollowsDoc="no" searchMode="2" transparencyMode="1" transparency="150" dotMatchesNewline="yes">
         <Path name="C:\1\code\cpp\UDL24\v1 on github" />
         <Path name="C:\1\Projects\C++\NPP\33_final\npp.5.9.3.src\PowerEditor" />
+        <Find name="IDC_DELIMITER7_BOUNDARYOPEN_EDIT" />
         <Find name="&lt;Tactical_Build_Time_Seconds&gt; .* &lt;/Tactical_Build_Time_Seconds&gt;" />
         <Find name="&lt;Tactical_Build_Time_Seconds&gt; .*? &lt;/Tactical_Build_Time_Seconds&gt;" />
         <Find name="&lt;Tactical_Build_Time_Seconds&gt; 25 &lt;/Tactical_Build_Time_Seconds&gt;" />
@@ -107,7 +108,6 @@
         <Find name="GetEmucovStat" />
         <Find name="," />
         <Find name='&quot;' />
-        <Find name="blockData" />
         <Replace name=' = &quot;&quot;' />
         <Replace name="&apos;" />
         <Replace name=";" />
@@ -120,7 +120,6 @@
         <Replace name="btiFixedOutput" />
     </FindHistory>
     <History nbMaxFile="10" inSubMenu="no" customLength="-1">
-        <File filename="C:\1\code\cpp\UDL25\UDL2\scintilla\lexers\LexUser.cxx" />
         <File filename="C:\1\code\cpp\UDL25\github\PowerEditor\src\Notepad_plus.rc" />
         <File filename="C:\1\code\cpp\ren2.bat" />
         <File filename="C:\1\ftp\SIP_demo_for_ETK\bin\SIP_Constants_for_ETK.ttcn" />
@@ -130,6 +129,7 @@
         <File filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\src\ScitillaComponent\UserDefineResource.h" />
         <File filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\userDefineLang.xml" />
         <File filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\win32\scintilla.mak" />
+        <File filename="C:\Users\eivarad\Documents\test_exp.reg" />
     </History>
     <ProjectPanels>
         <ProjectPanel id="0" workSpaceFile="" />

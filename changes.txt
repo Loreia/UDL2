@@ -4,7 +4,7 @@ Features:
 - none
 
 Bug fix:
-- none
+- Fixed wrong ID of delimiter 7 and delimiter 8 edit boxes.
 
 Things left to do:
 - Include in next NPP release (v.6.2)
