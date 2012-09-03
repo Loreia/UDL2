@@ -258,6 +258,7 @@
 #define SCE_USER_STYLE_DELIMITER8           23
 #define SCE_USER_STYLE_DEFAULT              24
 #define SCE_USER_STYLE_TOTAL_STYLES         25
+#define SCE_USER_STYLE_MAPPER_TOTAL         17
 
 #define SCE_USER_MASK_NESTING_NONE           				0			
 #define SCE_USER_MASK_NESTING_DELIMITER1					0x1        

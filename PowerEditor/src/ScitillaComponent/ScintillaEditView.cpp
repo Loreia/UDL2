@@ -614,6 +614,20 @@ void ScintillaEditView::setUserLexer(const TCHAR *userLangName)
 	if (!userLangContainer)
 		return;
 
+	UINT codepage = CP_ACP;
+	UniMode unicodeMode = _currentBuffer->getUnicodeMode();
+	int encoding = _currentBuffer->getEncoding();
+	if (encoding == -1)
+	{
+		if (unicodeMode == uniUTF8 || unicodeMode == uniCookie)
+			codepage = CP_UTF8;
+	}
+	else
+	{
+		codepage = CP_OEMCP;	// system OEM code page might not match user selection for character set, 
+								// but this is the best match WideCharToMultiByte offers
+	}
+
 	execute(SCI_SETPROPERTY, reinterpret_cast<WPARAM>("fold"), reinterpret_cast<LPARAM>("1"));
 	execute(SCI_SETPROPERTY, (WPARAM)"userDefine.isCaseIgnored",		  (LPARAM)(userLangContainer->_isCaseIgnored ? "1":"0"));
 	execute(SCI_SETPROPERTY, (WPARAM)"userDefine.allowFoldOfComments",    (LPARAM)(userLangContainer->_allowFoldOfComments ? "1":"0"));
@@ -633,7 +647,7 @@ void ScintillaEditView::setUserLexer(const TCHAR *userLangName)
 		const char * keyWords_char = userLangContainer->_keywordLists[i];
 #else
 		WcharMbcsConvertor *wmc = WcharMbcsConvertor::getInstance();
-		const char * keyWords_char = wmc->wchar2char(userLangContainer->_keywordLists[i], CP_ACP);
+		const char * keyWords_char = wmc->wchar2char(userLangContainer->_keywordLists[i], codepage);
 #endif
 		if (i == SCE_USER_KWLIST_COMMENTS)
 		{

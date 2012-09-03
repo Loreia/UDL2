@@ -2713,7 +2713,7 @@ void NppParameters::feedUserStyles(TiXmlNode *node)
 		const TCHAR *styleIDStr = (childNode->ToElement())->Attribute(TEXT("styleID"), &id);
 		if (oldVersion)
 		{
-			if (id >= SCE_USER_STYLE_TOTAL_STYLES)
+			if (id >= SCE_USER_STYLE_MAPPER_TOTAL)
 				continue;
 
 			id = styleIdMApper[id];
@@ -2722,7 +2722,8 @@ void NppParameters::feedUserStyles(TiXmlNode *node)
 		}
 		if (styleIDStr)
 		{
-			_userLangArray[_nbUserLang - 1]->_styleArray.addStyler((id | L_USER << 16), childNode);
+			if (id < SCE_USER_STYLE_TOTAL_STYLES)
+				_userLangArray[_nbUserLang - 1]->_styleArray.addStyler((id | L_USER << 16), childNode);
 		}
 	}
 }

@@ -4,9 +4,11 @@ Features:
 - none
 
 Bug fix:
-- Fixed wrong ID of delimiter 7 and delimiter 8 edit boxes.
+- Fixed crashing issue when udl.xml was opened in old version (pre UDL2) and then again opened with UDL2.
+- Fixed issue with UDL keywords being converted to multibyte with ::WideCharToMultiByte codepage argument hardcoded to ANSI CP_ACP.
 
 Things left to do:
+- Move UDL vectors from Document class in Scintilla code to a (static global) hash map in lexUser.cxx
 - Include in next NPP release (v.6.2)
 
 Note:

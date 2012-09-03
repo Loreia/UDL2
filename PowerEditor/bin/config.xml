@@ -17,7 +17,7 @@
         <!-- For the primary scintilla view,
              2 status for Attribut lineNumberMargin, bookMarkMargin, indentGuideLine and currentLineHilitingShow: "show" or "hide"
              4 status for Attribut folderMarkStyle : "simple", "arrow", "circle" and "box"  -->
-        <GUIConfig name="ScintillaPrimaryView" lineNumberMargin="show" bookMarkMargin="show" folderMarkStyle="box" indentGuideLine="show" currentLineHilitingShow="show" Wrap="yes" edge="no" edgeNbColumn="100" wrapSymbolShow="hide" zoom="0" whiteSpaceShow="hide" eolShow="hide" lineWrapMethod="aligned" zoom2="0" borderWidth="2" />
+        <GUIConfig name="ScintillaPrimaryView" lineNumberMargin="show" bookMarkMargin="show" folderMarkStyle="box" indentGuideLine="show" currentLineHilitingShow="show" Wrap="no" edge="no" edgeNbColumn="100" wrapSymbolShow="hide" zoom="0" whiteSpaceShow="hide" eolShow="hide" lineWrapMethod="aligned" zoom2="0" borderWidth="2" />
         <!-- For the secodary scintilla view,
              2 status for Attribut lineNumberMargin, bookMarkMargin, indentGuideLine and currentLineHilitingShow: "show" or "hide"
              4 status for Attribut folderMarkStyle : "simple", "arrow", "circle" and "box" -->
@@ -98,6 +98,9 @@
     <FindHistory nbMaxFindHistoryPath="10" nbMaxFindHistoryFilter="10" nbMaxFindHistoryFind="10" nbMaxFindHistoryReplace="10" matchWord="no" matchCase="no" wrap="yes" directionDown="yes" fifRecuisive="yes" fifInHiddenFolder="no" dlgAlwaysVisible="no" fifFilterFollowsDoc="no" fifFolderFollowsDoc="no" searchMode="2" transparencyMode="1" transparency="150" dotMatchesNewline="yes">
         <Path name="C:\1\code\cpp\UDL24\v1 on github" />
         <Path name="C:\1\Projects\C++\NPP\33_final\npp.5.9.3.src\PowerEditor" />
+        <Find name="\s+\r\n" />
+        <Find name="\s+\r" />
+        <Find name="\s\r" />
         <Find name="IDC_DELIMITER7_BOUNDARYOPEN_EDIT" />
         <Find name="&lt;Tactical_Build_Time_Seconds&gt; .* &lt;/Tactical_Build_Time_Seconds&gt;" />
         <Find name="&lt;Tactical_Build_Time_Seconds&gt; .*? &lt;/Tactical_Build_Time_Seconds&gt;" />
@@ -105,9 +108,7 @@
         <Find name=".*" />
         <Find name='                    index = 0;&#x000D;&#x000A;                    for (unsigned int j=0; j&lt;length; ++j)&#x000D;&#x000A;                        temp[j] = 0;&#x000D;&#x000A;                }&#x000D;&#x000A;            }&#x000D;&#x000A;            else if (i == length-1)&#x000D;&#x000A;            {&#x000D;&#x000A;                temp[index++] = s[i];&#x000D;&#x000A;                if (*temp)&#x000D;&#x000A;                {&#x000D;&#x000A;                    if (!strcmp(temp, &quot;EOL&quot;))&#x000D;&#x000A;                    {&#x000D;&#x000A;                        subvector.push_back(&quot;\r\n&quot;);&#x000D;&#x000A;                        subvector.push_back(&quot;\n&quot;);&#x000D;&#x000A;                        subvector.push_back(&quot;\r&quot;);&#x000D;&#x000A;                    }&#x000D;&#x000A;                    else&#x000D;&#x000A;                        subvector.push_back(temp);&#x000D;&#x000A;                }&#x000D;&#x000A;            }&#x000D;&#x000A;            else&#x000D;&#x000A;            {&#x000D;&#x000A;                temp[index++] = s[i];&#x000D;&#x000A;            }&#x000D;&#x000A;        }&#x000D;&#x000A;    }&#x000D;&#x000A;&#x000D;&#x000A;    if (!subvector.empty())&#x000D;&#x000A;        vec.push_back(subvector);&#x000D;&#x000A;&#x000D;&#x000A;    delete [] temp;&#x000D;&#x000A;}&#x000D;&#x000A;&#x000D;&#x000A;static inline void GenerateVector(vvstring &amp; vec, const char * s, char * prefix, int minLength)&#x000D;&#x000A;{&#x000D;&#x000A;    unsigned int length = strlen(s);&#x000D;&#x000A;    char * temp = new char[length];&#x000D;&#x000A;    unsigned int index = 0;&#x000D;&#x000A;    bool copy = false;&#x000D;&#x000A;    bool inGroup = false;&#x000D;&#x000A;&#x000D;&#x000A;    for (unsigned int j=0; j&lt;length; ++j)&#x000D;&#x000A;        temp[j] = 0;&#x000D;&#x000A;&#x000D;&#x000A;    vec.clear();&#x000D;&#x000A;    for (unsigned int i=0; i&lt;length; ++i)&#x000D;&#x000A;    {&#x000D;&#x000A;        if (copy &amp;&amp; !inGroup &amp;&amp; s[i] == &apos; &apos;)&#x000D;&#x000A;        {&#x000D;&#x000A;            SubGroup(temp, vec, inGroup);&#x000D;&#x000A;            index = 0;&#x000D;&#x000A;            copy = false;&#x000D;&#x000A;            for (unsigned int j=0; j&lt;length; ++j)&#x000D;&#x000A;                temp[j] = 0;&#x000D;&#x000A;        }&#x000D;&#x000A;&#x000D;&#x000A;        if ( (s[i] == &apos; &apos; &amp;&amp; s[i+1] == prefix[0] &amp;&amp; s[i+2] == prefix[1] &amp;&amp; s[i+3] != &apos; &apos;) ||&#x000D;&#x000A;             (   i == 0   &amp;&amp;   s[0] == prefix[0] &amp;&amp;   s[1] == prefix[1] &amp;&amp; s[i+2] != &apos; &apos;) )&#x000D;&#x000A;        {&#x000D;&#x000A;            if (i &gt; 0)  i += 1; // skip space&#x000D;&#x000A;            i += 2;             // skip prefix&#x000D;&#x000A;            copy = true;&#x000D;&#x000A;&#x000D;&#x000A;            if (s[i] == &apos; &apos;)&#x000D;&#x000A;                continue;&#x000D;&#x000A;&#x000D;&#x000A;            if (s[i] == &apos;(&apos; &amp;&amp; s[i+1] == &apos;(&apos;)&#x000D;&#x000A;                inGroup = true;&#x000D;&#x000A;        }&#x000D;&#x000A;&#x000D;&#x000A;        if (inGroup &amp;&amp; s[i] == &apos;)&apos; &amp;&amp; s[i+1] == &apos;)&apos;)&#x000D;&#x000A;            inGroup' />
         <Find name="\r\n" />
-        <Find name="GetEmucovStat" />
-        <Find name="," />
-        <Find name='&quot;' />
+        <Replace name="\r\n" />
         <Replace name=' = &quot;&quot;' />
         <Replace name="&apos;" />
         <Replace name=";" />
@@ -117,11 +118,8 @@
         <Replace name="InsertAutoDict" />
         <Replace name=', &quot;&quot;))' />
         <Replace name="Index" />
-        <Replace name="btiFixedOutput" />
     </FindHistory>
     <History nbMaxFile="10" inSubMenu="no" customLength="-1">
-        <File filename="C:\1\code\cpp\UDL25\github\PowerEditor\src\Notepad_plus.rc" />
-        <File filename="C:\1\code\cpp\ren2.bat" />
         <File filename="C:\1\ftp\SIP_demo_for_ETK\bin\SIP_Constants_for_ETK.ttcn" />
         <File filename="C:\Users\eivarad\Desktop\SIP_TCs.ttcn" />
         <File filename="C:\Users\eivarad\Desktop\SIP_State_Machine_latest.ttcn" />
@@ -130,6 +128,8 @@
         <File filename="C:\1\code\cpp\UDL24\v1 on github\PowerEditor\bin\userDefineLang.xml" />
         <File filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\win32\scintilla.mak" />
         <File filename="C:\Users\eivarad\Documents\test_exp.reg" />
+        <File filename="C:\Users\eivarad\Downloads\userDefineLang_crash.xml" />
+        <File filename="C:\1\code\cpp\UDL25\github\changes.txt" />
     </History>
     <ProjectPanels>
         <ProjectPanel id="0" workSpaceFile="" />
