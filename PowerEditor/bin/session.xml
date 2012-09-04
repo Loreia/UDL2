@@ -1,15 +1,15 @@
 <NotepadPlus>
     <Session activeView="0">
-        <mainView activeIndex="6">
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="630" startPos="777" endPos="777" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL24\v1 on github\scintilla\lexers\LexUser.cxx">
-                <Mark line="290" />
-            </File>
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="910" startPos="488" endPos="488" selMode="0" lang="Batch" encoding="-1" filename="C:\Users\eivarad\Desktop\compile.scintilla.bat" />
+        <mainView activeIndex="0">
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="910" startPos="281" endPos="281" selMode="0" lang="Batch" encoding="-1" filename="C:\Users\eivarad\Desktop\compile.scintilla.bat" />
             <File firstVisibleLine="180" xOffset="0" scrollWidth="427" startPos="5857" endPos="5883" selMode="0" lang="XML" encoding="-1" filename="C:\Users\eivarad\Documents\BD_PRI_H.xml" />
             <File firstVisibleLine="110" xOffset="0" scrollWidth="665" startPos="8882" endPos="8882" selMode="0" lang="Resource file" encoding="-1" filename="C:\1\code\cpp\UDL25\github\PowerEditor\src\ScitillaComponent\UserDefineDialog.rc" />
             <File firstVisibleLine="0" xOffset="0" scrollWidth="1190" startPos="0" endPos="0" selMode="0" lang="XML" encoding="-1" filename="C:\1\code\cpp\UDL25\github\PowerEditor\bin\userDefineLang.xml" />
             <File firstVisibleLine="0" xOffset="0" scrollWidth="252" startPos="43" endPos="43" selMode="0" lang="Normal Text" encoding="-1" filename="C:\Users\eivarad\Desktop\npp.6.1.6.bin\test2.txt" />
             <File firstVisibleLine="0" xOffset="0" scrollWidth="916" startPos="0" endPos="0" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL25\github\PowerEditor\src\ScitillaComponent\UserDefineDialog.h" />
+            <File firstVisibleLine="1037" xOffset="0" scrollWidth="1120" startPos="38751" endPos="38751" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL25\github\scintilla\lexers\LexUser.cxx">
+                <Mark line="192" />
+            </File>
         </mainView>
         <subView activeIndex="0" />
     </Session>

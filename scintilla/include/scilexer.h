@@ -229,10 +229,10 @@
 														// and <= KEYWORDSET_MAX
 
 #define SCE_USER_TOTAL_DELIMITERS			8
-#define SCE_USER_TOTAL_KEYWORDS				8
+#define SCE_USER_TOTAL_KEYWORD_GROUPS		8
 #define SCE_USER_TOTAL_FOLDERS				6
 
-#define SCE_USER_STYLE_IDENTIFIER           0 
+#define SCE_USER_STYLE_DEFAULT              0 
 #define SCE_USER_STYLE_COMMENT              1 
 #define SCE_USER_STYLE_COMMENTLINE          2 
 #define SCE_USER_STYLE_NUMBER               3 
@@ -256,8 +256,8 @@
 #define SCE_USER_STYLE_DELIMITER6           21
 #define SCE_USER_STYLE_DELIMITER7           22
 #define SCE_USER_STYLE_DELIMITER8           23
-#define SCE_USER_STYLE_DEFAULT              24
-#define SCE_USER_STYLE_TOTAL_STYLES         25
+#define SCE_USER_STYLE_IDENTIFIER           24
+#define SCE_USER_STYLE_TOTAL_STYLES         SCE_USER_STYLE_IDENTIFIER
 #define SCE_USER_STYLE_MAPPER_TOTAL         17
 
 #define SCE_USER_MASK_NESTING_NONE           				0			

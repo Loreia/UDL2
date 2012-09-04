@@ -2567,7 +2567,7 @@ void NppParameters::feedUserSettings(TiXmlNode *settingsRoot)
         const TCHAR *udlVersion = _userLangArray[_nbUserLang - 1]->_udlVersion.c_str();
         if (!lstrcmp(udlVersion, TEXT("2.0")))
         {
-            for (int i = 0 ; i < SCE_USER_TOTAL_KEYWORDS ; i++)
+            for (int i = 0 ; i < SCE_USER_TOTAL_KEYWORD_GROUPS ; i++)
             {
                 boolStr = (prefixNode->ToElement())->Attribute(keywordListMapper[i+SCE_USER_KWLIST_KEYWORDS1]);
                 if (boolStr)
@@ -2576,7 +2576,7 @@ void NppParameters::feedUserSettings(TiXmlNode *settingsRoot)
         }
         else    // support for old style (pre 2.0)
         {
-            TCHAR names[SCE_USER_TOTAL_KEYWORDS][7] = {TEXT("words1"), TEXT("words2"), TEXT("words3"), TEXT("words4")};
+            TCHAR names[SCE_USER_TOTAL_KEYWORD_GROUPS][7] = {TEXT("words1"), TEXT("words2"), TEXT("words3"), TEXT("words4")};
             for (int i = 0 ; i < 4 ; i++)
             {
                 boolStr = (prefixNode->ToElement())->Attribute(names[i]);
@@ -5303,7 +5303,7 @@ void NppParameters::insertUserLang2Tree(TiXmlNode *node, UserLangContainer *user
 		globalElement->SetAttribute(TEXT("foldCompact"),			userLang->_foldCompact ? TEXT("yes"):TEXT("no"));
 
 		TiXmlElement *prefixElement = (settingsElement->InsertEndChild(TiXmlElement(TEXT("Prefix"))))->ToElement();
-		for (int i = 0 ; i < SCE_USER_TOTAL_KEYWORDS ; i++)
+		for (int i = 0 ; i < SCE_USER_TOTAL_KEYWORD_GROUPS ; i++)
 			prefixElement->SetAttribute(keywordListMapper[i+SCE_USER_KWLIST_KEYWORDS1], userLang->_isPrefix[i]?TEXT("yes"):TEXT("no"));
 	}
 

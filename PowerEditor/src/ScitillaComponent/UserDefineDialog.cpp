@@ -115,7 +115,7 @@ BOOL CALLBACK FolderStyleDialog::run_dlgProc(UINT Message, WPARAM wParam, LPARAM
                 }
                 case IDC_DEFAULT_STYLER :
                 {
-                    StylerDlg stylerDlg(_hInst, _hSelf, SCE_USER_STYLE_IDENTIFIER, SCE_USER_MASK_NESTING_NONE);
+                    StylerDlg stylerDlg(_hInst, _hSelf, SCE_USER_STYLE_DEFAULT, SCE_USER_MASK_NESTING_NONE);
                     stylerDlg.doDialog();
                     return TRUE;
                 }
@@ -882,8 +882,7 @@ UserDefineDialog::UserDefineDialog(): SharedParametersDialog(), _status(UNDOCK),
 {
     _pCurrentUserLang = new UserLangContainer();
 
-	//_pCurrentUserLang->_styleArray.addStyler(SCE_USER_STYLE_DEFAULT,              styleNameMapper[SCE_USER_STYLE_DEFAULT]);
-	_pCurrentUserLang->_styleArray.addStyler(SCE_USER_STYLE_IDENTIFIER,           styleNameMapper[SCE_USER_STYLE_IDENTIFIER]);
+    _pCurrentUserLang->_styleArray.addStyler(SCE_USER_STYLE_DEFAULT,              styleNameMapper[SCE_USER_STYLE_DEFAULT]);
     _pCurrentUserLang->_styleArray.addStyler(SCE_USER_STYLE_COMMENT,              styleNameMapper[SCE_USER_STYLE_COMMENT]);
     _pCurrentUserLang->_styleArray.addStyler(SCE_USER_STYLE_COMMENTLINE,          styleNameMapper[SCE_USER_STYLE_COMMENTLINE]);
     _pCurrentUserLang->_styleArray.addStyler(SCE_USER_STYLE_NUMBER,               styleNameMapper[SCE_USER_STYLE_NUMBER]);

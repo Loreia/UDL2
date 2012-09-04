@@ -936,7 +936,7 @@ public :
 		return *this;
 	};
 
-	int getNbKeywordList() {return SCE_USER_KWLIST_TOTAL;};
+	// int getNbKeywordList() {return SCE_USER_KWLIST_TOTAL;};
 	const TCHAR * getName() {return _name.c_str();};
 	const TCHAR * getExtention() {return _ext.c_str();};
 	const TCHAR * getUdlVersion() {return _udlVersion.c_str();};
@@ -954,7 +954,7 @@ private:
 	bool _allowFoldOfComments;
 	bool _forceLineCommentsAtBOL;
 	bool _foldCompact;
-	bool _isPrefix[SCE_USER_TOTAL_KEYWORDS];
+	bool _isPrefix[SCE_USER_TOTAL_KEYWORD_GROUPS];
 };
 
 #define MAX_EXTERNAL_LEXER_NAME_LEN 16

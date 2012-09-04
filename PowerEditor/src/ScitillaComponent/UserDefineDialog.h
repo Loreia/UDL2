@@ -89,7 +89,7 @@ const TCHAR keywordListMapper[SCE_USER_KWLIST_TOTAL][32] = {
     TEXT("Delimiters")                      // SCE_USER_KWLIST_DELIMITERS
 };
 const TCHAR styleNameMapper[SCE_USER_STYLE_TOTAL_STYLES][32] = {
-    TEXT("DEFAULT"),                    // 0   SCE_USER_STYLE_IDENTIFIER
+    TEXT("DEFAULT"),                    // 0   SCE_USER_STYLE_DEFAULT
     TEXT("COMMENTS"),                   // 1   SCE_USER_STYLE_COMMENT
     TEXT("LINE COMMENTS"),              // 2   SCE_USER_STYLE_COMMENTLINE
     TEXT("NUMBERS"),                    // 3   SCE_USER_STYLE_NUMBER
@@ -126,7 +126,7 @@ const int styleIdMApper[SCE_USER_STYLE_MAPPER_TOTAL] = {            // mapping s
     SCE_USER_STYLE_KEYWORD4,            // 8
     -1,                                 // 9
     SCE_USER_STYLE_OPERATOR,            // 10
-    SCE_USER_STYLE_IDENTIFIER,          // 11
+    SCE_USER_STYLE_DEFAULT,             // 11
     SCE_USER_STYLE_FOLDER_IN_CODE1,     // 12
     -1,                                 // 13
     SCE_USER_STYLE_DELIMITER1,          // 14

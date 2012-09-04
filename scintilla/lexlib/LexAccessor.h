@@ -166,10 +166,6 @@ public:
 	void ChangeLexerState(int start, int end) {
 		pAccess->ChangeLexerState(start, end);
 	}
-
-	void * GetDocumentPointer() {
-		return dynamic_cast<void *>(pAccess);
-	}
 };
 
 #ifdef SCI_NAMESPACE

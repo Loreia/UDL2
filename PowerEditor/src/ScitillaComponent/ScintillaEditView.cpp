@@ -635,13 +635,14 @@ void ScintillaEditView::setUserLexer(const TCHAR *userLangName)
 	execute(SCI_SETPROPERTY, (WPARAM)"userDefine.foldCompact",		      (LPARAM)(userLangContainer->_foldCompact ? "1":"0"));
 
 	char name[] = "userDefine.prefixKeywords0";
-	for (int i=0 ; i<SCE_USER_TOTAL_KEYWORDS ; i++)
+	for (int i=0 ; i<SCE_USER_TOTAL_KEYWORD_GROUPS ; i++)
 	{	
 		itoa(i+1, (name+25), 10);
 		execute(SCI_SETPROPERTY, (WPARAM)name, (LPARAM)(userLangContainer->_isPrefix[i]?"1":"0"));
 	}
 
-	for (int i = 0 ; i < userLangContainer->getNbKeywordList() ; i++)
+	// for (int i = 0 ; i < userLangContainer->getNbKeywordList() ; i++)
+	for (int i = 0 ; i < SCE_USER_KWLIST_TOTAL ; i++)
 	{
 #ifndef UNICODE
 		const char * keyWords_char = userLangContainer->_keywordLists[i];
@@ -748,8 +749,13 @@ void ScintillaEditView::setUserLexer(const TCHAR *userLangName)
 		}
 	}
 
-	char nestingBuffer[] = "userDefine.nesting.00";
+	// at the end (position SCE_USER_KWLIST_TOTAL) send id values
+	execute(SCI_SETPROPERTY, (WPARAM)"userDefine.udlName", reinterpret_cast<LPARAM>(userLangContainer->getName()));
+	execute(SCI_SETPROPERTY, (WPARAM)"userDefine.currentBufferID", reinterpret_cast<LPARAM>(_currentBufferID));
+
 	char intBuffer[10];
+	char nestingBuffer[] = "userDefine.nesting.00";
+	
 	for (int i = 0 ; i < userLangContainer->_styleArray.getNbStyler() ; i++)
 	{
 		Style & style = userLangContainer->_styleArray.getStyler(i);
