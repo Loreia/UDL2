@@ -1985,7 +1985,8 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                             sc.Forward(skipForward);
                             sc.SetState(SCE_USER_STYLE_COMMENTLINE);
                             dontMove = true;
-                            startOfDelimiter = true;
+                            if (lineCommentNesting & SCE_USER_MASK_NESTING_NUMBERS)
+                                startOfDelimiter = true;
                             break;
                         }
                     }
@@ -2013,7 +2014,8 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                         sc.Forward(skipForward);
                         sc.SetState(SCE_USER_STYLE_COMMENT);
                         dontMove = true;
-                        startOfDelimiter = true;
+                        if (commentNesting & SCE_USER_MASK_NESTING_NUMBERS)
+                            startOfDelimiter = true;
                         break;
                     }
                 }
@@ -2035,7 +2037,8 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                             sc.Forward(skipForward);
                             sc.SetState(i+SCE_USER_STYLE_DELIMITER1);
                             dontMove = true;
-                            startOfDelimiter = true;
+                            if (delimNestings[i] & SCE_USER_MASK_NESTING_NUMBERS)
+                                startOfDelimiter = true;
                             break;  // break from nested 'for' loop, not 'case' statement
                         }
                     }

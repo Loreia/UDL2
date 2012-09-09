@@ -1,19 +1,24 @@
 <NotepadPlus>
     <Session activeView="0">
-        <mainView activeIndex="0">
+        <mainView activeIndex="12">
             <File firstVisibleLine="0" xOffset="0" scrollWidth="1472" startPos="376" endPos="376" selMode="0" lang="Batch" encoding="-1" filename="C:\Users\eivarad\Desktop\compile.scintilla.bat" />
             <File firstVisibleLine="110" xOffset="0" scrollWidth="665" startPos="8882" endPos="8882" selMode="0" lang="Resource file" encoding="-1" filename="C:\1\code\cpp\UDL25\github\PowerEditor\src\ScitillaComponent\UserDefineDialog.rc" />
             <File firstVisibleLine="0" xOffset="0" scrollWidth="1190" startPos="1205" endPos="1205" selMode="0" lang="XML" encoding="-1" filename="C:\1\code\cpp\UDL25\github\PowerEditor\bin\userDefineLang.xml" />
             <File firstVisibleLine="0" xOffset="0" scrollWidth="252" startPos="43" endPos="43" selMode="0" lang="Normal Text" encoding="-1" filename="C:\Users\eivarad\Desktop\npp.6.1.6.bin\test2.txt" />
             <File firstVisibleLine="0" xOffset="0" scrollWidth="916" startPos="0" endPos="0" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL25\github\PowerEditor\src\ScitillaComponent\UserDefineDialog.h" />
-            <File firstVisibleLine="1013" xOffset="0" scrollWidth="1120" startPos="38751" endPos="38751" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL25\github\scintilla\lexers\LexUser.cxx">
-                <Mark line="192" />
+            <File firstVisibleLine="2025" xOffset="0" scrollWidth="1120" startPos="85974" endPos="85987" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL25\github\scintilla\lexers\LexUser.cxx">
+                <Mark line="82" />
+                <Mark line="871" />
+                <Mark line="988" />
+                <Mark line="1987" />
+                <Mark line="2016" />
             </File>
             <File firstVisibleLine="57" xOffset="0" scrollWidth="924" startPos="331" endPos="331" selMode="0" lang="Python" encoding="-1" filename="C:\Users\eivarad\Desktop\npp.6.1.5.bin\unicode\localization\update_localization.py" />
             <File firstVisibleLine="267" xOffset="0" scrollWidth="525" startPos="7302" endPos="7302" selMode="0" lang="XML" encoding="-1" filename="C:\Users\eivarad\Documents\BD_PRI_H.xml" />
             <File firstVisibleLine="511" xOffset="0" scrollWidth="1267" startPos="15355" endPos="15355" selMode="0" lang="XML" encoding="-1" filename="C:\1\code\python\sqr\pri1.sgml" />
             <File firstVisibleLine="0" xOffset="0" scrollWidth="889" startPos="1705" endPos="1705" selMode="0" lang="Python" encoding="-1" filename="C:\1\code\python\sqr\2.py" />
             <File firstVisibleLine="0" xOffset="0" scrollWidth="6216" startPos="0" endPos="0" selMode="0" lang="XML" encoding="-1" filename="C:\1\code\python\sqr\test.txt" />
+            <File firstVisibleLine="432" xOffset="0" scrollWidth="1318" startPos="20300" endPos="20300" selMode="0" lang="C++" encoding="-1" filename="C:\1\code\cpp\UDL25\github\PowerEditor\src\ScitillaComponent\ScintillaEditView.cpp" />
         </mainView>
         <subView activeIndex="0" />
     </Session>

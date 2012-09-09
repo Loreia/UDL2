@@ -4,9 +4,7 @@ Features:
 - none
 
 Bug fix:
-- Fixed issue with numbers not being recognized within delimiters.
-- Fixed issue with missing escape sequence for quotes in UDL keywords (now quotes acn be part of keyword).
-- Fixed issue with consequtive spaces in multi-part keywords.
+- Small performance improvment for numbers within delimiters.
 
 Things left to do:
 - Include in next NPP release (v.6.2)
