@@ -160,46 +160,46 @@ struct forwardStruct
 }FWS;   // just one instance
 
 struct nestedInfo {
-	unsigned int position;
-	int nestedLevel;
-	int index;
-	int state;
-	int opener;
+    unsigned int position;
+    int nestedLevel;
+    int index;
+    int state;
+    int opener;
 
-	// constructor, useless but obligatory
-	nestedInfo():position(0), nestedLevel(0), index(0), state(0), opener(0) {};
+    // constructor, useless but obligatory
+    nestedInfo():position(0), nestedLevel(0), index(0), state(0), opener(0) {};
 
-	nestedInfo * Set (unsigned int position, int nestedLevel, int index, int state, int opener) {
-		this->position = position;
-		this->nestedLevel = nestedLevel;
-		this->index = index;
-		this->state = state;
-		this->opener = opener;
-		return this;
-	}
+    nestedInfo * Set (unsigned int position, int nestedLevel, int index, int state, int opener) {
+        this->position = position;
+        this->nestedLevel = nestedLevel;
+        this->index = index;
+        this->state = state;
+        this->opener = opener;
+        return this;
+    }
 };
 static nestedInfo NI;   // also just one instance
 
 struct udlKeywordsMapStruct
 {
-	vvstring commentLineOpen, commentLineContinue, commentLineClose;
-	vvstring commentOpen, commentClose;
-	vvstring delim1Open, delim1Escape, delim1Close;
-	vvstring delim2Open, delim2Escape, delim2Close;
-	vvstring delim3Open, delim3Escape, delim3Close;
-	vvstring delim4Open, delim4Escape, delim4Close;
-	vvstring delim5Open, delim5Escape, delim5Close;
-	vvstring delim6Open, delim6Escape, delim6Close;
-	vvstring delim7Open, delim7Escape, delim7Close;
-	vvstring delim8Open, delim8Escape, delim8Close;
-	vvstring operators1;
-	vvstring foldersInCode1Open, foldersInCode1Middle, foldersInCode1Close;
-	vvstring foldersInCode2Open, foldersInCode2Middle, foldersInCode2Close;
-	vector<string> suffixTokens;
-	vector<string> prefixTokens;
-	vector<string> negativePrefixTokens;
-	vector<string> extrasInPrefixedTokens;
-	vector<string> rangeTokens;  
+    vvstring commentLineOpen, commentLineContinue, commentLineClose;
+    vvstring commentOpen, commentClose;
+    vvstring delim1Open, delim1Escape, delim1Close;
+    vvstring delim2Open, delim2Escape, delim2Close;
+    vvstring delim3Open, delim3Escape, delim3Close;
+    vvstring delim4Open, delim4Escape, delim4Close;
+    vvstring delim5Open, delim5Escape, delim5Close;
+    vvstring delim6Open, delim6Escape, delim6Close;
+    vvstring delim7Open, delim7Escape, delim7Close;
+    vvstring delim8Open, delim8Escape, delim8Close;
+    vvstring operators1;
+    vvstring foldersInCode1Open, foldersInCode1Middle, foldersInCode1Close;
+    vvstring foldersInCode2Open, foldersInCode2Middle, foldersInCode2Close;
+    vector<string> suffixTokens;
+    vector<string> prefixTokens;
+    vector<string> negativePrefixTokens;
+    vector<string> extrasInPrefixedTokens;
+    vector<string> rangeTokens;  
 };
 
 // key value is of type "int" so it could receive pointer value !!
@@ -342,7 +342,7 @@ static inline int isADigit(StyleContext & sc, bool ignoreCase, vector<string> & 
         return NBR_FOLLOWED_BY_FORWARD_KEYWORD;
 
     if (IsADigit(sc.ch))
-		return NBR_DECIMAL;
+        return NBR_DECIMAL;
 
     if (true == isWhiteSpace(sc.ch))
         return NBR_WHITESPACE;
@@ -381,13 +381,13 @@ static bool IsNumber(vector<string> & prefixTokens, vector<string> & negativePre
     if (IsADigit(sc.ch) || ((sc.ch == '-' || sc.ch == '+') && IsADigit(sc.chNext) && !IsADigit(sc.chPrev)))
     {
         sc.SetState(SCE_USER_STYLE_NUMBER);
-		hasPrefix = true;	// prefix in the middle is an error case, treat any number as it it had a prefix
+        hasPrefix = true;   // prefix in the middle is an error case, treat any number as it it had a prefix
         return true;
     }
     else if (sc.ch == '.' && IsADigit(sc.chNext))
     {
         sc.SetState(SCE_USER_STYLE_NUMBER);
-		hasPrefix = true;
+        hasPrefix = true;
         hasDot = true;
         return true;
     }
@@ -761,7 +761,7 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
 
     while (i >= 0)
     {
-        while ((ignoreCase?toupper(list.words[i][0]):list.words[i][0]) == (ignoreCase?toupper(firstChar):firstChar))
+        while (static_cast<unsigned char>(ignoreCase?toupper(list.words[i][0]):list.words[i][0]) == (ignoreCase?toupper(firstChar):firstChar))
         {
             a = 0;
             b = 0;
@@ -1023,20 +1023,20 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
 
     // creation of vvstring (short for vector<vector<string>>) objects is expensive,
     // therefore these objects are created only at beginning of file, and saved to 
-	// global std::map objects udlKeywordsMap and nestedMap
-	
-	int currentBufferID = styler.GetPropertyInt("userDefine.currentBufferID", 0);
-	if (nestedMap.find(currentBufferID) == nestedMap.end())
-	{
-		nestedMap[currentBufferID] = vector<nestedInfo>();
-	}
-	vector<nestedInfo> & nestedVector = nestedMap[currentBufferID];
+    // global std::map objects udlKeywordsMap and nestedMap
+    
+    int currentBufferID = styler.GetPropertyInt("userDefine.currentBufferID", 0);
+    if (nestedMap.find(currentBufferID) == nestedMap.end())
+    {
+        nestedMap[currentBufferID] = vector<nestedInfo>();
+    }
+    vector<nestedInfo> & nestedVector = nestedMap[currentBufferID];
 
-	int sUdlName = styler.GetPropertyInt("userDefine.udlName", 0);
-	if (udlKeywordsMap.find(sUdlName) == udlKeywordsMap.end())
-	{
-		udlKeywordsMap[sUdlName] = udlKeywordsMapStruct();
-	}
+    int sUdlName = styler.GetPropertyInt("userDefine.udlName", 0);
+    if (udlKeywordsMap.find(sUdlName) == udlKeywordsMap.end())
+    {
+        udlKeywordsMap[sUdlName] = udlKeywordsMapStruct();
+    }
     
     vvstring & commentLineOpen      = udlKeywordsMap[sUdlName].commentLineOpen;
     vvstring & commentLineContinue  = udlKeywordsMap[sUdlName].commentLineContinue;
@@ -1304,6 +1304,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
     int nlCount = 0;
 
     int continueCommentBlock = 0;
+    bool startOfDelimiter = false;
 
     vector<nestedInfo> lastNestedGroup;
 
@@ -1413,7 +1414,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 if (levelPrev != 0)
                 {
                     // foldVector[lineCurrent - 1] = levelPrev;
-					styler.SetLevel(lineCurrent - 1, levelPrev);
+                    styler.SetLevel(lineCurrent - 1, levelPrev);
                     levelPrev = 0;
                 }
             }
@@ -1504,8 +1505,8 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                                     chNext,
                                     fwEndVectors);
 
-				if (moveForward)
-	                sc.Forward(moveForward);
+                if (moveForward)
+                    sc.Forward(moveForward);
                 dontMove = true;
 
                 if (previousWasRange == true)
@@ -1560,10 +1561,10 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                         hasSuffix = true;
                 }
 
-				if (test == NBR_DECIMAL || test == NBR_EXTRA_CHAR)
-				{
-					sc.Forward();
-				}
+                if (test == NBR_DECIMAL || test == NBR_EXTRA_CHAR)
+                {
+                    sc.Forward();
+                }
 
                 break;
             }
@@ -1635,6 +1636,20 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 {
                     // create new 'compare point' (AKA beginning of nested keyword) before checking for numbers
                     sc.SetState(prevState);
+                    if (delimNesting & SCE_USER_MASK_NESTING_NUMBERS)
+                    {
+                        if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
+                        {
+                            numberParentState = prevState;
+                            break;
+                        }
+                    }
+                }
+
+                // special case when number follows opening sequence
+                if (startOfDelimiter == true)
+                {
+                    startOfDelimiter = false;
                     if (delimNesting & SCE_USER_MASK_NESTING_NUMBERS)
                     {
                         if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
@@ -1731,6 +1746,20 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                     }
                 }
 
+                // special case when number follows opening sequence
+                if (startOfDelimiter == true)
+                {
+                    startOfDelimiter = false;
+                    if (commentNesting & SCE_USER_MASK_NESTING_NUMBERS)
+                    {
+                        if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
+                        {
+                            numberParentState = SCE_USER_STYLE_COMMENT;
+                            break;
+                        }
+                    }
+                }
+
                 // third, check nested delimiter sequence
                 if (isInListNested(commentNesting, forwards, sc, ignoreCase, openIndex, skipForward, newState, lineCommentAtBOL))
                 {
@@ -1806,6 +1835,20 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 {
                     // create new 'compare point' (AKA beginning of nested keyword) before checking for numbers
                     sc.SetState(SCE_USER_STYLE_COMMENTLINE);
+                    if (lineCommentNesting & SCE_USER_MASK_NESTING_NUMBERS)
+                    {
+                        if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
+                        {
+                            numberParentState = SCE_USER_STYLE_COMMENTLINE;
+                            break;
+                        }
+                    }
+                }
+
+                // special case when number follows opening sequence
+                if (startOfDelimiter == true)
+                {
+                    startOfDelimiter = false;
                     if (lineCommentNesting & SCE_USER_MASK_NESTING_NUMBERS)
                     {
                         if (true == IsNumber(prefixTokens, negativePrefixTokens, sc, ignoreCase, hasPrefix, dontMove, hasDot))
@@ -1931,17 +1974,18 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                             if (foldComments && isCommentLine != COMMENTLINE_SKIP_TESTING)
                                 isCommentLine = COMMENTLINE_YES;
 
-							// any backward keyword 'glued' on the left side?
+                            // any backward keyword 'glued' on the left side?
                             setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
                             // paint up to start of line comment sequence
-							sc.SetState(SCE_USER_STYLE_COMMENTLINE);
+                            sc.SetState(SCE_USER_STYLE_COMMENTLINE);
                             // record start of line comment sequence (NI_OPEN) in BOTH vectors
                             nestedVector.push_back(*NI.Set(sc.currentPos, ++nestedLevel, openIndex, SCE_USER_STYLE_COMMENTLINE, NI_OPEN));
                             lastNestedGroup.push_back(NI);
-							// paint start of line comment sequence
+                            // paint start of line comment sequence
                             sc.Forward(skipForward);
                             sc.SetState(SCE_USER_STYLE_COMMENTLINE);
                             dontMove = true;
+                            startOfDelimiter = true;
                             break;
                         }
                     }
@@ -1958,17 +2002,18 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                                 isCommentLine = COMMENTLINE_YES;
                         }
 
-						// any backward keyword 'glued' on the left side?
+                        // any backward keyword 'glued' on the left side?
                         setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
                         // paint up to start of comment sequence
-						sc.SetState(SCE_USER_STYLE_COMMENT);
-						// record start of comment sequence (NI_OPEN) in BOTH nesting vectors
+                        sc.SetState(SCE_USER_STYLE_COMMENT);
+                        // record start of comment sequence (NI_OPEN) in BOTH nesting vectors
                         nestedVector.push_back(*NI.Set(sc.currentPos, ++nestedLevel, openIndex, SCE_USER_STYLE_COMMENT, NI_OPEN));
                         lastNestedGroup.push_back(NI);
-						// paint start of comment sequence
+                        // paint start of comment sequence
                         sc.Forward(skipForward);
                         sc.SetState(SCE_USER_STYLE_COMMENT);
                         dontMove = true;
+                        startOfDelimiter = true;
                         break;
                     }
                 }
@@ -1979,17 +2024,18 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                     {
                         if (isInListForward(*delimStart[i], sc, ignoreCase, openIndex, skipForward))
                         {
-							// any backward keyword 'glued' on the left side?
+                            // any backward keyword 'glued' on the left side?
                             setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
-							// paint up to start of delimiter sequence
+                            // paint up to start of delimiter sequence
                             sc.SetState(i+SCE_USER_STYLE_DELIMITER1);
-							// record start of delimiter sequence (NI_OPEN) in BOTH nesting vectors
+                            // record start of delimiter sequence (NI_OPEN) in BOTH nesting vectors
                             nestedVector.push_back(*NI.Set(sc.currentPos, ++nestedLevel, openIndex, i+SCE_USER_STYLE_DELIMITER1, NI_OPEN));
                             lastNestedGroup.push_back(NI);
-							// paint start of delimiter sequence
+                            // paint start of delimiter sequence
                             sc.Forward(skipForward);
                             sc.SetState(i+SCE_USER_STYLE_DELIMITER1);
                             dontMove = true;
+                            startOfDelimiter = true;
                             break;  // break from nested 'for' loop, not 'case' statement
                         }
                     }
@@ -2002,14 +2048,14 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 {
                     if (isInListForward(operators1, sc, ignoreCase, openIndex, skipForward))
                     {
-						// any backward keyword 'glued' on the left side?
+                        // any backward keyword 'glued' on the left side?
                         setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
                         // paint up to start of sequence
-						sc.SetState(SCE_USER_STYLE_OPERATOR);
-						// paint sequence
+                        sc.SetState(SCE_USER_STYLE_OPERATOR);
+                        // paint sequence
                         sc.Forward(skipForward);
                         sc.ChangeState(SCE_USER_STYLE_OPERATOR);
-						// no closing sequence, start over from default
+                        // no closing sequence, start over from default
                         sc.SetState(SCE_USER_STYLE_IDENTIFIER);
                         dontMove = true;
                         break;
@@ -2020,7 +2066,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                 {
                     if (isInListForward(foldersInCode1Open, sc, ignoreCase, openIndex, skipForward))
                     {
-						// any backward keyword 'glued' on the left side?
+                        // any backward keyword 'glued' on the left side?
                         setBackwards(kwLists, sc, prefixes, ignoreCase, bwNesting, fwEndVectors, levelMinCurrent, levelNext, nlCount, dontMove, docLength);
                         // paint up to start of sequence
                         sc.SetState(SCE_USER_STYLE_FOLDER_IN_CODE1);
@@ -2110,7 +2156,6 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
             default:
                 break;
         }
-
     }
     sc.Complete();
 }

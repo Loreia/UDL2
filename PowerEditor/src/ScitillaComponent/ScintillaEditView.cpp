@@ -720,11 +720,17 @@ void ScintillaEditView::setUserLexer(const TCHAR *userLangName)
 					continue;
 				}
 
+				if (keyWords_char[j] == '\\' && (keyWords_char[j+1] == '"' || keyWords_char[j+1] == '\''))
+				{
+					++j;
+					temp[index++] = keyWords_char[j++];
+				}
+
 				if (inDoubleQuote)
 				{
 					if (keyWords_char[j] != ' ')
 						temp[index++] = keyWords_char[j];
-					else if (keyWords_char[j+1] != '"')
+					else if (keyWords_char[j+1] != '"' && keyWords_char[j+1] != ' ')
 						temp[index++] = '\v';
 					else
 						continue;
@@ -733,7 +739,7 @@ void ScintillaEditView::setUserLexer(const TCHAR *userLangName)
 				{
 					if (keyWords_char[j] != ' ')
 						temp[index++] = keyWords_char[j];
-					else if (keyWords_char[j+1] != '\'')
+					else if (keyWords_char[j+1] != '\'' && keyWords_char[j+1] != ' ')
 						temp[index++] = '\b';
 					else
 						continue;

@@ -4,11 +4,9 @@ Features:
 - none
 
 Bug fix:
-- Fixed crashing issue when udl.xml was opened in old version (pre UDL2) and then again used with UDL2.
-- Fixed issue with UDL keywords being converted to multibyte with ::WideCharToMultiByte codepage argument hardcoded to ANSI CP_ACP.
-- Fixed issue with serialization of styles (nameless style 24 was saved to XML file, even though there are only 23 styles)
-- Moved UDL2 vectors from Document class in Scintilla code to a (static global) std::map in LexUser.cxx
-(this leaves Scintilla code free of UDL2 modifications, apart from changes in StyleContext class)
+- Fixed issue with numbers not being recognized within delimiters.
+- Fixed issue with missing escape sequence for quotes in UDL keywords (now quotes acn be part of keyword).
+- Fixed issue with consequtive spaces in multi-part keywords.
 
 Things left to do:
 - Include in next NPP release (v.6.2)
