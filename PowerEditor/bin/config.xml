@@ -10,14 +10,14 @@
         <!-- 2 positions : "horizontal" or "vertical"-->
         <GUIConfig name="ScintillaViewsSplitter">vertical</GUIConfig>
         <!-- For the attribut of position, 2 status : docked or undocked ; 2 status : "show" or "hide" -->
-        <GUIConfig name="UserDefineDlg" position="docked">show</GUIConfig>
+        <GUIConfig name="UserDefineDlg" position="undocked">hide</GUIConfig>
         <GUIConfig name="TabSetting" size="4" replaceBySpace="yes" />
         <!--App position-->
         <GUIConfig name="AppPosition" x="43" y="1" width="1135" height="737" isMaximized="yes" />
         <!-- For the primary scintilla view,
              2 status for Attribut lineNumberMargin, bookMarkMargin, indentGuideLine and currentLineHilitingShow: "show" or "hide"
              4 status for Attribut folderMarkStyle : "simple", "arrow", "circle" and "box"  -->
-        <GUIConfig name="ScintillaPrimaryView" lineNumberMargin="show" bookMarkMargin="show" folderMarkStyle="box" indentGuideLine="show" currentLineHilitingShow="show" Wrap="no" edge="no" edgeNbColumn="100" wrapSymbolShow="hide" zoom="0" whiteSpaceShow="hide" eolShow="hide" lineWrapMethod="aligned" zoom2="0" borderWidth="2" />
+        <GUIConfig name="ScintillaPrimaryView" lineNumberMargin="show" bookMarkMargin="show" folderMarkStyle="box" indentGuideLine="show" currentLineHilitingShow="show" Wrap="yes" edge="no" edgeNbColumn="100" wrapSymbolShow="hide" zoom="0" whiteSpaceShow="hide" eolShow="hide" lineWrapMethod="aligned" zoom2="0" borderWidth="2" />
         <!-- For the secodary scintilla view,
              2 status for Attribut lineNumberMargin, bookMarkMargin, indentGuideLine and currentLineHilitingShow: "show" or "hide"
              4 status for Attribut folderMarkStyle : "simple", "arrow", "circle" and "box" -->
@@ -68,7 +68,7 @@
 						3 : bottom
 						>= 4 : undocked -> FloatingWindow id
 			-->
-        <GUIConfig name="noUpdate" intervalDays="15" nextUpdateDate="20120919">no</GUIConfig>
+        <GUIConfig name="noUpdate" intervalDays="15" nextUpdateDate="20121004">no</GUIConfig>
         <GUIConfig name="MaitainIndent">yes</GUIConfig>
         <GUIConfig name="MRU">yes</GUIConfig>
         <GUIConfig name="URL">2</GUIConfig>
@@ -84,9 +84,9 @@
         <GUIConfig name="titleBar" short="no" />
         <GUIConfig name="stylerTheme" path="c:\1\code\cpp\UDL25\github\PowerEditor\bin\stylers.xml" />
         <GUIConfig name="DockingManager" leftWidth="200" rightWidth="200" topHeight="200" bottomHeight="274">
+            <PluginDlg pluginName="dummy" id="0" curr="3" prev="-1" isVisible="yes" />
             <PluginDlg pluginName="Notepad++::InternalFunction" id="44080" curr="1" prev="-1" isVisible="no" />
             <PluginDlg pluginName="Notepad++::InternalFunction" id="42052" curr="1" prev="-1" isVisible="no" />
-            <PluginDlg pluginName="dummy" id="0" curr="3" prev="-1" isVisible="yes" />
             <PluginDlg pluginName="Notepad++::InternalFunction" id="42051" curr="1" prev="-1" isVisible="no" />
             <ActiveTabs cont="0" activeTab="-1" />
             <ActiveTabs cont="1" activeTab="-1" />
@@ -95,19 +95,22 @@
         </GUIConfig>
     </GUIConfigs>
     <!-- The History of opened files list -->
-    <FindHistory nbMaxFindHistoryPath="10" nbMaxFindHistoryFilter="10" nbMaxFindHistoryFind="10" nbMaxFindHistoryReplace="10" matchWord="no" matchCase="yes" wrap="yes" directionDown="yes" fifRecuisive="yes" fifInHiddenFolder="no" dlgAlwaysVisible="no" fifFilterFollowsDoc="no" fifFolderFollowsDoc="no" searchMode="1" transparencyMode="1" transparency="150" dotMatchesNewline="yes">
+    <FindHistory nbMaxFindHistoryPath="10" nbMaxFindHistoryFilter="10" nbMaxFindHistoryFind="10" nbMaxFindHistoryReplace="10" matchWord="no" matchCase="yes" wrap="yes" directionDown="yes" fifRecuisive="yes" fifInHiddenFolder="no" dlgAlwaysVisible="no" fifFilterFollowsDoc="no" fifFolderFollowsDoc="no" searchMode="0" transparencyMode="1" transparency="150" dotMatchesNewline="no">
         <Path name="C:\1\code\cpp\UDL24\v1 on github" />
         <Path name="C:\1\Projects\C++\NPP\33_final\npp.5.9.3.src\PowerEditor" />
-        <Find name="// special case when number follows opening seque" />
-        <Find name=" " />
-        <Find name="raw" />
-        <Find name="softstat" />
-        <Find name="mhweb_statistics" />
-        <Find name="full2" />
-        <Find name="new2" />
-        <Find name="new" />
-        <Find name="Comment" />
-        <Find name="===" />
+        <Find name="msc_2010" />
+        <Find name="show log" />
+        <Find name="show" />
+        <Find name="log" />
+        <Find name="[" />
+        <Find name="STR-1.*?record( |\.)" />
+        <Find name="STR-1.*record( |\.)" />
+        <Find name="STR-1.*record\." />
+        <Find name='&quot;STR-1.*record\.&quot;' />
+        <Find name="STR-1.*?records?" />
+        <Replace name="\n[" />
+        <Replace name=";" />
+        <Replace name="\1\2" />
         <Replace name="\n" />
         <Replace name="original" />
         <Replace name="pri" />
@@ -115,21 +118,17 @@
         <Replace name="qualityCommentsTable" />
         <Replace name="qualityTable" />
         <Replace name="/" />
-        <Replace name="\r\n" />
-        <Replace name="b" />
-        <Replace name="q" />
     </FindHistory>
     <History nbMaxFile="10" inSubMenu="no" customLength="-1">
-        <File filename="C:\Program Files\Notepad++\localization\english.xml" />
-        <File filename="C:\Users\eivarad\Desktop\npp.6.1.5.bin\unicode\localization\albanian.xml" />
-        <File filename="C:\1\code\python\sqr\1.py" />
-        <File filename="Y:\web2py\applications\sqr\controllers\sqr_coaps.py" />
-        <File filename="Y:\web2py\applications\sqr\controllers\a\0064\CAAZA1074469_R1A\2\archive.zip" />
-        <File filename="Y:\web2py\applications\sqr\controllers\sqr_enumerate_pairs.py" />
-        <File filename="Y:\web2py\applications\sqr\controllers\sqr_download_files.py" />
         <File filename="Y:\web2py\applications\sqr\controllers\sqr_pri.py" />
         <File filename="Y:\web2py\applications\sqr\controllers\sqr_updater.py" />
-        <File filename="Y:\web2py\applications\sqr\controllers\sqr_dal.py" />
+        <File filename="Y:\web2py\applications\sqr\views\default\get_softstat_log.html" />
+        <File filename="Y:\web2py\applications\sqr\views\default\get_code_log.html" />
+        <File filename="Y:\web2py\applications\sqr\views\default\get_coaps_log.html" />
+        <File filename="Y:\web2py\applications\sqr\views\default\get_bti_log.html" />
+        <File filename="Y:\web2py\applications\sqr\views\default\get_autodc_log.html" />
+        <File filename="Y:\web2py\applications\sqr\views\default\get_analyze_log.html" />
+        <File filename="Y:\web2py\applications\sqr\views\default\get_mhweb_log.html" />
     </History>
     <ProjectPanels>
         <ProjectPanel id="0" workSpaceFile="" />

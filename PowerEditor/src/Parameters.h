@@ -65,6 +65,8 @@
 #include "ContextMenu.h"
 #endif //CONTEXTMENU
 
+#include <tchar.h>
+
 class NativeLangSpeaker;
 
 using namespace std;
@@ -1290,7 +1292,7 @@ public:
 		return false;
 	};
 
-	const TCHAR * getUserDefinedLangNameFromExt(TCHAR *ext) {
+	const TCHAR * getUserDefinedLangNameFromExt(TCHAR *ext, TCHAR *fullName) {
 		if ((!ext) || (!ext[0]))
 			return NULL;
 
@@ -1299,7 +1301,7 @@ public:
 			vector<generic_string> extVect;
 			cutString(_userLangArray[i]->_ext.c_str(), extVect);
 			for (size_t j = 0 ; j < extVect.size() ; j++)
-				if (!generic_stricmp(extVect[j].c_str(), ext))
+				if (!generic_stricmp(extVect[j].c_str(), ext) || (_tcschr(fullName, '.') && !generic_stricmp(extVect[j].c_str(), fullName)))
 					return _userLangArray[i]->_name.c_str();
 		}
 		return NULL;

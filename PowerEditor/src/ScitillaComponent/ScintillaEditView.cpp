@@ -695,52 +695,41 @@ void ScintillaEditView::setUserLexer(const TCHAR *userLangName)
 			char temp[max_char];
 			bool inDoubleQuote = false;
 			bool inSingleQuote = false;
+			bool nonWSFound = false;
 			int index = 0;
 			for (unsigned int j=0; j<strlen(keyWords_char); ++j)
 			{
-				if (keyWords_char[j] == '"')
+				if (!inSingleQuote && keyWords_char[j] == '"')
 				{
 					inDoubleQuote = !inDoubleQuote;
-					if (keyWords_char[j+1] == ' ')
-					{
-						++j;
-						temp[index++] = ' ';
-					}
 					continue;
 				}
 
-				if (keyWords_char[j] == '\'')
+				if (!inDoubleQuote && keyWords_char[j] == '\'')
 				{
 					inSingleQuote = !inSingleQuote;
-					if (keyWords_char[j+1] == ' ')
-					{
-						++j;
-						temp[index++] = ' ';
-					}
 					continue;
 				}
 
-				if (keyWords_char[j] == '\\' && (keyWords_char[j+1] == '"' || keyWords_char[j+1] == '\''))
+				if (keyWords_char[j] == '\\' && (keyWords_char[j+1] == '"' || keyWords_char[j+1] == '\'' || keyWords_char[j+1] == '\\'))
 				{
 					++j;
-					temp[index++] = keyWords_char[j++];
+					temp[index++] = keyWords_char[j];
+					continue;
 				}
 
-				if (inDoubleQuote)
+				if (inDoubleQuote || inSingleQuote)
 				{
-					if (keyWords_char[j] != ' ')
+					if (keyWords_char[j] > ' ')		// copy non-whitespace unconditionally
+					{
 						temp[index++] = keyWords_char[j];
-					else if (keyWords_char[j+1] != '"' && keyWords_char[j+1] != ' ')
-						temp[index++] = '\v';
-					else
-						continue;
-				}
-				else if (inSingleQuote)
-				{
-					if (keyWords_char[j] != ' ')
-						temp[index++] = keyWords_char[j];
-					else if (keyWords_char[j+1] != '\'' && keyWords_char[j+1] != ' ')
-						temp[index++] = '\b';
+						if (nonWSFound == false)
+							nonWSFound = true;
+					}
+					else if (nonWSFound == true && keyWords_char[j-1] != '"' && keyWords_char[j+1] != '"' && keyWords_char[j+1] > ' ')
+					{
+						temp[index++] = inDoubleQuote ? '\v' : '\b';
+					}
 					else
 						continue;
 				}

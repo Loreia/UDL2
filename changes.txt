@@ -1,13 +1,15 @@
 Changes in this commit.
 
 Features:
-- none
+- UDL can now accept full file names, not just extensions, in extension edit box.
+- GUI feature: Keyword 1-8 edit boxes accept ENTER now (keywords can be aligned vertically)
 
 Bug fix:
-- Small performance improvment for numbers within delimiters.
+- Any whitespace character can now be used as keyword separator in keyword edit boxes.
+- Fixed several issues with multi-part keywords (as well as some code beautification of multi-part code)
 
 Things left to do:
-- Include in next NPP release (v.6.2)
+- Include in next NPP release (v.6.2 RC)
 
 Note:
 - This version should be last beta, after releasing this version, code will be sent to Don for inclusion in main branch.
