@@ -74,6 +74,10 @@ using namespace Scintilla;
 #define NBR_FOLLOWED_BY_FORWARD_KEYWORD 6
 #define NBR_NOT_A_NUMBER                7
 
+#define NO_DELIMITER                    0
+#define FORWARD_WHITESPACE_FOUND        1
+#define FORWARD_KEYWORD_FOUND           2
+
 #define SC_ISCOMMENTLINE      0x8000
 #define MULTI_PART_LIMIT      100
 
@@ -199,7 +203,7 @@ struct udlKeywordsMapStruct
     vector<string> prefixTokens;
     vector<string> negativePrefixTokens;
     vector<string> extrasInPrefixedTokens;
-    vector<string> rangeTokens;  
+    vector<string> rangeTokens;
 };
 
 // key value is of type "int" so it could receive pointer value !!
@@ -219,7 +223,7 @@ static inline bool isWhiteSpace(const int ch)
     return (ch > 0 && ch < 0x21);
 }
 
-static inline bool isWhiteSpace2(const int ch, int & nlCount, char excludeNewLine=0, char chNext=0)
+static inline bool isWhiteSpace2(unsigned char ch, int & nlCount, unsigned char excludeNewLine=0, unsigned char chNext=0)
 {
     // multi-part keywords come in two flavors:
     // 1. "else if" (internally mapped to "else\vif") where '\v' can be replaced by spaces, tabs and new lines
@@ -734,10 +738,20 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
         return false;
 
     moveForward = 0;
+
     int offset = -1 * sc.LengthCurrent();   // length of 'word' that needs to be investigated
+    unsigned char a = 0;    // iterator for user defined keywords
+    unsigned char b = 0;    // iterator for text in the file
+    unsigned char bNext = 0;
+    unsigned char wsChar = 0;
     unsigned char firstChar = sc.GetRelative(offset);
+    int fwDelimiterFound = NO_DELIMITER;
+    int nlCountTemp = 0;
+    int indexa = 0;
+    int indexb = 0;
     int i = list.starts[firstChar];
-    bool doUpperLoop = ignoreCase ? true:false;
+    bool doUpperLoop = ignoreCase;
+
     if (ignoreCase)
     {
         i = list.starts[tolower(firstChar)];
@@ -750,14 +764,6 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
             doUpperLoop = false;
         }
     }
-    unsigned char a = 0;    // iterator for user defined keywords
-    unsigned char b = 0;    // iterator for text in the file
-    int bNext = 0;
-    int indexa = 0;
-    int indexb = 0;
-    char wsChar = 0;
-    int nlCountTemp = 0;
-    bool fwDelimiterFound = false;
 
     while (i >= 0)
     {
@@ -769,7 +775,7 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
             indexa = 0;
             indexb = 0;
             wsChar = 0;
-            fwDelimiterFound = false;
+            fwDelimiterFound = NO_DELIMITER;
 
             do
             {
@@ -795,57 +801,63 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
             }
             while (a && (a == b));
 
-            // if multi-part keyword is found, it must also be followed by whitespace or 'forward' keyword
-            // otherwise "else if" might wrongly match "else iff"
-            bNext = sc.GetRelative(offset + indexb);
-            if (isWhiteSpace2(b, nlCountTemp, wsChar, bNext))
-                fwDelimiterFound = true;
-
-            if (!fwDelimiterFound && !specialMode && wsChar)
-            {
-                if (isInListForward2(fwEndVectors, sc, ignoreCase, indexb + offset))
-                {
-                    fwDelimiterFound = true;
-                    break;
-                }
-            }
-
-            // special case when multi-part keywords have 'prefix' option enabled
-            // then the next word in the text file must be treated as part of multi-part keyword
-            // e.g. prefixed "else if" matches "else if nextWord", but not "else iffy"
-            if (!a && specialMode && wsChar)
-            {
-                if (fwDelimiterFound)    // there must be a white space !!
-                {
-                    // first, skip whitespace (all of it)
-                    while((sc.currentPos + offset + indexb) <= docLength &&
-                           isWhiteSpace2(sc.GetRelative(offset + indexb++), nlCountTemp, wsChar, sc.GetRelative(offset + indexb)));
-
-                    // second, skip next "word"
-                    bool breakOut = false;
-                    // it is not necessary to check EOF position here, because sc.GetRelative returns ' ' beyond EOF
-                    while (!isWhiteSpace2(sc.GetRelative(indexb + offset), nlCountTemp, wsChar, sc.GetRelative(offset + indexb)))
-                    {
-                        if (isInListForward2(fwEndVectors, sc, ignoreCase, indexb + offset))
-                        {
-                            breakOut = true;
-                            break;
-                        }
-                        if (breakOut)
-                            break;
-                        ++indexb;
-                    }
-                    ++indexb;
-                }
-            }
-
-            // keyword is read fully, decide if we can leave this function
             if (!a)
             {
-                nlCount += nlCountTemp;
-                moveForward = indexb + offset - 1;  // offset is already negative
+                // multi-part keyword is found,
+                // but it must be followed by whitespace (or 'forward' keyword)
+                // otherwise "else if" might wrongly match "else iff"
+                bNext = sc.GetRelative(--indexb + offset);  // decrement indexb to compensate for comparing with '\0' in previous loop
+                if (isWhiteSpace2(b, nlCountTemp, wsChar, bNext))
+                    fwDelimiterFound = FORWARD_WHITESPACE_FOUND;
 
-                if (fwDelimiterFound || !wsChar)
+                if (fwDelimiterFound == NO_DELIMITER && wsChar)
+                {
+                    if (isInListForward2(fwEndVectors, sc, ignoreCase, indexb + offset))
+                    {
+                        fwDelimiterFound = FORWARD_KEYWORD_FOUND;
+                    }
+                }
+
+                // special case when multi-part keywords have 'prefix' option enabled
+                // then the next word in the text file must be treated as part of multi-part keyword
+                // e.g. prefixed "else if" matches "else if nextWord", but not "else iffy"
+                if (specialMode && wsChar)
+                {
+                    if (fwDelimiterFound == FORWARD_WHITESPACE_FOUND)    // there must be a white space !!
+                    {
+                        // skip whitespace (all of it)
+                        int savedPosition = indexb;     // return here if whitespace is not followed by another word
+                        for (;;)
+                        {
+                            if ((sc.currentPos + offset + indexb) > docLength)
+                                break;
+                            if (!isWhiteSpace2(sc.GetRelative(offset + indexb), nlCountTemp, wsChar, sc.GetRelative(offset + indexb + 1)))
+                                break;
+                            ++indexb;
+                        }
+
+                        // skip next "word" (if next word is not found, go back to end of multi-part keyword)
+                        // it is not necessary to check EOF position here, because sc.GetRelative returns ' ' beyond EOF
+                        bool nextWordFound = false;
+                        while (!isWhiteSpace2(sc.GetRelative(indexb + offset), nlCountTemp, wsChar, sc.GetRelative(offset + indexb + 1)))
+                        {
+                            if (isInListForward2(fwEndVectors, sc, ignoreCase, indexb + offset))
+                            {
+                                break;
+                            }
+                            ++indexb;
+                            nextWordFound = true;
+                        }
+                        if (nextWordFound == false)
+                            indexb = savedPosition;
+                    }
+                }
+
+                // keyword is read fully, decide if we can leave this function
+                nlCount += nlCountTemp;
+                moveForward = indexb + offset;  // offset is already negative
+
+                if (fwDelimiterFound != NO_DELIMITER || !wsChar)
                 {
                     if (moveForward >= 0)
                         return true;
@@ -1022,9 +1034,9 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
                         | SCE_USER_MASK_NESTING_FOLDERS_IN_CODE2_CLOSE;
 
     // creation of vvstring (short for vector<vector<string>>) objects is expensive,
-    // therefore these objects are created only at beginning of file, and saved to 
+    // therefore these objects are created only at beginning of file, and saved to
     // global std::map objects udlKeywordsMap and nestedMap
-    
+
     int currentBufferID = styler.GetPropertyInt("userDefine.currentBufferID", 0);
     if (nestedMap.find(currentBufferID) == nestedMap.end())
     {
@@ -1037,7 +1049,7 @@ static void ColouriseUserDoc(unsigned int startPos, int length, int initStyle, W
     {
         udlKeywordsMap[sUdlName] = udlKeywordsMapStruct();
     }
-    
+
     vvstring & commentLineOpen      = udlKeywordsMap[sUdlName].commentLineOpen;
     vvstring & commentLineContinue  = udlKeywordsMap[sUdlName].commentLineContinue;
     vvstring & commentLineClose     = udlKeywordsMap[sUdlName].commentLineClose;
