@@ -31,6 +31,7 @@
 #include "FileDialog.h"
 #include "EncodingMapper.h"
 #include "VerticalFileSwitcher.h"
+#include <TCHAR.h>
 
 
 BufferID Notepad_plus::doOpen(const TCHAR *fileName, bool isReadOnly, int encoding)
@@ -289,7 +290,8 @@ bool Notepad_plus::doSave(BufferID id, const TCHAR * filename, bool isCopy)
 		_pluginsManager.notify(&scnN);
 	}
 
-	bool res = MainFileManager->saveBuffer(id, filename, isCopy);
+	generic_string error_msg;
+	bool res = MainFileManager->saveBuffer(id, filename, isCopy, &error_msg);
 
 	if (!isCopy)
 	{
@@ -298,11 +300,20 @@ bool Notepad_plus::doSave(BufferID id, const TCHAR * filename, bool isCopy)
 	}
 
 	if (!res)
-		_nativeLangSpeaker.messageBox("FileLockedWarning",
-		_pPublicInterface->getHSelf(),
-		TEXT("Please check if this file is opened in another program."),
-		TEXT("Save failed"), 
-		MB_OK);
+	{
+		if(error_msg.empty())
+		{
+			_nativeLangSpeaker.messageBox("FileLockedWarning",
+			_pPublicInterface->getHSelf(),
+			TEXT("Please check if this file is opened in another program."),
+			TEXT("Save failed"), 
+			MB_OK);
+		}
+		else
+		{
+			::MessageBox(_pPublicInterface->getHSelf(), error_msg.c_str(), TEXT("Save failed"), MB_OK);
+		}
+	}
 	return res;
 }
 
@@ -822,7 +833,16 @@ bool Notepad_plus::fileSaveAs(BufferID id, bool isSaveCopy)
 	fDlg.setDefFileName(buf->getFileName());
 	
     fDlg.setExtIndex(langTypeIndex+1); // +1 for "All types"
+
+	// Disable file autodetection before opening save dialog to prevent use-after-delete bug.
+	NppParameters *pNppParam = NppParameters::getInstance();
+	ChangeDetect cdBefore = ((NppGUI &)(pNppParam->getNppGUI()))._fileAutoDetection;
+	((NppGUI &)(pNppParam->getNppGUI()))._fileAutoDetection = cdDisabled;
+
 	TCHAR *pfn = fDlg.doSaveDlg();
+
+	// Enable file autodetection again.
+	((NppGUI &)(pNppParam->getNppGUI()))._fileAutoDetection = cdBefore;
 
 	if (pfn)
 	{

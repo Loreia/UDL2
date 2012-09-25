@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252" ?>
 <!--
-	German localization for Notepad++ 6.x
-	Last modified Tue, 28 May 2012 by Jan Schreiber.
+	German localization for Notepad++ 6.1.7
+	Last modified Wed, 12 September 2012 by Jan Schreiber.
 	Please e-mail errors, suggestions etc. to janschreiber(at)users.sf.net.
 -->
 <NotepadPlus>
@@ -10,59 +10,59 @@
 			<Main>
 				<!-- Main Menu Titles -->
 				<Entries>
-					<Item id="0" name="&amp;Datei"/>
-					<Item id="1" name="&amp;Bearbeiten"/>
-					<Item id="2" name="&amp;Suchen"/>
-					<Item id="3" name="&amp;Ansicht"/>
-					<Item id="4" name="&amp;Kodierung"/>
-					<Item id="5" name="S&amp;prachen"/>
-					<Item id="6" name="&amp;Einstellungen"/>
-					<Item id="7" name="&amp;Makro"/>
-					<Item id="8" name="Ausfüh&amp;ren"/>
+					<Item menuId="file" name="&amp;Datei"/>
+					<Item menuId="edit" name="&amp;Bearbeiten"/>
+					<Item menuId="search" name="&amp;Suchen"/>
+					<Item menuId="view" name="&amp;Ansicht"/>
+					<Item menuId="encoding" name="&amp;Kodierung"/>
+					<Item menuId="language" name="S&amp;prachen"/>
+					<Item menuId="settings" name="&amp;Einstellungen"/>
+					<Item menuId="macro" name="&amp;Makro"/>
+					<Item menuId="run" name="Ausfüh&amp;ren"/>
 					<Item idName="Plugins" name="Er&amp;weiterungen"/>
 					<Item idName="Window" name="Fe&amp;nster"/>
 				</Entries>
 				<!-- Sub Menu Entries -->
 				<SubEntries>
-					<Item posX="0" posY="19" name="Zuletzt &amp;verwendet"/>
-					<Item posX="1" posY="9" name="Pfad in &amp;Zwischenablage kopieren"/>
-					<Item posX="1" posY="10" name="Ein&amp;rückung"/>
-					<Item posX="1" posY="11" name="&amp;Groß-/Kleinschreibung"/>
-					<Item posX="1" posY="12" name="&amp;Zeilen"/>
-					<Item posX="1" posY="13" name="&amp;Kommentare"/>
-					<Item posX="1" posY="14" name="Autovervollst&amp;ändigung"/>
-					<Item posX="1" posY="15" name="Zeile&amp;nende"/>
-					<Item posX="1" posY="16" name="Nicht &amp;druckbare Zeichen"/>
-					<Item posX="1" posY="17" name= "Einfügen Spezial"/>
-					<Item posX="2" posY="16" name="Alle &amp;Vorkommnisse hervorheben"/>
-					<Item posX="2" posY="17" name="Alle &amp;Hervorhebungen löschen"/>
-					<Item posX="2" posY="18" name="Zu vorheriger Hervorhebung s&amp;pringen"/>
-					<Item posX="2" posY="19" name="Zu nächster Hervorhebung s&amp;pringen"/>
-					<Item posX="2" posY="21" name="&amp;Lesezeichen"/>
-					<Item posX="3" posY="4" name="Nicht &amp;druckbare Zeichen"/>
-					<Item posX="3" posY="5" name="Z&amp;oom"/>
-					<Item posX="3" posY="6" name="Datei &amp;verschieben/duplizieren"/>
-					<Item posX="3" posY="16" name="Te&amp;xtblöcke schließen"/>
-					<Item posX="3" posY="17" name="Te&amp;xtblöcke öffnen"/>
-					<Item posX="3" posY="21" name="Projektver&amp;waltung"/>
-					<Item posX="4" posY="5" name="Zeichensatz"/>
-					<Item posX="4" posY="5" posZ="0" name="Arabisch"/>
-					<Item posX="4" posY="5" posZ="1" name="Baltisch"/>
-					<Item posX="4" posY="5" posZ="2" name="Keltisch"/>
-					<Item posX="4" posY="5" posZ="3" name="Kyrillisch"/>
-					<Item posX="4" posY="5" posZ="4" name="Mitteleuropäisch"/>
-					<Item posX="4" posY="5" posZ="5" name="Chinesisch"/>
-					<Item posX="4" posY="5" posZ="6" name="Osteuropäisch"/>
-					<Item posX="4" posY="5" posZ="7" name="Griechisch"/>
-					<Item posX="4" posY="5" posZ="8" name="Hebräisch"/>
-					<Item posX="4" posY="5" posZ="9" name="Japanisch"/>
-					<Item posX="4" posY="5" posZ="10" name="Koreanisch"/>
-					<Item posX="4" posY="5" posZ="11" name="Nordeuropäisch"/>
-					<Item posX="4" posY="5" posZ="12" name="Thai"/>
-					<Item posX="4" posY="5" posZ="13" name="Türkisch"/>
-					<Item posX="4" posY="5" posZ="14" name="Westeuropäisch"/>
-					<Item posX="4" posY="5" posZ="15" name="Vietnamesisch"/>
-					<Item posX="6" posY="4" name="&amp;Import"/>
+					<Item subMenuId="file-recentFiles" name="Zuletzt &amp;verwendet"/>
+					<Item subMenuId="edit-copyToClipboard" name="Pfad in &amp;Zwischenablage kopieren"/>
+					<Item subMenuId="edit-indent" name="Ein&amp;rückung"/>
+					<Item subMenuId="edit-convertCaseTo" name="&amp;Groß-/Kleinschreibung"/>
+					<Item subMenuId="edit-lineOperations" name="&amp;Zeilen"/>
+					<Item subMenuId="edit-comment" name="&amp;Kommentare"/>
+					<Item subMenuId="edit-autoCompletion" name="Autovervollst&amp;ändigung"/>
+					<Item subMenuId="edit-eolConversion" name="Zeile&amp;nende"/>
+					<Item subMenuId="edit-blankOperations" name="Nicht &amp;druckbare Zeichen"/>
+					<Item subMenuId="edit-pasteSpecial" name= "Einfügen Spezial"/>
+					<Item subMenuId="search-markAll" name="Alle &amp;Vorkommnisse hervorheben"/>
+					<Item subMenuId="search-unmarkAll" name="Alle &amp;Hervorhebungen löschen"/>
+					<Item subMenuId="search-jumpUp" name="Zu vorheriger Hervorhebung s&amp;pringen"/>
+					<Item subMenuId="search-jumpDown" name="Zu nächster Hervorhebung s&amp;pringen"/>
+					<Item subMenuId="search-bookmark" name="&amp;Lesezeichen"/>
+					<Item subMenuId="view-showSymbol" name="Nicht &amp;druckbare Zeichen"/>
+					<Item subMenuId="view-zoom" name="Z&amp;oom"/>
+					<Item subMenuId="view-moveCloneDocument" name="Datei &amp;verschieben/duplizieren"/>
+					<Item subMenuId="view-collapsLevel" name="Te&amp;xtblöcke schließen"/>
+					<Item subMenuId="view-uncollapseLevel" name="Te&amp;xtblöcke öffnen"/>
+					<Item subMenuId="view-project" name="Projektver&amp;waltung"/>
+					<Item subMenuId="encoding-characterSets" name="Zeichensatz"/>
+					<Item subMenuId="encoding-arabic" name="Arabisch"/>
+					<Item subMenuId="encoding-baltic" name="Baltisch"/>
+					<Item subMenuId="encoding-celtic" name="Keltisch"/>
+					<Item subMenuId="encoding-cyrillic" name="Kyrillisch"/>
+					<Item subMenuId="encoding-centralEuropean" name="Mitteleuropäisch"/>
+					<Item subMenuId="encoding-chinese" name="Chinesisch"/>
+					<Item subMenuId="encoding-easternEuropean" name="Osteuropäisch"/>
+					<Item subMenuId="encoding-greek" name="Griechisch"/>
+					<Item subMenuId="encoding-hebrew" name="Hebräisch"/>
+					<Item subMenuId="encoding-japanese" name="Japanisch"/>
+					<Item subMenuId="encoding-korean" name="Koreanisch"/>
+					<Item subMenuId="encoding-northEuropean" name="Nordeuropäisch"/>
+					<Item subMenuId="encoding-thai" name="Thai"/>
+					<Item subMenuId="encoding-turkish" name="Türkisch"/>
+					<Item subMenuId="encoding-westernEuropean" name="Westeuropäisch"/>
+					<Item subMenuId="encoding-vietnamese" name="Vietnamesisch"/>
+					<Item subMenuId="settings-import" name="&amp;Import"/>
 				</SubEntries>
 				<!-- all menu items -->
 				<Commands>
@@ -137,6 +137,8 @@
 					<Item id="42050" name="Binär-Inhalt &amp;einfügen"/>
 					<Item id="42051" name="Zeichen&amp;tabelle"/>
 					<Item id="42052" name="Z&amp;wischenablage"/>
+					<Item id="42053" name="Leerzeichen in Tabulatoren umwandeln (nur am &amp;Zeilenanfang)"/>
+					<Item id="42054" name="Leerzeichen in &amp;Tabulatoren umwandeln (alle)"/>
 					<Item id="43052" name="Suche Zeichen aus Bereich ..."/>
 					<Item id="43001" name="&amp;Suchen ..."/>
 					<Item id="43002" name="&amp;Weitersuchen"/>
@@ -189,6 +191,9 @@
 					<Item id="44009" name="&amp;Post-It"/>
 					<Item id="44010" name="Alle Te&amp;xtblöcke schließen"/>
 					<Item id="44011" name="Benutzerdefinierte Spra&amp;che ..."/>
+					<Item id="44012" name="Zeilennummernrand ausb&amp;lenden"/>
+					<Item id="44013" name="Lesezeichenrand ausb&amp;lenden"/>
+					<Item id="44014" name="Codefaltung ausb&amp;lenden"/>
 					<Item id="44019" name="&amp;Alle Zeichen anzeigen"/>
 					<Item id="44020" name="&amp;Einzüge anzeigen"/>
 					<Item id="44022" name="Automatischer Zeilen&amp;umbruch"/>
@@ -231,6 +236,7 @@
 					<Item id="46017" name="Ressourcen-Datei"/>
 					<!-- <Item id="46019" name="MS-INI-Datei"/> -->
 					<Item id="46080" name="Benutzerdefiniert"/>
+					<Item id="46150" name="Eigene Sprache definieren ..."/>
 					<Item id="47000" name="&amp;Info ..."/>
 					<Item id="47001" name="Notepad++ im &amp;Web"/>
 					<Item id="47002" name="Notepad++ bei &amp;SourceForge"/>
@@ -255,22 +261,22 @@
 			</Main>
 			<Splitter/>
 			<TabBar>
-				<Item order="0" name="S&amp;chließen"/>
-				<Item order="1" name="&amp;Alle anderen schließen"/>
-				<Item order="2" name="&amp;Speichern"/>
-				<Item order="3" name="Speichern &amp;unter ..."/>
-				<Item order="4" name="&amp;Drucken"/>
-				<Item order="5" name="In zweite Ansicht &amp;verschieben"/>
-				<Item order="6" name="In zw&amp;eite Ansicht duplizieren"/>
-				<Item order="7" name="Vollständigen Pfad &amp;kopieren"/>
-				<Item order="8" name="Nur Datei&amp;namen kopieren"/>
-				<Item order="9" name="Nur Verzeichnis&amp;pfad kopieren"/>
-				<Item order="10" name="Datei um&amp;benennen ..."/>
-				<Item order="11" name="Datei &amp;löschen"/>
-				<Item order="12" name="Sch&amp;reibschutz"/>
-				<Item order="13" name="Schreibschutz au&amp;fheben"/>
-				<Item order="14" name="In neue &amp;Instanz verschieben"/>
-				<Item order="15" name="In neue Instan&amp;z duplizieren"/>
+				<Item CMID="0" name="S&amp;chließen"/>
+				<Item CMID="1" name="&amp;Alle anderen schließen"/>
+				<Item CMID="2" name="&amp;Speichern"/>
+				<Item CMID="3" name="Speichern &amp;unter ..."/>
+				<Item CMID="4" name="&amp;Drucken"/>
+				<Item CMID="5" name="In zweite Ansicht &amp;verschieben"/>
+				<Item CMID="6" name="In zw&amp;eite Ansicht duplizieren"/>
+				<Item CMID="7" name="Vollständigen Pfad &amp;kopieren"/>
+				<Item CMID="8" name="Nur Datei&amp;namen kopieren"/>
+				<Item CMID="9" name="Nur Verzeichnis&amp;pfad kopieren"/>
+				<Item CMID="10" name="Datei um&amp;benennen ..."/>
+				<Item CMID="11" name="Datei &amp;löschen"/>
+				<Item CMID="12" name="Sch&amp;reibschutz"/>
+				<Item CMID="13" name="Schreibschutz au&amp;fheben"/>
+				<Item CMID="14" name="In neue &amp;Instanz verschieben"/>
+				<Item CMID="15" name="In neue Instan&amp;z duplizieren"/>
 			</TabBar>
 		</Menu>
 		<Dialog>
@@ -566,16 +572,18 @@
 					<Item id="6318" name="Klickbare Links"/>
 					<Item id="6319" name="Aktivieren"/>
 					<Item id="6320" name="Links nicht unterstreichen"/>
-					<Item id="6322" name="Sitzungsdatei Erw.:"/>
+					<Item id="6322" name="Sitzungsdatei-Erw.:"/>
 					<Item id="6323" name="Automatisches Update aktivieren"/>
 					<Item id="6324" name="Dokumentenumschalter (Strg+Tab)"/>
 					<Item id="6325" name="Nach Aktualisierung zum Ende scrollen"/>
-					<Item id="6326" name="Bei Doppelklick alle Vorkommnisse markieren"/>
+					<Item id="6326" name="Bei Doppelklick alle Vork. markieren"/>
 					<Item id="6327" name="Tags hervorheben"/>
 					<Item id="6328" name="Attribute hervorheben"/>
 					<Item id="6329" name="HTML-Hervorhebung"/>
 					<Item id="6330" name="PHP/ASP-Bereiche hervorheben"/>
 					<Item id="6331" name="Nur Dateinamen in Titelleiste anzeigen"/>
+					<Item id="6332" name="Groß-/Kleinschreibung unterscheiden"/>
+					<Item id="6333" name="Smart Highlighting"/>
 				</MISC>
 				<Backup title="Sicherheitskopie/Autovervollständigung">
 					<Item id="6801" name="Sicherheitskopie"/>

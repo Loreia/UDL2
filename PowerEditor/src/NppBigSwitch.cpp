@@ -1448,20 +1448,32 @@ LRESULT Notepad_plus::process(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPa
 			    scnN.nmhdr.idFrom = 0;
 			    _pluginsManager.notify(&scnN);
 
-			    saveFindHistory();
+				//
+				// saving config.xml
+				//
+			    saveFindHistory(); //writeFindHistory
+			    _lastRecentFileList.saveLRFL(); //writeRecentFileHistorySettings, writeHistory
+			    saveScintillaParams(); //writeScintillaParams
+			    saveGUIParams(); //writeGUIParams
+				saveProjectPanelsParams(); //writeProjectPanelsSettings
+				pNppParam->saveConfig_xml();
 
-			    _lastRecentFileList.saveLRFL();
-			    saveScintillaParams();
-			    saveGUIParams();
-				saveProjectPanelsParams();
+
 			    saveUserDefineLangs();
 			    saveShortcuts();
 			    if (nppgui._rememberLastSession && _rememberThisSession)
 				    saveSession(currentSession);
 
                 //Sends WM_DESTROY, Notepad++ will end
-			    ::DestroyWindow(hwnd);
+				if(Message == WM_CLOSE)
+					::DestroyWindow(hwnd);
 			}
+			return TRUE;
+		}
+
+		case WM_ENDSESSION:
+		{
+			::DestroyWindow(hwnd);
 			return TRUE;
 		}
 

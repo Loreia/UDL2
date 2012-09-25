@@ -1133,7 +1133,6 @@ void NppParameters::destroyInstance()
 
 	if (_pXmlUserDoc != NULL)
 	{
-		_pXmlUserDoc->SaveFile();
 		delete _pXmlUserDoc;
 	}
 	if (_pXmlUserStylerDoc)
@@ -3322,6 +3321,22 @@ void NppParameters::feedGUIParameters(TiXmlNode *node)
 			}
 		}
 
+		else if (!lstrcmp(nm, TEXT("SmartHighLightCaseSensitive")))
+		{
+			TiXmlNode *n = childNode->FirstChild();
+			if (n)
+			{
+				val = n->Value();
+				if (val)
+				{
+					if (!lstrcmp(val, TEXT("yes")))
+						_nppGUI._smartHiliteCaseSensitive = true;
+					else
+						_nppGUI._smartHiliteCaseSensitive = false;
+				}
+			}
+		}
+
 		else if (!lstrcmp(nm, TEXT("TagsMatchHighLight")))
 		{
 			TiXmlNode *n = childNode->FirstChild();
@@ -4198,6 +4213,7 @@ bool NppParameters::writeGUIParams()
 	bool noUpdateExist = false;
 	bool menuBarExist = false;
 	bool smartHighLightExist = false;
+	bool smartHighLightCaseSensitiveExist = false;
 	bool tagsMatchHighLightExist = false;
 	bool caretExist = false;
     bool ScintillaGlobalSettingsExist = false;
@@ -4375,6 +4391,16 @@ bool NppParameters::writeGUIParams()
 		{
 			smartHighLightExist = true;
 			const TCHAR *pStr = _nppGUI._enableSmartHilite?TEXT("yes"):TEXT("no");
+			TiXmlNode *n = childNode->FirstChild();
+			if (n)
+				n->SetValue(pStr);
+			else
+				childNode->InsertEndChild(TiXmlText(pStr));
+		}
+		else if (!lstrcmp(nm, TEXT("SmartHighLightCaseSensitive")))
+		{
+			smartHighLightCaseSensitiveExist = true;
+			const TCHAR *pStr = _nppGUI._smartHiliteCaseSensitive?TEXT("yes"):TEXT("no");
 			TiXmlNode *n = childNode->FirstChild();
 			if (n)
 				n->SetValue(pStr);
@@ -4604,6 +4630,10 @@ bool NppParameters::writeGUIParams()
 	if (!smartHighLightExist)
 	{
 		insertGUIConfigBoolNode(GUIRoot, TEXT("SmartHighLight"), _nppGUI._enableSmartHilite);
+	}
+	if( !smartHighLightCaseSensitiveExist)
+	{
+		insertGUIConfigBoolNode(GUIRoot, TEXT("SmartHighLightCaseSensitive"), _nppGUI._smartHiliteCaseSensitive);
 	}
 	if (!tagsMatchHighLightExist)
 	{
