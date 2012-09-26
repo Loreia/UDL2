@@ -17,7 +17,7 @@
         <!-- For the primary scintilla view,
              2 status for Attribut lineNumberMargin, bookMarkMargin, indentGuideLine and currentLineHilitingShow: "show" or "hide"
              4 status for Attribut folderMarkStyle : "simple", "arrow", "circle" and "box"  -->
-        <GUIConfig name="ScintillaPrimaryView" lineNumberMargin="show" bookMarkMargin="show" folderMarkStyle="box" indentGuideLine="show" currentLineHilitingShow="show" Wrap="yes" edge="no" edgeNbColumn="100" wrapSymbolShow="hide" zoom="0" whiteSpaceShow="hide" eolShow="hide" lineWrapMethod="aligned" zoom2="0" borderWidth="2" />
+        <GUIConfig name="ScintillaPrimaryView" lineNumberMargin="show" bookMarkMargin="show" folderMarkStyle="box" indentGuideLine="show" currentLineHilitingShow="show" Wrap="no" edge="no" edgeNbColumn="100" wrapSymbolShow="hide" zoom="0" whiteSpaceShow="hide" eolShow="hide" lineWrapMethod="aligned" zoom2="0" borderWidth="2" />
         <!-- For the secodary scintilla view,
              2 status for Attribut lineNumberMargin, bookMarkMargin, indentGuideLine and currentLineHilitingShow: "show" or "hide"
              4 status for Attribut folderMarkStyle : "simple", "arrow", "circle" and "box" -->
@@ -83,6 +83,7 @@
         <GUIConfig name="openSaveDir" value="0" defaultDirPath="" />
         <GUIConfig name="titleBar" short="no" />
         <GUIConfig name="stylerTheme" path="c:\1\code\cpp\UDL25\github\PowerEditor\bin\stylers.xml" />
+        <GUIConfig name="SmartHighLightCaseSensitive">no</GUIConfig>
         <GUIConfig name="DockingManager" leftWidth="200" rightWidth="200" topHeight="200" bottomHeight="274">
             <PluginDlg pluginName="dummy" id="0" curr="3" prev="-1" isVisible="yes" />
             <PluginDlg pluginName="Notepad++::InternalFunction" id="44080" curr="1" prev="-1" isVisible="no" />
@@ -98,26 +99,26 @@
     <FindHistory nbMaxFindHistoryPath="10" nbMaxFindHistoryFilter="10" nbMaxFindHistoryFind="10" nbMaxFindHistoryReplace="10" matchWord="no" matchCase="yes" wrap="yes" directionDown="yes" fifRecuisive="yes" fifInHiddenFolder="no" dlgAlwaysVisible="no" fifFilterFollowsDoc="no" fifFolderFollowsDoc="no" searchMode="0" transparencyMode="1" transparency="150" dotMatchesNewline="no">
         <Path name="C:\1\code\cpp\UDL24\v1 on github" />
         <Path name="C:\1\Projects\C++\NPP\33_final\npp.5.9.3.src\PowerEditor" />
+        <Find name="_keywordLists[" />
+        <Find name="_keywordLists[4]" />
+        <Find name="extract" />
+        <Find name="&amp;nbsp;" />
+        <Find name="&lt;br&gt;" />
+        <Find name="\" />
         <Find name="msc_2010" />
         <Find name="show log" />
         <Find name="show" />
         <Find name="log" />
-        <Find name="[" />
-        <Find name="STR-1.*?record( |\.)" />
-        <Find name="STR-1.*record( |\.)" />
-        <Find name="STR-1.*record\." />
-        <Find name='&quot;STR-1.*record\.&quot;' />
-        <Find name="STR-1.*?records?" />
+        <Replace name="_keywordLists[SCE_USER_KWLIST_COMMENTS]" />
+        <Replace name=" " />
+        <Replace name="\n" />
+        <Replace name="/" />
         <Replace name="\n[" />
         <Replace name=";" />
         <Replace name="\1\2" />
-        <Replace name="\n" />
         <Replace name="original" />
         <Replace name="pri" />
         <Replace name="pri_statistics" />
-        <Replace name="qualityCommentsTable" />
-        <Replace name="qualityTable" />
-        <Replace name="/" />
     </FindHistory>
     <History nbMaxFile="10" inSubMenu="no" customLength="-1">
         <File filename="Y:\web2py\applications\sqr\controllers\sqr_pri.py" />
@@ -129,6 +130,7 @@
         <File filename="Y:\web2py\applications\sqr\views\default\get_autodc_log.html" />
         <File filename="Y:\web2py\applications\sqr\views\default\get_analyze_log.html" />
         <File filename="Y:\web2py\applications\sqr\views\default\get_mhweb_log.html" />
+        <File filename="C:\1\code\cpp\UDL25\github\PowerEditor\src\ScitillaComponent\ScintillaEditView.cpp" />
     </History>
     <ProjectPanels>
         <ProjectPanel id="0" workSpaceFile="" />
