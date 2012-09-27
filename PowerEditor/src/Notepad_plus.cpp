@@ -3314,7 +3314,10 @@ static generic_string extractSymbol(TCHAR firstChar, TCHAR secondChar, const TCH
 				return TEXT("");
 
 			if (str2extract[i] == firstChar && str2extract[i+1] == secondChar)
+			{
 				found = true;
+				++i;
+			}
 		}
 	}
 	return  generic_string(extracted);

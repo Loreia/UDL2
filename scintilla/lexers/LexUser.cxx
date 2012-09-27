@@ -803,67 +803,72 @@ static bool isInListBackward(WordList & list, StyleContext & sc, bool specialMod
 
             if (!a)
             {
-                // multi-part keyword is found,
-                // but it must be followed by whitespace (or 'forward' keyword)
-                // otherwise "else if" might wrongly match "else iff"
-                bNext = sc.GetRelative(--indexb + offset);  // decrement indexb to compensate for comparing with '\0' in previous loop
-                if (isWhiteSpace2(b, nlCountTemp, wsChar, bNext))
-                    fwDelimiterFound = FORWARD_WHITESPACE_FOUND;
-
-                if (fwDelimiterFound == NO_DELIMITER && wsChar)
+                --indexb;   // decrement indexb to compensate for comparing with '\0' in previous loop
+                if (wsChar)
                 {
-                    if (isInListForward2(fwEndVectors, sc, ignoreCase, indexb + offset))
-                    {
-                        fwDelimiterFound = FORWARD_KEYWORD_FOUND;
-                    }
-                }
+                    // multi-part keyword is found,
+                    // but it must be followed by whitespace (or 'forward' keyword)
+                    // otherwise "else if" might wrongly match "else iff"
+                    bNext = sc.GetRelative(indexb + offset + 1);  
+                    if (isWhiteSpace2(b, nlCountTemp, wsChar, bNext))
+                        fwDelimiterFound = FORWARD_WHITESPACE_FOUND;
 
-                // special case when multi-part keywords have 'prefix' option enabled
-                // then the next word in the text file must be treated as part of multi-part keyword
-                // e.g. prefixed "else if" matches "else if nextWord", but not "else iffy"
-                if (specialMode && wsChar)
-                {
-                    if (fwDelimiterFound == FORWARD_WHITESPACE_FOUND)    // there must be a white space !!
+                    if (fwDelimiterFound == NO_DELIMITER)
                     {
-                        // skip whitespace (all of it)
-                        int savedPosition = indexb;     // return here if whitespace is not followed by another word
-                        for (;;)
+                        if (isInListForward2(fwEndVectors, sc, ignoreCase, indexb + offset))
                         {
-                            if ((sc.currentPos + offset + indexb) > docLength)
-                                break;
-                            if (!isWhiteSpace2(sc.GetRelative(offset + indexb), nlCountTemp, wsChar, sc.GetRelative(offset + indexb + 1)))
-                                break;
-                            ++indexb;
+                            fwDelimiterFound = FORWARD_KEYWORD_FOUND;
                         }
+                    }
 
-                        // skip next "word" (if next word is not found, go back to end of multi-part keyword)
-                        // it is not necessary to check EOF position here, because sc.GetRelative returns ' ' beyond EOF
-                        bool nextWordFound = false;
-                        while (!isWhiteSpace2(sc.GetRelative(indexb + offset), nlCountTemp, wsChar, sc.GetRelative(offset + indexb + 1)))
+                    // special case when multi-part keywords have 'prefix' option enabled
+                    // then the next word in the text file must be treated as part of multi-part keyword
+                    // e.g. prefixed "else if" matches "else if nextWord", but not "else iffy"
+                    if (specialMode)
+                    {
+                        if (fwDelimiterFound == FORWARD_WHITESPACE_FOUND)    // there must be a white space !!
                         {
-                            if (isInListForward2(fwEndVectors, sc, ignoreCase, indexb + offset))
+                            // skip whitespace (all of it)
+                            int savedPosition = indexb;     // return here if whitespace is not followed by another word
+                            for (;;)
                             {
-                                break;
+                                if ((sc.currentPos + offset + indexb) > docLength)
+                                    break;
+                                if (!isWhiteSpace2(sc.GetRelative(offset + indexb), nlCountTemp, wsChar, sc.GetRelative(offset + indexb + 1)))
+                                    break;
+                                ++indexb;
                             }
-                            ++indexb;
-                            nextWordFound = true;
+
+                            // skip next "word" (if next word is not found, go back to end of multi-part keyword)
+                            // it is not necessary to check EOF position here, because sc.GetRelative returns ' ' beyond EOF
+                            bool nextWordFound = false;
+                            while (!isWhiteSpace2(sc.GetRelative(indexb + offset), nlCountTemp, wsChar, sc.GetRelative(offset + indexb + 1)))
+                            {
+                                if (isInListForward2(fwEndVectors, sc, ignoreCase, indexb + offset))
+                                {
+                                    break;
+                                }
+                                ++indexb;
+                                nextWordFound = true;
+                            }
+                            if (nextWordFound == false)
+                                indexb = savedPosition;
                         }
-                        if (nextWordFound == false)
-                            indexb = savedPosition;
                     }
                 }
-
                 // keyword is read fully, decide if we can leave this function
                 nlCount += nlCountTemp;
                 moveForward = indexb + offset;  // offset is already negative
 
-                if (fwDelimiterFound != NO_DELIMITER || !wsChar)
+                if (wsChar)    
                 {
-                    if (moveForward >= 0)
-                        return true;
-                    else if (specialMode)
-                        return true;
+					if (fwDelimiterFound != NO_DELIMITER)
+                        return true;	// multi part keyword found
                 }
+                else if (moveForward == 0)
+                    return true;    // single part keyword found
+                else if (specialMode)
+                    return true;    // prefixed single part keyword found
             }
             nlCountTemp = 0;
             ++i;

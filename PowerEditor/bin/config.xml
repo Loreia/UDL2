@@ -10,7 +10,7 @@
         <!-- 2 positions : "horizontal" or "vertical"-->
         <GUIConfig name="ScintillaViewsSplitter">vertical</GUIConfig>
         <!-- For the attribut of position, 2 status : docked or undocked ; 2 status : "show" or "hide" -->
-        <GUIConfig name="UserDefineDlg" position="undocked">hide</GUIConfig>
+        <GUIConfig name="UserDefineDlg" position="docked">show</GUIConfig>
         <GUIConfig name="TabSetting" size="4" replaceBySpace="yes" />
         <!--App position-->
         <GUIConfig name="AppPosition" x="43" y="1" width="1135" height="737" isMaximized="yes" />
@@ -99,6 +99,9 @@
     <FindHistory nbMaxFindHistoryPath="10" nbMaxFindHistoryFilter="10" nbMaxFindHistoryFind="10" nbMaxFindHistoryReplace="10" matchWord="no" matchCase="yes" wrap="yes" directionDown="yes" fifRecuisive="yes" fifInHiddenFolder="no" dlgAlwaysVisible="no" fifFilterFollowsDoc="no" fifFolderFollowsDoc="no" searchMode="0" transparencyMode="1" transparency="150" dotMatchesNewline="no">
         <Path name="C:\1\code\cpp\UDL24\v1 on github" />
         <Path name="C:\1\Projects\C++\NPP\33_final\npp.5.9.3.src\PowerEditor" />
+        <Find name="//if (moveForward &gt;= 0)" />
+        <Find name="/ TODO: add folding in code 1 to" />
+        <Find name="wsTabConvert(spaceTab whichWay" />
         <Find name="_keywordLists[" />
         <Find name="_keywordLists[4]" />
         <Find name="extract" />
@@ -106,9 +109,6 @@
         <Find name="&lt;br&gt;" />
         <Find name="\" />
         <Find name="msc_2010" />
-        <Find name="show log" />
-        <Find name="show" />
-        <Find name="log" />
         <Replace name="_keywordLists[SCE_USER_KWLIST_COMMENTS]" />
         <Replace name=" " />
         <Replace name="\n" />
@@ -121,7 +121,6 @@
         <Replace name="pri_statistics" />
     </FindHistory>
     <History nbMaxFile="10" inSubMenu="no" customLength="-1">
-        <File filename="Y:\web2py\applications\sqr\controllers\sqr_pri.py" />
         <File filename="Y:\web2py\applications\sqr\controllers\sqr_updater.py" />
         <File filename="Y:\web2py\applications\sqr\views\default\get_softstat_log.html" />
         <File filename="Y:\web2py\applications\sqr\views\default\get_code_log.html" />
@@ -131,6 +130,7 @@
         <File filename="Y:\web2py\applications\sqr\views\default\get_analyze_log.html" />
         <File filename="Y:\web2py\applications\sqr\views\default\get_mhweb_log.html" />
         <File filename="C:\1\code\cpp\UDL25\github\PowerEditor\src\ScitillaComponent\ScintillaEditView.cpp" />
+        <File filename="C:\1\code\cpp\UDL25\github\scintilla\lexers\LexUser.cxx" />
     </History>
     <ProjectPanels>
         <ProjectPanel id="0" workSpaceFile="" />
