@@ -1,12 +1,11 @@
 Changes in this commit.
 
 Features:
-- UDL can now accept full file names, not just extensions, in extension edit box.
-- GUI feature: Keyword 1-8 edit boxes accept ENTER now (keywords can be aligned vertically)
+- none
 
 Bug fix:
-- Any whitespace character can now be used as keyword separator in keyword edit boxes.
-- Fixed several issues with multi-part keywords (as well as some code beautification of multi-part code)
+- Fixed regression in 'multi part keywords' (single quotes flavor).
+- Expanded max array style from 24 to 30 (to accomodate for GlobalStyles)
 
 Things left to do:
 - Include in next NPP release (v.6.2 RC)
