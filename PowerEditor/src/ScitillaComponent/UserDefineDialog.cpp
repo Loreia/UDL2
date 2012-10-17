@@ -1587,7 +1587,6 @@ BOOL CALLBACK StylerDlg::dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             if (HIWORD(wParam) == CBN_SELCHANGE)
             {
                 int i = ::SendDlgItemMessage(hwnd, LOWORD(wParam), CB_GETCURSEL, 0, 0);
-                Style & style = SharedParametersDialog::_pUserLang->_styleArray.getStyler(dlg->stylerIndex);
                 if (LOWORD(wParam) == IDC_STYLER_COMBO_FONT_SIZE)
                 {
                     TCHAR intStr[5];
@@ -1674,7 +1673,12 @@ BOOL CALLBACK StylerDlg::dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 
                 return TRUE;
             }
+			return FALSE;
         }
+		case WM_CLOSE:
+		{
+			return TRUE;
+		}
         default :
             return FALSE;
     }

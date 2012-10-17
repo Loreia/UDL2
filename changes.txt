@@ -1,17 +1,24 @@
 Changes in this commit.
 
 Features:
-- none
+- Links (hotspots) are now triggered with any move operation (arrowsup/down, page up/down, goto(ctrl+g), find(ctrl+f), replace(ctrl+h), mouse scroll)
+- Completely rewritten detection of numbers in UDL:
+    - better detection of numbers
+    - added support for user selectable decimal separator: dot, comma or both
+    - added support for 2 prefix groups:
+        - prefix1 does not support extra chars: e.g B10, O12345670, D1234567890
+        - prefix2 supports extra chars: 0xABCDEF
 
 Bug fix:
-- Fixed regression in 'multi part keywords' (single quotes flavor).
-- Expanded max array style from 24 to 30 (to accomodate for GlobalStyles)
+- Expanded max array style from 24 to 30 (to accomodate for GlobalStyles).
+- Links (hotspots) are now rewritten to avoid clashing with lexer styles.
+- UDL Styler dialog has removed close cutton because it is causing application crash in Npp v.6.2
+- Fixed bug where "Folder in code" keywords were detected even outside of commnets.
+- Fixed bug where 0xfece57 was picked as number, but 0xfe57ce was not.
 
 Things left to do:
-- Include in next NPP release (v.6.2 RC)
-
-Note:
-- This version should be last beta, after releasing this version, code will be sent to Don for inclusion in main branch.
+- Add version information to UDL, both in title and source code.
+- Add options to UDl GUI that would allow new features in numbers (decimal separator and 2 prefix groups)
 
 BR
 Loreia

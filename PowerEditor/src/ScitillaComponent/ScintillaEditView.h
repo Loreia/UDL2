@@ -225,7 +225,7 @@ public:
 						delete [] it2->second._fontName;
 				}
 				delete it->second;
-			} 
+			}
 		}
 	};
 	virtual void destroy()
@@ -242,7 +242,7 @@ public:
 	
 	void activateBuffer(BufferID buffer);
 
-	std::vector<HeaderLineState> getCurrentFoldStates();
+	void getCurrentFoldStates(std::vector<HeaderLineState> & lineStateVector);
 	void syncFoldStateWith(const std::vector<HeaderLineState> & lineStateVectorNew);
 
 	void getText(char *dest, int start, int end) const;
@@ -666,7 +666,7 @@ protected:
 
 	typedef std::map<int, Style> StyleMap;
 	typedef std::map<BufferID, StyleMap*> BufferStyleMap;
-	BufferStyleMap _hotspotStyles; 
+	BufferStyleMap _hotspotStyles;
 
 //Lexers and Styling
 	void restyleBuffer();
